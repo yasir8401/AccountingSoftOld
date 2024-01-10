@@ -1,0 +1,314 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models.Finance
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.DAL.Utilities
+
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+
+@inject LocService SharedLocalizer
+
+@{
+    FinancialPositionViewModel financialPositionViewModel = Model.financialPositionViewModel;
+
+    var filePath = NativePaths.GetFilePath(_env);
+    var img = "Erponclick.png";
+
+
+}
+<link href="~/css/Report.css?v=inv_@DateTime.Now.ToString("mm")" rel="stylesheet" />
+<div class="table-responsive pb-2 ">
+    <table id="pltable" class="table table-hover table-condensed ">
+        <thead class="text-sm ">
+            <tr class="text-center">
+                <th colspan="4">
+                    <img style="-webkit-user-select: none" src="@filePath@img" width="20%" />
+                    <h4>
+                        STATEMENT OF FINANCIAL POSITION
+                    </h4>
+                </th>
+            </tr>
+            <tr class="col-lg-12 text-center">
+                <th width="40%"> @SharedLocalizer.GetLocalizedHtmlString("") </th>
+                <th width="10%"> @SharedLocalizer.GetLocalizedHtmlString("Notes") </th>
+                <th width="25%"> @SharedLocalizer.GetLocalizedHtmlString("2021") <br /> @SharedLocalizer.GetLocalizedHtmlString("--Rupees-- ")</th>
+                <th width="25%"> @SharedLocalizer.GetLocalizedHtmlString("2020") <br /> @SharedLocalizer.GetLocalizedHtmlString("--Rupees-- ")</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left underline"> ASSETS </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left">  &nbsp;&nbsp; NON CURRENT ASSETS </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            <tr>
+                <td class="text-left font-weight-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Operating fixed assets</td>
+                <td> </td>
+                <td class="text-center b-b b-t b-lr"> @financialPositionViewModel.Operatingfixedassets_2021</td>
+                <td class="text-center b-b b-t b-lr"> @financialPositionViewModel.Operatingfixedassets_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL NON CURRENT ASSETS</td>
+                <td> </td>
+                <td class="text-center"> @financialPositionViewModel.Operatingfixedassets_2021</td>
+                <td class="text-center"> @financialPositionViewModel.Operatingfixedassets_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"> &nbsp;&nbsp; CURRENT ASSETS </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="text-left font-weight-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cash and bank balances</td>
+                <td> </td>
+                <td class="text-center b-t b-lr"> @financialPositionViewModel.BankBalance_2021</td>
+                <td class="text-center b-t b-lr"> @financialPositionViewModel.BankBalance_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left font-weight-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Receivables</td>
+                <td> </td>
+                <td class="text-center b-lr"> @financialPositionViewModel.Receivables_2021</td>
+                <td class="text-center b-lr"> @financialPositionViewModel.Receivables_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left font-weight-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Other current assets</td>
+                <td> </td>
+                <td class="text-center b-lr b-b"> @financialPositionViewModel.OtherCurrentAssets_2021</td>
+                <td class="text-center b-lr b-b"> @financialPositionViewModel.OtherCurrentAssets_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL CURRENT ASSETS</td>
+                <td> </td>
+                <td class="text-center"> @financialPositionViewModel.TotalCurrentAsset_2021 </td>
+                <td class="text-center"> @financialPositionViewModel.TotalCurrentAsset_2020 </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left pl-1">  TOTAL ASSETS </td>
+                <td></td>
+                <td class="b-t b-b b-lr text-center"> @financialPositionViewModel.TotalAsset_2021</td>
+                <td class="b-t b-b b-lr text-center"> @financialPositionViewModel.TotalAsset_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left underline"> EQUITY AND LIABILITIES </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left">  &nbsp;&nbsp; CAPITAL RESERVE </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left font-weight-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Authorised Share Capital</td>
+                <td> </td>
+                <td class="text-center b-b"> @financialPositionViewModel.Authorizedsharecapital_2021</td>
+                <td class="text-center b-b"> @financialPositionViewModel.Authorizedsharecapital_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left font-weight-normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Accumulated Profit</td>
+                <td> </td>
+                <td class="text-center b-b b-t b-lr"> @(financialPositionViewModel.AccumulatedProfit_2021)</td>
+                <td class="text-center b-b b-t b-lr"> @(financialPositionViewModel.AccumulatedProfit_2020)</td>
+            </tr>
+            <tr>
+                <td class="text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL CAPITAL RESERVE</td>
+                <td> </td>
+                <td class="text-center">@(financialPositionViewModel.TotalReserve_2021) </td>
+                <td class="text-center">@(financialPositionViewModel.TotalReserve_2020) </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"> &nbsp;&nbsp; CURRENT LIABILITIES </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left font-weight-normal"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Account payables </td>
+                <td></td>
+                <td class="text-center b-t b-lr"> @financialPositionViewModel.AccountPaybles_2021</td>
+                <td class="text-center b-t b-lr"> @financialPositionViewModel.AccountPaybles_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left font-weight-normal"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Other current liabilities </td>
+                <td></td>
+                <td class="text-center b-b b-lr"> @financialPositionViewModel.OtherCurrentLibilities_2021</td>
+                <td class="text-center b-b b-lr"> @financialPositionViewModel.OtherCurrentLibilities_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOTAL CURRENT LIABILITIES</td>
+                <td> </td>
+                <td class="text-center">@(financialPositionViewModel.TotalLiability_2021)</td>
+                <td class="text-center">@(financialPositionViewModel.TotalLiability_2020)</td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"> &nbsp;&nbsp; Contingencies & commitments </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left pl-1">  TOTAL EQUITY AND LIABILITIES </td>
+                <td></td>
+                <td class="b-t b-b b-lr text-center">@(financialPositionViewModel.Totalequity_2021)</td>
+                <td class="b-t b-b b-lr text-center">@(financialPositionViewModel.Totalequity_2020)</td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr class="signatrure-table">
+                <td style="display: none;"></td>
+                <td colspan="2" class="signatrure-section"><span>Chief Executive Officer</span></td>
+                <td colspan="2" class="signatrure-section"><span>Director</span></td>
+                <td style="display: none;"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <br />
+    <br />
+</div>
+
+<style>
+    button.dt-button, div.dt-button, a.dt-button {
+        font-weight: 900;
+        letter-spacing: 2px;
+        border-radius: 5px !important;
+        border-color: silver !important;
+        background-color: #f8f9fa !important;
+        border-color: #ddd !important;
+        color: #444 !important;
+        padding: .25rem .5rem !important;
+        font-size: .875rem !important;
+        line-height: 1.5 !important;
+        border-radius: .2rem !important;
+        position: relative;
+    }
+
+    div.dt-buttons {
+        float: right !important;
+    }
+
+    button.dt-button:before {
+        font-family: "Font Awesome 5 Free";
+        top: 0;
+        left: -5px;
+        padding-right: 10px;
+        content: "\f56e";
+    }
+</style>
+
+
+<script>
+    $(function () {
+        $('#Accli').addClass("menu-open");
+        $('#Statementsli').addClass("menu-open");
+        $('#Reportsli').removeClass("menu-open");
+        $('#AccRli').removeClass("menu-open");
+        $('#AccPli').removeClass("menu-open");
+        $('#Setupli').removeClass("menu-open");
+
+        // DataTable
+        var table = $('#pltable').DataTable({
+            //"order": [[0, "desc"]],
+            dom: 'Bfrtip',
+            ordering: false,
+            paging: false,
+            info: false,
+            searching: false,
+            buttons: [
+                'excel'
+            ]
+        });
+    });
+</script>

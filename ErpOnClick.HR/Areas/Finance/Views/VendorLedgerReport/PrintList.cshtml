@@ -1,0 +1,104 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models
+@{
+    Layout = "_LayoutReport";
+    List<AccountLedgerReportModel> listReportVendorLedger = Model.listReportVendorLedger;
+    Company CompanyDetail = Model.CompanyDetail;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        Vendor Ledger
+                    </h2>
+                    <br>
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="33%"><i class="fa fa-filter"></i>From Date </td>
+                                <td width="33%"><i class="fa fa-filter"></i>Vendor </td>
+                                <td width="33%"><i class="fa fa-filter"></i>To Date </td>
+
+                            </tr>
+
+                            <tr class="ItemColor text-center">
+                                <td width="33%" nowrap="">@(Model.FromDate != null ? Convert.ToDateTime(Model.FromDate).ToString("dd-MMM-yyyy") : "-")</td>
+                                <td width="33%" nowrap="">@(Model.Vendor != null ? Model.Vendor : "-")</td>
+                                <td width="33%" nowrap="">@(Model.ToDate != null ? Convert.ToDateTime(Model.ToDate).ToString("dd-MMM-yyyy"): "-")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            <tr class="Grid_HeaderStyle">
+                                <th align="center" width="800px"> Date</th>
+                                <th align="center"> Account</th>
+                                <th align="center"> Voucher</th>
+                                <th align="center"> Account Code</th>
+                                <th align="center"> Description</th>
+                                <th align="center"> Type</th>
+                                <th align="center"> Debit </th>
+                                <th align="center"> Credit </th>
+                                <th align="center"> Balance</th>
+
+                            </tr>
+                        </thead>
+                        @{
+                            <tbody>
+                                @foreach (var item in listReportVendorLedger)
+                                {
+                                    <tr class="ItemColor text-center">
+                                        <td align="center" width="800px"> @(item.CreatedDate != null ? Convert.ToDateTime(item.CreatedDate).ToString("dd-MMM-yyyy") : "-") </td>
+                                        <td align="left"> @(item.Account != null ? item.Account : "-") </td>
+                                        <td align="center">
+                                            @if (item.Voucher != 0)
+                                            {
+                                                <a href='@Url.Content("~/")Finance/Vouchers/Edit/@item.Voucher'>@item.Voucher</a>
+                                            }
+                                        </td>
+
+                                        <td align="left"> @(item.AccountCode != null ? item.AccountCode : "-") </td>
+                                        <td align="center"> @(item.Description != null ? item.Description : "-") </td>
+                                        <td align="center"> @(item.Type != null ? item.Type : "-") </td>
+                                        <td align="right"> @(item.Debit != 0 ? String.Format("{0:.00}",item.Debit) : "0") </td>
+                                        <td align="right"> @(item.Credit != 0 ? String.Format("{0:.00}",item.Credit) : "0") </td>
+                                        <td align="right"> @(item.Balance != 0 ? String.Format("{0:.00}",item.Balance) : "0") </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                            <tfoot>
+                                <tr class="Grid_HeaderStyle">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td align="center">Total</td>
+                                    <td align="center">@(String.Format("{0:.00}", listReportVendorLedger.Sum(x => x.Debit)))</td>
+                                    <td align="center">@(String.Format("{0:.00}", listReportVendorLedger.Sum(x => x.Credit)))</td>
+                                    <td align="center"></td>
+                                </tr>
+                            </tfoot>
+                        }
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,700 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment hostingEnv
+@using System.IO
+@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.DAL.Utilities
+@inject LocService SharedLocalizer
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env;
+
+@{
+
+    var filePath = NativePaths.GetFilePath(_env);
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Lookups> martialStatusList = Model.martialStatusList;
+    IList<Lookups> citiyList = Model.citiyList;
+    IList<Lookups> nationalityList = Model.nationalityList;
+    IList<Lookups> religionList = Model.religionList;
+    IList<Lookups> genderList = Model.genderList;
+    IList<Lookups> activeStatusList = Model.activeStatusList;
+    IList<Lookups> idTypesList = Model.idTypeList;
+    IList<Positions> positionList = Model.postions;
+    Emp empDetails = Model.empDetails;
+    bool isEdit = (empDetails != null);
+    var envName = hostingEnv.EnvironmentName;
+    string path = "";
+    if (envName == "Production")
+    {
+        path = @Url.Content(@"C:\inetpub\wwwroot\ErpOnClick\Files");
+
+    }
+    else if (envName == "Development")
+    {
+        path = @Url.Content(@"C:/Hamza Nayel/NayelSourceCodes/ErpOnClick/Files");
+        //path = @"C:\Hamza Nayel\NayelSourceCodes\ErpOnClick\Files";
+    }
+
+}
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="EmpId" name="EmpId" class="form-control" value="@(empDetails != null ? empDetails.EmpId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(empDetails != null ? empDetails.CompanyId : 0)">
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(empDetails != null ? empDetails.BranchId : 0)">
+
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header p-0 border-bottom-0">
+            <div class="card" style="background-color: #496b6a">
+            </div>
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item active">
+                    <a class="nav-link" style="background-color:#496b6a;color:white" id="tabMain-tab" data-toggle="pill" href="#tabMain" role="tab" aria-controls="tabMain" aria-selected="true"><i class="fa fa-info"></i> @SharedLocalizer.GetLocalizedHtmlString("General Info")</a>
+                </li>
+
+
+                @Html.Partial("_tabsPartial", empDetails)
+
+            </ul>
+        </div>
+        <div class="card-header">
+            <h2 class="card-title mt-1">
+                @SharedLocalizer.GetLocalizedHtmlString("General Information")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools pr-0">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                        <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                @*<a href="~/ESS/ESSDashboard" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>*@
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-lg-3 padding-left-0 pl-0 text-left" style="background-repeat:no-repeat;background-size: 200px 200px;background-image:url('/adminlte/dist/img/noimage.jpg');text-align: center" onclick="uploadimg()">
+                    @if (empDetails != null && empDetails.ProfilePic != null)
+                    {
+                        <img style="width:200px;height:200px" id="profilePic" class="disabled" src="@filePath@empDetails.ProfilePic" />
+                        <input type="text" hidden id="ProfilePic" name="ProfilePic" value="@(empDetails!=null?empDetails.ProfilePic: null)">
+                    }
+                    else
+                    {
+                        <img style="width: 200px; height: 200px" id="profilePic" class="" src="/Erp/adminlte/dist/img/noimage.jpg" />
+                    }
+
+                </div>
+                @*<input type="file" hidden id="ProfilePicFile" name="ProfilePicFile" class="">*@
+
+                <div class="col-lg-9">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("First Name")</label>
+                                <input type="text" readonly id="FirstNameEn" required name="FirstNameEn" class="form-control" value="@(empDetails!=null?empDetails.FirstNameEn: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Fathers Name") </label>
+                                <input type="text" readonly id="FatherNameEn" name="FatherNameEn" class="form-control" value="@(empDetails!=null?empDetails.FatherNameEn: null)">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Grand Name")  </label>
+                                <input type="text" readonly id="GrandNameEn" name="GrandNameEn" class="form-control" value="@(empDetails!=null?empDetails.GrandNameEn: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Family Name") </label>
+                                <input type="text" readonly id="FamilyNameEn" name="FamilyNameEn" class="form-control" value="@(empDetails!=null?empDetails.FamilyNameEn: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("First Name  (Arabic)") </label>
+                                <input type="text" readonly id="FirstNameAr" name="FirstNameAr" class="form-control" value="@(empDetails!=null?empDetails.FirstNameAr: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Father Name (Arabic)")</label>
+                                <input type="text" readonly id="FatherNameAr" name="FatherNameAr" class="form-control" value="@(empDetails!=null?empDetails.FatherNameAr: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Grand Name (Arabic)")</label>
+                                <input type="text" readonly id="GrandNameAr" name="GrandNameAr" class="form-control" value="@(empDetails!=null?empDetails.GrandNameAr: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Family Name (Arabic)")</label>
+                                <input type="text" readonly id="FamilyNameAr" name="FamilyNameAr" class="form-control" value="@(empDetails!=null?empDetails.FamilyNameAr: null)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Contact and Birth Info")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Email")</label>
+                        <input type="email" id="Email" name="Email" class="form-control" value="@(empDetails!=null?empDetails.Email: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Mobile No")</label>
+                        <div class="row">
+                            <input type="text" style="margin-right:10px" placeholder="Country Code" id="MobileNumberCode" name="MobileNumberCode" class="form-control col-md-3" value="+966">
+                            <input type="text" id="MobileNo" name="MobileNo" class="form-control col-md-8" value="@(empDetails!=null?empDetails.MobileNo: null)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("ID Type")</label>
+                        <select id="IdtypeId" name="IdtypeId" class="form-control" disabled>
+
+                            @foreach (var item in idTypesList)
+                            {
+                                <option value="@item.Code" @(empDetails != null && empDetails.IdtypeId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("ID number")</label>
+                        <input type="text" readonly id="EmpCnic" name="EmpCnic" class="form-control" value="@(empDetails!=null?empDetails.EmpCnic: "")">
+                    </div>
+                </div>
+                <div class="col-sm-3" style="display:none;">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Emp Ntn")</label>
+                        <input type="text" readonly id="EmpNtn" name="EmpNtn" class="form-control" value="@(empDetails!=null?empDetails.EmpNtn: "")">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Emp Type")</label>
+                        <input type="text" readonly id="EmpType" name="EmpType" class="form-control" value="@(empDetails!=null?empDetails.EmpType: "")">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Designation")</label>
+                        <select id="DesignationPositionId" name="DesignationPositionId" class="form-control" disabled>
+                            <option></option>
+                            @foreach (var item in positionList)
+                            {
+                                <option value="@item.PositionId" @(empDetails != null && empDetails.DesignationPositionId == item.PositionId ? "selected" : "")>
+                                    @item.PositionNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("DOB")</label>
+                        <input type="text" disabled id="Dob" name="Dob" class="form-control DatePicker" onchange="ToHijri(this)" value="@(empDetails != null && empDetails.Dob !=null ? Convert.ToDateTime(empDetails.Dob).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Dob (Hijri)")</label>
+                        <input type="text" disabled id="DobH" name="DobH" class="form-control DatePickerHijri" value="@(empDetails != null && empDetails.DobH !=null ? Convert.ToDateTime(empDetails.DobH).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Age")</label>
+                        <input type="number" readonly id="Age" name="Age" class="form-control" readonly value="@(empDetails!=null?empDetails.Age: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Nationality")</label>
+                        <select id="NationalityId" name="NationalityId" class="form-control" disabled>
+
+                            @foreach (var item in nationalityList)
+                            {
+                                <option value="@item.Code" @(empDetails != null && empDetails.NationalityId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Birth Place")</label>
+                        <input type="text" readonly id="BirthPlaceId" name="BirthPlaceId" class="form-control" value="@(empDetails!=null?empDetails.BirthPlaceId: "")">
+
+                        @*<select id="BirthPlaceId" name="BirthPlaceId" class="form-control">
+
+                                @foreach (var item in citiyList)
+                                {
+                                    <option value="@item.Code" @(empDetails != null && empDetails.BirthPlaceId == item.Code ? "selected" : "")>
+                                        @item.LookupNameEn
+                                    </option>
+                                }
+                            </select>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Personal Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <div class="">
+                            <label class="col-md-12">@SharedLocalizer.GetLocalizedHtmlString("Staying With Family")</label>
+                            <select id="StayingWithFamily" name="StayingWithFamily" class="form-control" required disabled>
+
+                                <option value="True" @(empDetails != null && empDetails.StayingWithFamily != null ? (Convert.ToBoolean(empDetails.StayingWithFamily) ? "selected" : "") : "")>Yes</option>
+                                <option value="False" @(empDetails != null && empDetails.StayingWithFamily != null ? (Convert.ToBoolean(empDetails.StayingWithFamily) ? "" : "selected") : "")>No</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Marital Status")</label>
+                        <select id="MaritalStatusId" name="MaritalStatusId" class="form-control" disabled>
+
+                            @foreach (var item in martialStatusList)
+                            {
+                                <option value="@item.Code" @(empDetails != null && empDetails.MaritalStatusId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Religion")</label>
+                        <select id="ReligionId" name="ReligionId" class="form-control" disabled>
+
+                            @foreach (var item in religionList)
+                            {
+                                <option value="@item.Code" @(empDetails != null && empDetails.ReligionId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn - @item.LookupNameAr
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Gender")</label>
+                        <select id="GenderId" name="GenderId" class="form-control" disabled>
+
+                            @foreach (var item in genderList)
+                            {
+                                <option value="@item.Code" @(empDetails != null && empDetails.GenderId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Active Status")</label>
+                        <select id="ActiveStatus" name="ActiveStatus" class="form-control" disabled>
+
+                            @foreach (var item in activeStatusList)
+                            {
+                                <option value="@item.Code" @(empDetails != null && empDetails.ActiveStatus == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-12">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Passport Details")
+            </h2>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Passport No")</label>
+                        <input type="text" disabled id="PassportNo" name="PassportNo" class="form-control" value="@(empDetails!=null?empDetails.PassportNo: null)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Issued Date")</label>
+                        <input type="text" disabled id="PassportIssuedDate" name="PassportIssuedDate" class="form-control DatePicker" value="@(empDetails != null && empDetails.PassportIssuedDate !=null ? Convert.ToDateTime(empDetails.PassportIssuedDate).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Issued Date (Hijri)")</label>
+                        <input type="text" disabled id="PassportIssuedDateH" name="PassportIssuedDateH" class="form-control DatePickerHijri" value="@(empDetails != null && empDetails.PassportIssuedDateH !=null ? Convert.ToDateTime(empDetails.PassportIssuedDateH).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Expiry")</label>
+                        <input type="text" disabled id="PassportExpiryDate" name="PassportExpiryDate" class="form-control DatePicker" value="@(empDetails != null && empDetails.PassportExpiryDate !=null ? Convert.ToDateTime(empDetails.PassportExpiryDate).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Expiry Date (Hijri)")</label>
+                        <input type="text" disabled id="PassportExpiryDateH" name="PassportExpiryDateH" class="form-control DatePickerHijri" value="@(empDetails != null && empDetails.PassportExpiryDateH !=null ? Convert.ToDateTime(empDetails.PassportExpiryDateH).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-3 dvIqama">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Visa Code")</label>
+                        <input type="text" disabled id="VisaCode" name="VisaCode" class="form-control" value="@(empDetails!=null?empDetails.VisaCode: null)">
+                    </div>
+                </div>
+                <div class="col-sm-3 dvIqama">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Visa Job")</label>
+                        <input type="text" disabled id="VisaJob" name="VisaJob" class="form-control" value="@(empDetails!=null?empDetails.VisaJob: null)">
+                    </div>
+                </div>
+                <div class="col-sm-3 dvIqama">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Visa Date")</label>
+                        <input type="text" disabled id="VisaDate" name="VisaDate" class="form-control DatePicker" value="@(empDetails != null && empDetails.VisaDate !=null ? Convert.ToDateTime(empDetails.VisaDate).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-3 dvIqama">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Pass Code")</label>
+                        <input type="text" disabled id="PassCode" name="PassCode" class="form-control" value="@(empDetails!=null?empDetails.PassCode: null)">
+                    </div>
+                </div>
+                <div class="col-sm-3 dvIqama">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Pass Port")</label>
+                        <input type="text" disabled id="PassPort" name="PassPort" class="form-control" value="@(empDetails!=null?empDetails.PassPort: null)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group dvIqama">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Pass Date")</label>
+                        <input type="text" disabled id="PassDate" name="PassDate" class="form-control DatePicker" value="@(empDetails != null && empDetails.PassDate !=null ? Convert.ToDateTime(empDetails.PassDate).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group dvIqama">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Employee Office Labor Code")</label>
+                        <input type="text" disabled id="EmpOfficeLaborCode" name="EmpOfficeLaborCode" class="form-control" value="@(empDetails!=null?empDetails.EmpOfficeLaborCode: null)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-default card-outline col-lg-12" style="display:none">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(empDetails != null && empDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option></option>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(empDetails != null && empDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+
+            var id = $('#IdtypeId').val();
+            showHideIqamaFields(id);
+
+            BindGrid_Eduction();
+            $('.DatePicker').css('cursor', 'default');
+
+            $('.DatePicker').calendarsPicker({
+                yearRange: '1950:2003',
+                dateFormat: 'dd-M-yyyy',
+            });
+            $('.DatePickerHijri').calendarsPicker($.extend({
+                calendar: $.calendars.instance('Islamic', 'ar'),
+                yearRange: '1369:1424',
+                dateFormat: 'dd-m-yyyy',
+            }, $.calendarsPicker.regionalOptions['ar']));
+
+
+            $('.DatePicker,.DatePickerHijri').attr('autocomplete', 'off');
+
+            $('.DatePicker').on("keypress paste", function (e) {
+                e.preventDefault();
+            })
+
+            $('#CompanyId').change(function () {
+
+                var id = $('#CompanyId').val();
+
+                $.ajax({
+                    url: applicationName + "Ajax/BranchCascading",
+                    async: false,
+                    type: "POST",
+                    data: { id: id },
+                    success: function (data) {
+
+                        var item = '';
+
+                        $.each(data.result, function (i, product) {
+
+                            item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                        });
+
+                        $("#BranchId").html(item);
+
+                    }
+                });
+
+            });
+
+            $('#IdtypeId').change(function () {
+                var id = $('#IdtypeId').val();
+                showHideIqamaFields(id);
+            });
+        });
+
+        function showHideIqamaFields(id) {
+            var id = $('#IdtypeId').val();
+
+            if (id !== "056002") {
+                $("#VisaCode").val('');
+                $("#VisaJob").val('');
+                $("#VisaDate").val('');
+                $("#PassCode").val('');
+                $("#PassPort").val('');
+                $("#PassDate").val('');
+                $("#EmpOfficeLaborCode").val('');
+                $(".dvIqama").hide();
+            } else {
+                $(".dvIqama").show();
+            }
+        };
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+                    $.ajax({
+                        url: applicationName + "ESS/Profile/" + actionType,
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                var id = data.result.scalerVal;
+
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + `ESS/Profile/Index`;
+                                }, 100);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $("#removePicture").click(function () {
+
+            $("#profilePic").remove();
+            $("#DP").html('<input type="file"  id="ProfilePicFile"  name="ProfilePicFile">');
+
+
+        });
+
+        function BindGrid_Eduction() {
+
+            var test = $('#frmSearch').serialize();
+
+            $('#divListEduction').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'ESS/EmpEducation/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divListEduction').html(data);
+                }
+            })
+        };
+
+        function uploadimg() {
+
+            $('#ProfilePicFile').click();
+
+        }
+        $('#Email').focusout(function () {
+
+            var email = $('#Email').val();
+            var expr = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            if (!expr.test(email)) {
+                showMsg('Invalid Email !', 'Please enter a valid Email', 'error');
+
+            }
+
+        });
+        $('#Dob').change(function () {
+            var Dob = $('#Dob').val();
+            var d = new Date(Dob);
+            var currentDate = new Date();
+            var Difference_In_Time = currentDate.getTime() - d.getTime();
+            var Difference_In_Days = parseInt((Difference_In_Time / (1000 * 3600 * 24)) / 365);
+            $('#Age').val(Difference_In_Days);
+        });
+
+        function ToHijri(el) {
+
+            var date = el.value;
+            var id = el.attributes.id.value;
+
+            $.ajax({
+                url: applicationName + "ESS/Emp/GeorgianToHijri",
+                async: false,
+                type: "POST",
+                data: { date: date },
+                success: function (data) {
+                    var val = data.result;
+                    $('#DobH').val(val);
+
+                }
+            });
+        }
+        $('#DobH').change(function () {
+
+            var date = $('#DobH').val();
+            var newdate = "";
+            $.ajax({
+                url: applicationName + "ESS/Emp/HijriToGeogian",
+                async: false,
+                type: "POST",
+                data: { date: date },
+                success: function (data) {
+                    var val = data.result;
+                    $('#Dob').val(val);
+                    newdate = val;
+                }
+            });
+
+            var currentDate = new Date();
+            var Difference_In_Time = currentDate.getTime() - (new Date(newdate)).getTime();
+            var Difference_In_Days = parseInt((Difference_In_Time / (1000 * 3600 * 24)) / 365);
+            $('#Age').val(Difference_In_Days);
+
+        });
+    </script>
+
+}

@@ -1,0 +1,359 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+
+@{
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Emp> employeesList = Model.employeesList;
+
+    List<Lookups> RequestStatus = Model.RequestStatus;
+    List<Lookups> RequestType = Model.RequestType;
+
+
+    TimeInOutCorrection timeCorrectionRequestDetails = Model.TimeCorrectionRequestDetails;
+    bool isEdit = (timeCorrectionRequestDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="RecId" name="RecId" class="form-control" value="@(timeCorrectionRequestDetails != null ? timeCorrectionRequestDetails.RecId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(timeCorrectionRequestDetails != null ? timeCorrectionRequestDetails.CompanyId : 0)">
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(timeCorrectionRequestDetails != null ? timeCorrectionRequestDetails.BranchId : 0)">
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Time In-Out Correction Request Detail")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary" @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestStatus != null ? "hidden" : "")>
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save Time Correction Request")
+                </button>
+                <a id="postBtn" @(!isEdit ? "hidden" : "" ) class="btn  btn-sm btn-success" @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestStatus != null ? "hidden" : "")>
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Submit for Approval")
+                </a>
+                <a href="~/ESS/TimeCorrectionRequest" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Employee")</label>
+                        <select id="EmpId" name="EmpId" class="form-control" required>
+                            <option selected></option>
+                            @foreach (var item in employeesList)
+                            {
+                                <option value="@item.EmpId" selected>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestStatus != null ? "" : "hidden")>
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Request Status")</label>
+                        <select id="RequestStatus" name="RequestStatus" class="form-control" required disabled>
+                            <option selected></option>
+                            @foreach (var item in RequestStatus)
+                            {
+                                <option value="@item.Code" @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestStatus == item.Code ? "selected" : "")>
+                                    @(item.LookupNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Requested Date") </label>
+                        <input type="text" id="RequestedDate" @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestStatus != null ? "disabled" : "") name="RequestedDate" class="form-control DatePicker1" value="@(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestedDate !=null ? Convert.ToDateTime(timeCorrectionRequestDetails.RequestedDate).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-6" hidden>
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Approval Date") </label>
+                        <input type="text" disabled id="RequestDate" name="RequestDate" class="form-control DatePicker" value="@(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestDate !=null ? Convert.ToDateTime(timeCorrectionRequestDetails.RequestDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Old Time In")</label>
+                        <input readonly @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestStatus != null ? "disabled" : "") id="OldTimeFrom" name="OldTimeFrom" value="@(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.OldTimeFrom !=null ?timeCorrectionRequestDetails.OldTimeFrom : null)" type="time" step="any" class="form-control input-sm text-right" min="0">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Old Time Out")</label>
+                        <input readonly @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestStatus != null ? "disabled" : "") id="OldTimeTo" name="OldTimeTo" value="@(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.OldTimeTo !=null ?timeCorrectionRequestDetails.OldTimeTo : null)" type="time" step="any" class="form-control input-sm text-right" min="0">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("New Time In")</label>
+                        <input @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestStatus != null ? "disabled" : "") id="TimeFrom" value="@(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.TimeFrom !=null ?timeCorrectionRequestDetails.TimeFrom : null)" name="TimeFrom" type="time" step="any" class="form-control input-sm text-right" min="0">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("New Time Out")</label>
+                        <input @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestStatus != null ? "disabled" : "") id="TimeTo" value="@(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.TimeTo !=null ?timeCorrectionRequestDetails.TimeTo : null)" name="TimeTo" type="time" step="any" class="form-control input-sm text-right" min="0">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Reason")
+            </h2>
+        </div>
+        <div class="card-body p-2">
+            <textarea rows="3" @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.RequestStatus != null ? "disabled" : "") id="Reason" name="Reason" class="form-control " style="border:none" placeholder="Enter Reason here...">@(timeCorrectionRequestDetails != null ? timeCorrectionRequestDetails.Reason : "")</textarea>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8" style="display:none">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option></option>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(timeCorrectionRequestDetails != null && timeCorrectionRequestDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        var applicationName = getApplicationName();
+        var flag = false;
+        $(function () {
+
+            $('.DatePicker1').css('cursor', 'default');
+
+            $('.DatePicker1').calendarsPicker({
+                yearRange: 'c-0.1:c',
+                dateFormat: 'dd-M-yyyy',
+            });
+          
+
+
+            $('.DatePicker1').attr('autocomplete', 'off');
+
+            $('.DatePicker1').on("keypress paste", function (e) {
+                e.preventDefault();
+            })
+
+
+            $('#CompanyId').change(function () {
+
+                var id = $('#CompanyId').val();
+
+                $.ajax({
+                    url: applicationName + "Ajax/BranchCascading",
+                    async: false,
+                    type: "POST",
+                    data: { id: id },
+                    success: function (data) {
+
+                        var item = '';
+
+                        $.each(data.result, function (i, product) {
+
+                            item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                        });
+
+                        $("#BranchId").html(item);
+
+                    }
+                });
+
+            });
+
+          
+
+        });
+
+
+
+        $("#RequestedDate").change(function () {
+            var requestedDate = $('#RequestedDate').val();
+            debugger;
+            if (flag) {
+                $.ajax({
+                    url: applicationName + "ESS/TimeCorrectionRequest/GetCurrentAttendance",
+                    async: false,
+                    type: "POST",
+                    data: { requestedDate },
+                    success: function (data) {
+
+                        if (data != null && data.timeIn != "" && data.timeOut != "") {
+                            $("#OldTimeFrom").val(data.timeIn);
+                            $("#OldTimeTo").val(data.timeOut);
+                            $("#TimeFrom").val(data.timeIn);
+                            $("#TimeTo").val(data.timeOut);
+                        }
+                        else {
+                            $("#OldTimeFrom").val(null);
+                            $("#OldTimeTo").val(null);
+                            $("#TimeFrom").val(null);
+                            $("#TimeTo").val(null);
+                        }
+
+                    }
+                });
+            }
+            flag = true;
+        });
+
+        //$('#RequestedDate').change(function (statuidscc) {
+
+
+        //    debugger;
+        //    alert(statuidscc);
+
+
+        //});
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+
+                    $.ajax({
+                        url: applicationName + "ESS/TimeCorrectionRequest/" + actionType,
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'ESS/TimeCorrectionRequest';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#postBtn').click(function () {
+
+
+            confirmAction('Confirm ?', 'Are you sure you want to Post  ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+                    var id = $('#RecId').val();
+
+                    $.ajax({
+                        url: applicationName + "ESS/TimeCorrectionRequest/Post",
+                        async: false,
+                        type: "POST",
+                        data: { id: id },
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been Posted !', 'success');
+                                setTimeout(function () {
+                                    debugger;
+                                    var id = data.result.scalerVal;
+                                    window.location = applicationName + 'ESS/TimeCorrectionRequest/Edit?id=' + id;
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

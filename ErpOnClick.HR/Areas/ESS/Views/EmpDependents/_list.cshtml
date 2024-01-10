@@ -1,0 +1,113 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<EmpDependents> EmpDependentsList = Model.EmpDependentsList;
+    var empId = Model.empId;
+}
+
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Id") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Name") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("DOB") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("No") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Date Issued") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("End Date") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Attachment") </th>
+
+
+                <th width="30px"></th>
+                
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+
+                <th> Id </th>
+                <th> Name </th>
+                <th> Dob </th>
+                <th> No </th>
+                <th> Date Issued </th>
+                <th> End Date </th>
+                <th> Attachment </th>
+
+                <th></th>
+                
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in EmpDependentsList)
+            {
+
+                <tr class="text-center">
+                    <td> @item.DependentId </td>
+                    <td> @item.DependentNameEn </td>
+                    <td> @item.Dob </td>
+                    <td> @item.IdNo </td>
+                    <td> @item.IdIssuedDate </td>
+                    <td> @item.IdEndDate </td>
+                    <td>
+
+                        @if (!String.IsNullOrWhiteSpace(item.IdAttachment))
+                        {
+                            <a href="~/Files/@item.IdAttachment" download="">DownloadDPF</a>
+                        }
+
+                    </td>
+
+
+
+                    <td class="text-center padding-5">
+                        <a href="~/ESS/EmpDependents/view/emp/@item.EmpId/@item.DependentId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-search"></i></a>
+                    </td>
+                   
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName + "ESS/EmpDependents/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName + 'ESS/empdependents/emp/@empId';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

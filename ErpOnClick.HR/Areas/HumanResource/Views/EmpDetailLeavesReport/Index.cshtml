@@ -1,0 +1,141 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<Emp> empsList = Model.empsList;
+    int empId = Model.empId;
+    DateTime fromDate = Model.fromDate;
+    DateTime toDate = Model.toDate;
+}
+
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Leave Summary Report")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a id="printList" href="" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Print")</a>
+            <a href="~/HumanResource/EmpLeavesReport" type="button" class="btn  btn-sm btn-default">
+                <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+            </a>
+
+        </div>
+        <!-- /. tools -->
+    </div>
+    <div class="card-footer pb-0 pt-2 text-sm">
+        <form id="frmSearch">
+            <div class="row">
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("From Date") </label>
+                        <input type="text" id="FromDate" name="FromDate" class="form-control DatePicker">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("To Date") </label>
+                        <input type="text" id="ToDate" name="ToDate" class="form-control DatePicker">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Employee")</label>
+                        <select name="EmpId" id="EmpId" class="form-control" required>
+
+                            <option></option>
+                            @foreach (var item in empsList)
+                            {
+                                <option value="@item.EmpId" @(item.EmpId == empId ? "selected" : "")> @(item.FirstNameEn + " " + item.FatherNameEn + " " + item.GrandNameEn + " " + item.FamilyNameEn)</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <button style="margin-top:29px" type="submit" class="btn btn-primary btn-block"> @SharedLocalizer.GetLocalizedHtmlString("Search")</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+
+
+            if (@empId != 0) {
+
+                var newfromdate ="@fromDate";
+                var fdate = new Date("@fromDate");
+                var tdate = new Date("@toDate");
+                var FROMDATE = fdate.getFullYear() + '-' + String(fdate.getMonth() + 1).padStart(2, '0') + '-' + String(fdate.getDate()).padStart(2, '0');
+                var TODATE = tdate.getFullYear() + '-' + String(tdate.getMonth() + 1).padStart(2, '0') + '-' + String(tdate.getDate()).padStart(2, '0');
+
+                $('#FromDate').val((FROMDATE));
+                $('#ToDate').val(TODATE);
+                $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+                $.ajax({
+                    url: applicationName + 'HumanResource/EmpDetailLeavesReport/_list',
+                    data: $('#frmSearch').serialize(),
+                    success: function (data) {
+                        $('#printList').show();
+
+                        $('#divList').html(data);
+                    }
+                });
+            }
+            else {
+            $('#printList').hide();
+
+            var start = '2020' + '-' + '01' + '-' + '01';
+            today = '2020' + '-' + '12' + '-' + '01';
+            $('#FromDate').val(start);
+            $('#ToDate').val(today);
+
+
+            BindGrid();
+            $('#frmSearch').submit(function (e) {
+
+                e.preventDefault();
+                BindGrid();
+            })
+            }
+        });
+
+        function BindGrid() {
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'HumanResource/EmpDetailLeavesReport/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#printList').show();
+
+                    $('#divList').html(data);
+                }
+            })
+        }
+
+        $('#printList').click(function (e) {
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            var EmpId = $('#EmpId').val();
+            window.open(applicationName + "HumanResource/EmpDetailLeavesReport/PrintList?FromDate=" + FromDate + "&ToDate=" + ToDate + "&EmpId=" + EmpId, "_blank");
+        });
+    </script>
+}
+

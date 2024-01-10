@@ -1,0 +1,135 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models
+@{
+    Layout = "_LayoutReport";
+
+    bool empSalaryCheck = Model.empSalaryCheck;
+    List<ReportModel> empListReport = Model.empListReport;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        Employees @(empSalaryCheck ? "Salary":"List")
+                    </h2>
+                    <br>
+
+
+                    <br>
+                    <br />
+                    @if (empSalaryCheck)
+                    {
+                        <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                            <thead>
+
+                                <tr class="Grid_HeaderStyle">
+                                    <th align="left">  Name</th>
+                                    <th> Basic Salary </th>
+                                    <th> Housing </th>
+                                    <th> Transport  </th>
+                                    <th> Food  </th>
+                                    <th> Other  </th>
+                                    <th>  Leave Pay </th>
+                                    <th>  Indemnity </th>
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in empListReport)
+                                {
+                                    <tr class="ItemColor text-center">
+
+                                        <td align="left">@item.EmpName </td>
+                                        <td align="right">
+                                            @(String.Format("{0:.00}", item.BasicSalray))
+                                        </td>
+                                        <td align="right">
+                                            @(String.Format("{0:.00}", item.Housing))
+                                        </td>
+                                        <td align="right"> @(String.Format("{0:.00}", @item.Transport)) </td>
+                                        <td align="right"> @(String.Format("{0:.00}", @item.Food))</td>
+                                        <td align="right"> @(String.Format("{0:.00}", @item.Other)) </td>
+                                        <td align="right"> @(String.Format("{0:.00}", @item.LeavePay)) </td>
+                                        <td align="right"> @(String.Format("{0:.00}", @item.Indemnity)) </td>
+
+
+                                    </tr>
+
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr class="Grid_HeaderStyle">
+                                    <th align="left">Total</th>
+                                    <th align="right">@(String.Format("{0:.00}", empListReport.Sum(x => x.BasicSalray)))</th>
+                                    <th align="right">@(String.Format("{0:.00}", empListReport.Sum(x => x.Housing)))</th>
+                                    <th align="right">@(String.Format("{0:.00}", empListReport.Sum(x => x.Transport)))</th>
+                                    <th align="right">@(String.Format("{0:.00}", empListReport.Sum(x => x.Food)))</th>
+                                    <th align="right">@(String.Format("{0:.00}", @empListReport.Sum(x => x.Other)))</th>
+                                    <th align="right">@(String.Format("{0:.00}", @empListReport.Sum(x => x.LeavePay)))</th>
+                                    <th align="right">@(String.Format("{0:.00}", empListReport.Sum(x => x.Indemnity)))</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    }
+                    else
+                    {
+                        <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                            <thead>
+
+                                <tr class="Grid_HeaderStyle">
+                                    <th align="left">  Name</th>
+                                    @*<th> Postion(Job Title) </th>*@
+                                    <th>Divison</th>
+                                    <th> Department </th>
+                                    <th> Section </th>
+                                    <th> Sub Section </th>
+                                    <th> Unit </th>
+                                    <th> Team </th>
+                                    <th> Company </th>
+                                    <th> Branch </th>
+                                    <th> Salaray </th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in empListReport)
+                                {
+                                    <tr class="ItemColor text-center">
+
+                                        <td align="left">@item.EmpName </td>
+
+                                        @*<td>@item.EmpPostion </td>*@
+                                        <td>@item.EmpDivison </td>
+                                        <td>@item.EmpDepartment </td>
+                                        <td>@item.EmpSection </td>
+                                        <td>@item.EmpSubSection </td>
+                                        <td>@item.EmpUnit </td>
+                                        <td>@item.EmpTeam </td>
+                                        <td>@item.EmpCompany </td>
+                                        <td>@item.EmpBranch </td>
+                                        <td align="right">@(String.Format("{0:.00}",(item.BasicSalray + item.Housing + item.Transport + item.Food + item.Other + item.LeavePay + item.Indemnity)))</td>
+                                    </tr>
+
+                                }
+                            </tbody>
+
+                        </table>
+                    }
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+

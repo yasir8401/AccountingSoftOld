@@ -1,0 +1,137 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Lookups CodeDetail = Model.CodeDetail;
+    List<LookupTypes> LookupTypeList = Model.LookupTypeList;
+    bool isEdit = (CodeDetail != null);
+}
+
+
+
+    <form id="frmEdit" role="form">
+        <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+
+        <div class="card card-default card-outline col-lg-8">
+
+            <div class="card-header">
+                <h2 class="card-title">
+                    Lookup Types
+                </h2>
+                <!-- tools box -->
+                <div class="card-tools">
+                    <button type="submit" class="btn  btn-sm btn-primary">
+                        <i class="fas fa-save fa-fw"></i> Save
+                    </button>
+                    <a href="~/admin/Lookups" type="button" class="btn  btn-sm btn-default">
+                        <i class="fas fa-arrow-left fa-fw"></i> Return
+                    </a>
+                </div>
+                <!-- /. tools -->
+            </div>
+            <div class="card-body">
+
+                <div class="row">
+
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Code Type ID</label>
+                            <select id="LookupTypeId" name="LookupTypeId" class="form-control" required>
+                                @if (!isEdit)
+                                {
+                                    <option></option>
+                                }
+                                @foreach (var item in LookupTypeList)
+                                {
+                            <option value="@item.LookupTypeId" @(CodeDetail != null && CodeDetail.LookupTypeId == item.LookupTypeId ? "selected" :  (isEdit ? "hidden" : "") )>
+                                @item.LookupTypeId - @item.LookupTypeNameEn
+                            </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Code ID</label>
+                            <input type="text" id="LookupId" name="LookupId" class="form-control" value="@(CodeDetail!=null?CodeDetail.LookupId: null)" @(isEdit ? "readonly" : "") required min="3" maxlength="3" >
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Code Type Name</label>
+                            <input type="text" id="LookupNameEn" name="LookupNameEn" class="form-control" value="@(CodeDetail!=null?CodeDetail.LookupNameEn: null)" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Code Type Name in Arabic</label>
+                            <input type="text" id="LookupNameAr" name="LookupNameAr" class="form-control" dir="rtl" value="@(CodeDetail!=null?CodeDetail.LookupNameAr: null)">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Active Status</label>
+                            <select id="ActiveStatus" name="ActiveStatus" class="form-control" required>
+                                @*<option></option>*@
+                                <option value="True" @(CodeDetail != null && CodeDetail.ActiveStatus == true ? "selected" : "")>Active</option>
+                                <option value="False" @(CodeDetail != null && CodeDetail.ActiveStatus == false ? "selected" : "")>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+            $('#LookupId').mask('999');
+
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() +"admin/Lookups/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() +'admin/Lookups';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

@@ -1,0 +1,241 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Modules> moduleList = Model.moduleList;
+    IList<Navigations> navigationList = Model.navigationList;
+
+    Privileges PrivilegeDetails = Model.PrivilegesDetails;
+    bool isEdit = (PrivilegeDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="PrivilegeId" name="PrivilegeId" class="form-control" value="@(PrivilegeDetails != null ? PrivilegeDetails.PrivilegeId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(PrivilegeDetails != null ? PrivilegeDetails.CompanyId : 0)" >
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(PrivilegeDetails != null ? PrivilegeDetails.BranchId : 0)" >
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details") 
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/Security/Privileges" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Return") 
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
+                        <input type="text" id="PrivilegeNameEn" name="PrivilegeNameEn" class="form-control" value="@(PrivilegeDetails!=null?PrivilegeDetails.PrivilegeNameEn: null)" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Description")</label>
+                        <textarea id="PrivilegeDescriptionEn" required rows="3" name="PrivilegeDescriptionEn" class="form-control">@(PrivilegeDetails != null? PrivilegeDetails.PrivilegeDescriptionEn : "")</textarea>
+                    </div>
+
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Name Arabic")</label>
+                        <input type="text" id="PrivilegeNameAr" name="PrivilegeNameAr" class="form-control" value="@(PrivilegeDetails!=null?PrivilegeDetails.PrivilegeNameAr: null)">
+                    </div>
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Description Arabic")</label>
+                        <textarea id="PrivilegeDescriptionAr" rows="3" name="PrivilegeDescriptionAr" class="form-control">@(PrivilegeDetails != null? PrivilegeDetails.PrivilegeDescriptionAr : "")</textarea>
+                    </div>
+
+                </div>
+
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Code")</label>
+                        <input type="text" id="PrivilegeCode" name="PrivilegeCode" class="form-control" value="@(PrivilegeDetails!=null?PrivilegeDetails.PrivilegeCode: null)">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("More Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Navigation")</label>
+                        <select id="NavigationId" name="NavigationId" class="form-control">
+
+                            @foreach (var item in navigationList)
+                            {
+                                <option value="@item.NavigationId" @(PrivilegeDetails != null && PrivilegeDetails.NavigationId == item.NavigationId ? "selected" : "")>
+                                    @item.NavigationNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Module")</label>
+                        <select id="ModuleId" name="ModuleId" class="form-control">
+
+                            @foreach (var item in moduleList)
+                            {
+                                <option value="@item.ModuleId" @(PrivilegeDetails != null && PrivilegeDetails.ModuleId == item.ModuleId ? "selected" : "")>
+                                    @item.ModuleNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6" style="display:none">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(PrivilegeDetails != null && PrivilegeDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6" style="display:none">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(PrivilegeDetails != null && PrivilegeDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Is-Active")</label>
+                        <select id="IsActive" name="IsActive" class="form-control">
+                            @*<option></option>*@
+                            <option value="True" @(PrivilegeDetails != null && PrivilegeDetails.IsActive == true ? "selected" : "")>Active</option>
+                            <option value="False" @(PrivilegeDetails != null && PrivilegeDetails.IsActive == false ? "selected" : "")>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() + "Security/Privileges/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'Security/Privileges';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#CompanyId').change(function () {
+         
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName() + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+         
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+         
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+    </script>
+
+}

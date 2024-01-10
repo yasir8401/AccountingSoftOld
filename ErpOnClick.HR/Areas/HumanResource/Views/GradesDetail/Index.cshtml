@@ -1,0 +1,77 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+    var gradeID = Model.gradeID;
+    Grades1 GradesDetails = Model.gradeDetails;
+
+}
+
+@section TabName{
+    Vacant jobs Setup
+}
+
+
+<form id="frmList">
+    <input type="hidden" id="gradeID" name="gradeID" class="form-control" value="@gradeID" />
+
+    <div class="card card-default card-outline">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="window.location = getApplicationName() + 'HumanResource/Grades/edit/@gradeID'" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("General Info")</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tabGradeDetails-tab" data-toggle="pill" onclick="window.location = getApplicationName() + 'HumanResource/GradesDetail/grade/@gradeID'" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Grade Details")</a>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Grade Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <a href="~/HumanResource/GradesDetail/edit/Grade/@gradeID" type="button" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-plus"></i>@SharedLocalizer.GetLocalizedHtmlString("Add New") 
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+
+
+
+        <div class="card-body">
+            <div id="divList"></div>
+
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#tabGradeDetails-tab").addClass("nav-link active");
+            BindGrid();
+        });
+
+        var applicationName = getApplicationName();
+
+        function BindGrid() {
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'HumanResource/GradesDetail/_list',
+                data: $('#frmList').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+    </script>
+}

@@ -1,0 +1,117 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.ErpMain.Areas.ESS.Models;
+@inject LocService SharedLocalizer
+
+@{
+
+    DateTime? PaySlipDate = Model.PaySlipDate;
+    //var PaySlipDetails = Model.PaySlipDetails;
+
+}
+
+@section TabName{
+    Vacant jobs Setup
+}
+<style>
+    .ui-datepicker-calendar {
+        display: none;
+    }
+
+    .text {
+        display: inline-block;
+        padding: 0.5em 1em;
+        min-width: 20em;
+        line-height: 1.2em;
+        background: #84ceeb;
+        position: relative;
+    }
+</style>
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-3">
+                <h2 class="card-title">
+                    @SharedLocalizer.GetLocalizedHtmlString("Emp Pay Slip")
+                </h2>
+            </div>
+
+            <div class="col-md-3">
+                @*<input type="text" placeholder="Attendance Date" value="@(date!=null ?Convert.ToDateTime(date).ToString("MMM-yyyy") : "")" name="AttendanceDate" id="AttendanceDate" class="form-control" />*@
+                <input type="month" class="form-control" value="@(PaySlipDate!=null ? PaySlipDate.Value.Year+"-"+PaySlipDate.Value.ToString("MM") : "")" id="PaySlipDate" name="PaySlipDate" />
+            </div>
+            <div class="col-md-4">
+                <button class="btn  btn-sm btn-primary" onclick="searchByDate()">@SharedLocalizer.GetLocalizedHtmlString("Search")</button>
+                <a id="printPaySlip" href="" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Print")</a>
+            </div>
+
+        </div>
+
+        <!-- /. tools -->
+    </div>
+    <div class="card-body">
+
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            BindGrid();
+
+        });
+        var applicationName = getApplicationName();
+
+       
+        function searchByDate() {
+            //var date = $('#AttendanceDate').val();
+            debugger;
+            var paySlipDate = $('#PaySlipDate').val();
+
+            //if (date == "") {
+            if (paySlipDate == "") {
+                showMsg('Enter !', '!Date First');
+            }
+            else {
+
+                $.ajax({
+                    url: applicationName + "ESS/EmpPaySlip/_list",
+                    data: { date: paySlipDate },
+                    success: function (data) {
+                        window.location = applicationName + 'ESS/EmpPaySlip?paySlipDate=' + paySlipDate;
+                    }
+                });
+
+                //    BindGrid(date);
+            }
+
+
+        };
+
+        function BindGrid(paySlipDate) {
+            paySlipDate = (paySlipDate == null ? $('#PaySlipDate').val() : paySlipDate);
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'ESS/EmpPaySlip/_list',
+                data: { date: paySlipDate },
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+
+        $('#printPaySlip').click(function (e) {
+            debugger;
+            var paySlipDate = $('#PaySlipDate').val();
+            /*window.open(getApplicationName() + "ESS/EmpAttendances/PrintAttendance?attendanceDate=" + attendaceDate, "_blank");*/
+            window.open(getApplicationName() + "ESS/EmpPaySlip/PrintPaySlip/" + paySlipDate, "_blank");
+
+        });
+    </script>
+}

@@ -1,0 +1,98 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Invoicing.Resources
+@inject LocService SharedLocalizer
+
+@{ }
+
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Vendor Ledger Report")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a id="printList" href="" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Print")</a>
+
+
+        </div>
+        <!-- /. tools -->
+    </div>
+    <div class="card-footer pb-0 pt-2 text-sm">
+        <form id="frmSearch">
+            <div class="row">
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("From Date") </label>
+                        <input type="text" id="FromDate" name="FromDate" class="form-control DatePicker">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("To Date") </label>
+                        <input type="text" id="ToDate" name="ToDate" class="form-control DatePicker">
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <button style="margin-top:29px" type="submit" class="btn btn-primary btn-block">@SharedLocalizer.GetLocalizedHtmlString("Search")</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            $('#printList').hide();
+
+            var date = new Date();
+            var dd = String(date.getDate()).padStart(2, '0');
+            var mm = String(date.getMonth() + 1).padStart(2, '0')
+            var yyyy = date.getFullYear();
+            var premonth = parseInt(mm) - 1;
+            var start = yyyy + '-' + mm + '-' + '01';
+            today = yyyy + '-' + mm + '-' + dd;
+            $('#FromDate').val(start);
+            $('#ToDate').val(today);
+
+            BindGrid();
+            $('#frmSearch').submit(function (e) {
+
+                e.preventDefault();
+                BindGrid();
+            })
+
+        });
+
+        function BindGrid() {
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() + 'fn/VendorLedgerReport/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#printList').show();
+
+                    $('#divList').html(data);
+                }
+            })
+        }
+
+        $('#printList').click(function (e) {
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            window.open(getApplicationName() + "fn/VendorLedgerReport/PrintList?FromDate=" + FromDate + "&ToDate=" + ToDate, "_blank");
+        });
+    </script>
+}
+

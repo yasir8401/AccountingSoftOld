@@ -1,0 +1,505 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@using ErpOnClick.ErpMain.Models
+@{
+
+
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Navigations> navigationList = Model.navigationList;
+
+    ApprovalTasks ApprovalTaskDetails = Model.ApprovalTaskDetails;
+    IList<Users> userList = Model.userList;
+    IList<Departments> deptList = Model.deptList;
+    IList<ApprovalRoutes> approvalRoutesList = Model.approvalRoutesList;
+
+    bool isEdit = (ApprovalTaskDetails != null);
+}
+
+<link href="~/adminlte/dist/css/EditAbleTableCss.css" rel="stylesheet" />
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="ApprovalTaskId" name="ApprovalTaskId" class="form-control" value="@(ApprovalTaskDetails != null ? ApprovalTaskDetails.ApprovalTaskId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(ApprovalTaskDetails != null ? ApprovalTaskDetails.CompanyId : 0)">
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(ApprovalTaskDetails != null ? ApprovalTaskDetails.BranchId : 0)" >
+
+    <div class="card card-default card-outline col-lg-12">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Approval Task Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/Security/ApprovalTask" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
+                        <input type="text" id="ApprovalTaskNameEn" name="ApprovalTaskNameEn" class="form-control" value="@(ApprovalTaskDetails!=null?ApprovalTaskDetails.ApprovalTaskNameEn: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Name (Arabic)")</label>
+                        <input type="text" id="ApprovalTaskNameAr" name="ApprovalTaskNameAr" class="form-control" value="@(ApprovalTaskDetails!=null?ApprovalTaskDetails.ApprovalTaskNameAr: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Code")</label>
+                        <input type="text" id="ApprovalTaskCode" name="ApprovalTaskCode" class="form-control" value="@(ApprovalTaskDetails!=null?ApprovalTaskDetails.ApprovalTaskCode: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Is-Active")</label>
+                        <select id="IsActive" name="IsActive" class="form-control">
+                            @*<option></option>*@
+                            <option value="True" @(ApprovalTaskDetails != null && ApprovalTaskDetails.IsActive == true ? "selected" : "")>Active</option>
+                            <option value="False" @(ApprovalTaskDetails != null && ApprovalTaskDetails.IsActive == false ? "selected" : "")>Not Active</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Navigations") </label>
+                        <select id="NavigationIds" name="NavigationIds" class="form-control select2" multiple required>
+
+                            @foreach (var item in navigationList)
+                            {
+                                bool isSelected = (ApprovalTaskDetails != null && !string.IsNullOrEmpty(ApprovalTaskDetails.NavigationIds) && ApprovalTaskDetails.NavigationIds.Contains(item.NavigationId.ToString()));
+                                <option value="@item.NavigationId" @(isSelected ? "selected" : "")>
+                                    @item.NavigationNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card card-default card-outline">
+        <div class="card-header">
+            <h2 class="card-title pt-1">
+                @SharedLocalizer.GetLocalizedHtmlString("Items")
+            </h2>
+            <div class="card-tools">
+                <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="addRow(1)">@SharedLocalizer.GetLocalizedHtmlString("Add Row")</a>
+                <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="addRow(3)">@SharedLocalizer.GetLocalizedHtmlString("Add 3 Rows")</a>
+                <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="addRow(5)">@SharedLocalizer.GetLocalizedHtmlString("Add 5 Rows")</a>
+
+            </div>
+        </div>
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+                <table id="tblLines" class="table table-bordered m-0 table-condensed">
+                    <thead>
+                        <tr>
+                            <th width="50px">@SharedLocalizer.GetLocalizedHtmlString("Seq Id") </th>
+                            <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
+                            <th width="120px">@SharedLocalizer.GetLocalizedHtmlString("Is-Department") </th>
+                            <th>@SharedLocalizer.GetLocalizedHtmlString("Department")</th>
+                            <th>@SharedLocalizer.GetLocalizedHtmlString("Is-Active")</th>
+
+                            <th width="30px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="trSample" style="display:none">
+                            <td style="display:none">
+                                <input type="hidden" id="ApprovalRouteId" name="ApprovalRouteId" value="0">
+                            </td>
+
+                            <td><input id="SeqId" name="SeqId" type="number" step="any" class="form-control input-sm text-right" min="0"></td>
+                            <td>
+
+                                <select id="UserId" name="UserId" class="form-control">
+                                    <option></option>
+                                    @foreach (var item in userList)
+                                    {
+                                        <option value="@item.UserId">
+                                            @item.UserName
+                                        </option>
+                                    }
+                                </select>
+                            </td>
+                            <td>
+                                <select id="IsDepartment" name="IsDepartment" class="form-control">
+                                    <option></option>
+                                    <option value="True">Yes</option>
+                                    <option value="False">No</option>
+                                </select>
+                            </td>
+                            <td>
+
+                                <select id="DepartmentId" name="DepartmentId" class="form-control">
+                                    <option></option>
+                                    @foreach (var item in deptList)
+                                    {
+                                        <option value="@item.DepartmentId">
+                                            @item.DepartmentNameEn
+                                        </option>
+                                    }
+                                </select>
+
+                            </td>
+                            <td>
+                                <select id="IsActive" name="IsActive" class="form-control">
+
+                                    <option value="True">Active</option>
+                                    <option value="False">Not Active</option>
+                                </select>
+                            </td>
+
+
+                            <td>
+                                <a href="javascript:void(0)" id="lnkDelete" class="btn-sm btn-block text-danger" onclick="deleteRow($(this).parent().parent())">
+                                    <i id="faDelete" class="fa fa-trash"></i>
+                                    <i id="faUndo" class="fa fa-undo text-white" style="display:none"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        @if (approvalRoutesList.Count() != 0)
+                        {
+
+                            @foreach (var item in approvalRoutesList)
+                            {
+
+                                <tr>
+                                    <td style="display:none">
+                                        <input type="hidden" id="ApprovalRouteId" name="ApprovalRouteId" value="@(item.ApprovalRouteId !=0 ? item.ApprovalRouteId:0)">
+                                    </td>
+                                    <td><input id="SeqId" name="SeqId" type="number" value="@(item.SeqId !=0 ? item.SeqId:0)" step="any" class="form-control input-sm text-right" min="0"></td>
+                                    <td>
+
+                                        <select id="UserId" name="UserId" class="form-control">
+                                            <option></option>
+                                            @foreach (var itemUser in userList)
+                                            {
+                                                <option value="@itemUser.UserId" @(itemUser != null && itemUser.UserId == item.UserId ? "selected" : "")>
+                                                    @itemUser.UserName
+                                                </option>
+                                            }
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id="IsDepartment" name="IsDepartment" class="form-control">
+                                            <option></option>
+                                            <option value="True" @(item != null && item.IsDepartment == true ? "selected" : "")>Yes</option>
+                                            <option value="False" @(item != null && item.IsDepartment == false ? "selected" : "")>No</option>
+                                        </select>
+                                    </td>
+                                    <td>
+
+                                        <select id="DepartmentId" name="DepartmentId" class="form-control">
+                                            <option></option>
+                                            @foreach (var itemDept in deptList)
+                                            {
+                                                <option value="@itemDept.DepartmentId" @(itemDept != null && itemDept.DepartmentId == item.DepartmentId ? "selected" : "")>
+                                                    @itemDept.DepartmentNameEn
+                                                </option>
+                                            }
+                                        </select>
+
+                                    </td>
+                                    <td>
+                                        <select id="IsActive" name="IsActive" class="form-control">
+
+                                            <option value="True" @(item != null && item.IsActive == true ? "selected" : "")>Active</option>
+                                            <option value="False" @(item != null && item.IsActive == false ? "selected" : "")>Not Active</option>
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <input type="hidden" id="IsDeleted" name="IsDeleted" value="false">
+                                        <a href="javascript:void(0)" id="lnkDelete" class="btn-sm btn-block text-danger" onclick="deleteRow($(this).parent().parent())">
+                                            <i id="faDelete" class="fa fa-trash"></i>
+                                            <i id="faUndo" class="fa fa-undo text-white" style="display:none"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card card-outline card-outline col-lg-12">
+
+        <div class="card-header">
+            <h3 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Description")
+            </h3>
+
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body pad">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("English"):</label>
+                        <textarea required id="ApprovalTaskDescriptionEn" rows="3" name="ApprovalTaskDescriptionEn"
+                                  style="width: 100%; height: 100px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(ApprovalTaskDetails != null? ApprovalTaskDetails.ApprovalTaskDescriptionEn : "")</textarea>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Arabic"):</label>
+                        <textarea id="ApprovalTaskDescriptionAr" rows="3" name="ApprovalTaskDescriptionAr"
+                                  style="width: 100%; height: 100px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(ApprovalTaskDetails != null? ApprovalTaskDetails.ApprovalTaskDescriptionAr : "")</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-12" style="display:none">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(ApprovalTaskDetails != null && ApprovalTaskDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(ApprovalTaskDetails != null && ApprovalTaskDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+            var actionType = $('#ACTION_TYPE').val();
+            if (actionType == "save") {
+                addRow(3);
+
+            }
+            setTriggers();
+        });
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+
+            var routeArray = new Array();
+            var taskObject = {
+                ApprovalTaskId: parseInt($('#ApprovalTaskId').val()),
+                ApprovalTaskNameEn: $('#ApprovalTaskNameEn').val(),
+                ApprovalTaskNameAr: $('#ApprovalTaskNameAr').val(),
+                ApprovalTaskDescriptionEn: $('#ApprovalTaskDescriptionEn').val(),
+                ApprovalTaskDescriptionAr: $('#ApprovalTaskDescriptionAr').val(),
+                ApprovalTaskCode: $('#ApprovalTaskCode').val(),
+                IsActive: ($('#IsActive').val() == 'True' ? true : false),
+                CompanyId: parseInt($('#CompanyId').val()),
+                BranchId: parseInt($('#BranchId').val()),
+                NavigationIds: $('#NavigationIds').val().toString(),
+            }
+            $("#tblLines tbody TR").not("#trSample").each(function () {
+
+                var row = $(this);
+                var inputFields = row.find(":input");
+                var routeObject = {};
+
+
+                if (row.find('#ApprovalRouteNameEn').val() != "") {
+
+                    routeObject.ApprovalRouteId = parseInt(row.find('#ApprovalRouteId').val());
+                    routeObject.ApprovalRouteNameEn = row.find('#ApprovalRouteNameEn').val(),
+                        routeObject.ApprovalRouteNameAr = row.find('#ApprovalRouteNameAr').val(),
+                        routeObject.ApprovalRouteCode = row.find('#ApprovalRouteCode').val(),
+                        routeObject.ApprovalTaskId = parseInt($('#ApprovalTaskId').val()),
+                        routeObject.SeqId = parseInt(row.find('#SeqId').val()),
+                        routeObject.UserId = parseInt(row.find('#UserId').val()),
+                        routeObject.DepartmentId = parseInt(row.find('#DepartmentId').val()),
+                        routeObject.IsActive = (row.find('#IsActive').val() == 'True' ? true : false),
+                        routeObject.IsDepartment = (row.find('#IsDepartment').val() == 'True' ? true : false),
+                        routeObject.IsDeleted = row.find('#IsDeleted').val()
+
+                    routeArray.push(routeObject);
+                }
+            });
+
+            var taskRouteViewModel = {
+
+                ApprovalTask: taskObject,
+                ApprovalRoutes: routeArray
+
+            }
+
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+
+                    $.ajax({
+                        url: getApplicationName() + "Security/ApprovalTask/" + actionType,
+                        type: "POST",
+                        data: taskRouteViewModel,
+                        async: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'Security/ApprovalTask';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+
+
+                }
+            });
+        });
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName() + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+                 
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+                 
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+        function addRow(n) {
+            var table = $('#tblLines');
+            trSample = table.find('#trSample');
+            for (var i = 0; i < n; i++) {
+                var newRow = trSample.clone();
+                newRow.removeAttr('id');
+                table.find('tbody').append(newRow);
+            }
+            table.find('tbody tr').not('#trSample').show();
+            setTriggers();
+
+        }
+        function setTriggers() {
+            var table = $('#tblLines');
+            table.find('tbody tr').each((i, item) => {
+                var tr = $(item);
+                tr.find('#IsDepartment').change(function () {
+
+                    var idDepartment = tr.find('#IsDepartment').val();
+                    if (idDepartment == "True") {
+
+                        tr.find('#UserId').hide();
+                        tr.find('#UserId').val("");
+                        tr.find('#DepartmentId').show();
+                    }
+                    else {
+                        tr.find('#UserId').show();
+                        tr.find('#DepartmentId').hide();
+                        tr.find('#DepartmentId').val("");
+                    }
+                });
+
+            });
+        }
+        function deleteRow(tr) {
+
+            tr.toggleClass('bg-danger');
+            tr.find('a > #faDelete').toggle();
+            tr.find('a > #faUndo').toggle();
+            var inputFields = tr.find('#IsDeleted');
+
+            var isDelete = tr.find('#IsDeleted').val();
+            if (isDelete == "false") {
+                tr.find('#IsDeleted').val("true");
+            }
+            if (isDelete == "true") {
+                tr.find('#IsDeleted').val("false");
+            }
+
+        }
+
+
+
+    </script>
+
+}

@@ -1,0 +1,92 @@
+﻿@using ErpOnClick.DAL.Models
+
+@using ErpOnClick.Invoicing.Models
+@using ErpOnClick.Invoicing.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<AccountLedgerReportModel> listReportAccountLedger = Model.listReportAccountLedger;
+
+}
+<link href="~/css/Report.css" rel="stylesheet" />
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed ">
+        <thead class="text-sm ">
+            <tr class="col-lg-12">
+                <th align="center" width="100px"> @SharedLocalizer.GetLocalizedHtmlString("Date")</th>
+                <th align="left"> @SharedLocalizer.GetLocalizedHtmlString("Account")</th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Debit") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Credit") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Balance")</th>
+
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr>
+                <th align="center" width="100px"> Date</th>
+                <th align="left"> Account</th>
+                <th align="right"> Debit </th>
+                <th align="right"> Credit </th>
+                <th align="right"> Balance</th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+
+            @foreach (var item in listReportAccountLedger)
+            {
+                <tr class="text-center">
+                    <td align="center" width="100px"> @(Convert.ToDateTime(item.CreatedDate).ToString("dd-MMM-yyyy")) </td>
+                    <td align="left"> @item.Account </td>
+                    <td align="right"> @(String.Format("{0:.00}",item.Debit)) </td>
+                    <td align="right"> @(String.Format("{0:.00}",item.Credit))</td>
+                    <td align="right"> @(String.Format("{0:.00}",item.Balance))</td>
+                </tr>
+            }
+            <tr style="background-color:#fff6ea" class="text-center">
+                <td align="right" colspan="2">Total</td>
+                <td align="right">@(String.Format("{0:.00}", listReportAccountLedger.Sum(x => x.Debit)))</td>
+                <td align="right">@(String.Format("{0:.00}", listReportAccountLedger.Sum(x => x.Credit)))</td>
+                <td align="right"></td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+        _initDatatable('#dtList');
+
+    });
+
+    //function deleteItem(id) {
+    //    confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+    //        if (result.value == true) {
+
+    //            $.ajax({
+    //                url:    getApplicationName()+'fn/AccountLedger/delete",
+    //                async: false,
+    //                type: "POST",
+    //                data: { id },
+    //                success: function (data) {
+    //                    if (data.result.isError != true) {
+    //                        showMsg('Deleted !', 'Record has been deleted !', 'success');
+    //                        setTimeout(function () {
+    //                            window.location = '/fn/Accounts';
+    //                        }, 500);
+    //                    }
+    //                    else if (data.result.msg != '') {
+    //                        showMsg('Delete Failed !', data.result.msg, 'error');
+    //                    }
+    //                    else {
+    //                        showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+    //                    }
+    //                }
+    //            });
+    //        }
+    //    });
+    //}
+
+</script>

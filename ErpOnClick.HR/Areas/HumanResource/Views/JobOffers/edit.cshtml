@@ -1,0 +1,508 @@
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment hostingEnv
+@using System.IO
+@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.DAL.Utilities
+@inject LocService SharedLocalizer
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env;
+
+@{
+
+    var filePath = NativePaths.GetFilePath(_env);
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Lookups> martialStatusList = Model.martialStatusList;
+    IList<Lookups> citiyList = Model.citiyList;
+    IList<Lookups> nationalityList = Model.nationalityList;
+    IList<Lookups> religionList = Model.religionList;
+    IList<Lookups> genderList = Model.genderList;
+    IList<Lookups> activeStatusList = Model.activeStatusList;
+    IList<Lookups> idTypesList = Model.idTypeList;
+    IList<Positions> positionList = Model.postions;
+    IList<Departments> departmentList = Model.departmentList;
+
+    JobOffers JobOfferDetails = Model.JobOfferDetails;
+
+    bool isEdit = (JobOfferDetails != null);
+    var envName = hostingEnv.EnvironmentName;
+    string path = "";
+    if (envName == "Production")
+    {
+        path = @Url.Content(@"C:\inetpub\wwwroot\ErpOnClick\Files");
+
+    }
+    else if (envName == "Development")
+    {
+        path = @Url.Content(@"C:\Users\ynisar\source\repos\NayelSolutions\ErpOnClick(Finance)\ErpOnClick.HR\wwwroot\Files");
+        //path = @"C:\Hamza Nayel\NayelSourceCodes\ErpOnClick\Files";
+    }
+
+}
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="JobOfferId" name="JobOfferId" class="form-control" value="@(JobOfferDetails != null ? JobOfferDetails.JobOfferId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(JobOfferDetails != null ? JobOfferDetails.CompanyId : 0)">
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(JobOfferDetails != null ? JobOfferDetails.BranchId : 0)">
+
+
+
+
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header">
+            <h2 class="card-title mt-1">
+                @SharedLocalizer.GetLocalizedHtmlString("Candidate Personal Information")
+            </h2>
+
+            <div class="card-tools pr-0">
+                <a id="printList" href="" class="btn btn-default btn-sm" @(isEdit ? "" : "hidden")>
+                    <i class="fa fa-print fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Print Job Proposal")
+                </a>
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/HumanResource/JobOffers" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("First Name")</label>
+                                <input type="text" id="FirstNameEn" required name="FirstNameEn" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.FirstNameEn: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Fathers Name") </label>
+                                <input type="text" id="FatherNameEn" required name="FatherNameEn" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.FatherNameEn: null)">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Grand Name")  </label>
+                                <input type="text" id="GrandNameEn" name="GrandNameEn" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.GrandNameEn: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Family Name") </label>
+                                <input type="text" id="FamilyNameEn" required name="FamilyNameEn" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.FamilyNameEn: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("First Name  (Arabic)") </label>
+                                <input type="text" id="FirstNameAr" required name="FirstNameAr" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.FirstNameAr: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Father Name (Arabic)")</label>
+                                <input type="text" id="FatherNameAr" required name="FatherNameAr" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.FatherNameAr: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Grand Name (Arabic)")</label>
+                                <input type="text" id="GrandNameAr" name="GrandNameAr" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.GrandNameAr: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group">
+                                <label>@SharedLocalizer.GetLocalizedHtmlString("Family Name (Arabic)")</label>
+                                <input type="text" id="FamilyNameAr" required name="FamilyNameAr" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.FamilyNameAr: null)">
+                            </div>
+                        </div>
+                        <div class="col-sm-3 ">
+                            <div class="form-group">
+                                <label> @SharedLocalizer.GetLocalizedHtmlString("Marital Status")</label>
+                                <select id="MaritalStatusId" name="MaritalStatusId" class="form-control">
+
+                                    @foreach (var item in martialStatusList)
+                                    {
+                                        <option value="@item.Code" @(JobOfferDetails != null && JobOfferDetails.MaritalStatusId == item.Code ? "selected" : "")>
+                                            @item.LookupNameEn
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 ">
+                            <div class="form-group">
+                                <label> @SharedLocalizer.GetLocalizedHtmlString("Gender")</label>
+                                <select id="GenderId" name="GenderId" class="form-control">
+
+                                    @foreach (var item in genderList)
+                                    {
+                                        <option value="@item.Code" @(JobOfferDetails != null && JobOfferDetails.GenderId == item.Code ? "selected" : "")>
+                                            @item.LookupNameEn
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3 ">
+                            <div class="form-group">
+                                <label> @SharedLocalizer.GetLocalizedHtmlString("Nationality")</label>
+                                <select id="NationalityId" name="NationalityId" class="form-control" required>
+
+                                    @foreach (var item in nationalityList)
+                                    {
+                                        <option value="@item.Code" @(JobOfferDetails != null && JobOfferDetails.NationalityId == item.Code ? "selected" : "")>
+                                            @item.LookupNameEn
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Contact And Work Related Info")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Email")</label>
+                        <input type="email" id="Email" required name="Email" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.Email: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Mobile No")</label>
+                        <div class="row">
+                            <input type="text" readonly style="margin-right:10px" placeholder="Country Code" id="MobileNumberCode" name="MobileNumberCode" class="form-control col-md-3" value="+966">
+                            <input type="text" required id="MobileNo" name="MobileNo" class="form-control col-md-8" value="@(JobOfferDetails!=null?JobOfferDetails.MobileNo: null)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Job Title")</label>
+                        <input type="text" required id="JobTitle" name="JobTitle" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.JobTitle: "")">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Expected Joining Date")</label>
+                        <input type="text" required id="ExpectingJoiningDate" name="ExpectingJoiningDate" class="form-control DatePicker1" value="@(JobOfferDetails != null && JobOfferDetails.ExpectingJoiningDate !=null ? Convert.ToDateTime(JobOfferDetails.ExpectingJoiningDate).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Department")</label>
+                        <select id="Department" name="Department" class="form-control" required>
+                            <option selected></option>
+                            @foreach (var item in departmentList)
+                            {
+                                <option value="@item.DepartmentId" @(JobOfferDetails != null && Convert.ToInt32(JobOfferDetails.Department) == item.DepartmentId ? "selected" : "")>
+                                    @item.DepartmentNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Employement Type")</label>
+                        <select id="EmployementType" name="EmployementType" class="form-control" required>
+                            <option @((JobOfferDetails != null && JobOfferDetails.EmployementType == "Full") ? "selected" : "") value="Full">Full Time</option>
+                            <option @((JobOfferDetails != null && JobOfferDetails.EmployementType == "Part") ? "selected" : "") value="Part">Part Time</option>
+                            <option @((JobOfferDetails != null && JobOfferDetails.EmployementType == "Remote") ? "selected" : "") value="Remote">Remote</option>
+                            <option @((JobOfferDetails != null && JobOfferDetails.EmployementType == "Contract") ? "selected" : "") value="Contract">Contract Base</option>
+                            <option @((JobOfferDetails != null && JobOfferDetails.EmployementType == "Project") ? "selected" : "") value="Project">Project Base</option>
+                        </select>
+                        @*<input type="text" id="EmployementType" name="EmployementType" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.EmployementType: "")">*@
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Reporting Manager")</label>
+                        <input type="text"  id="ReportingManager" name="ReportingManager" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.ReportingManager: "")">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Probation Period (In Months)")</label>
+                        <input type="number" required id="ProbationPeriod" placeholder="Probation Period in Months" name="ProbationPeriod" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.ProbationPeriod: 0)" min="0">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Finance Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Basic Salary")</label>
+                        <input type="number" step="any" required id="BasicSalary" onchange="CalculateGosiAndSanid()" name="BasicSalary" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.BasicSalary: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Housing Allowance")</label>
+                        <input type="number" step="any" required id="HousingAllowance" onchange="CalculateGosiAndSanid()" name="HousingAllowance" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.HousingAllowance: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Transportion Allowance")</label>
+                        <input type="number" step="any" required id="TransportationAllowance" onchange="calculateTotalSalary()" name="TransportationAllowance" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.TransportationAllowance: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Ticket Allowance")</label>
+                        <input type="number" step="any" required id="TicketAllowance" name="TicketAllowance" onchange="calculateTotalSalary()" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.TicketAllowance: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("GOSI Deduction")</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">9%</span>
+                            </div>
+                            <input type="number" readonly step="any" id="GosiDeduction" name="GosiDeduction" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.GosiDeduction: 0)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("SANED Deduction")</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">1%</span>
+                            </div>
+                            <input type="number" readonly step="any" id="SanedDeduction" name="SanedDeduction" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.SanedDeduction: 0)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Total Salary")</label>
+                        <input type="number" readonly step="any" id="TotalSalary" name="TotalSalary" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.TotalSalary: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-3 dvIqama">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Bonus")</label>
+                        <input type="text" id="Bonus" name="Bonus" class="form-control" value="@(JobOfferDetails!=null?JobOfferDetails.Bonus: null)">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+
+            $('#printList').click(function (e) {
+            //    //window.open(applicationName + "HumanResource/JobOffers/PrintProposal?JobOfferId=" + $("#JobOfferId").val(), "_blank");
+            //      $.get(applicationName + "HumanResource/JobOffers/PrintProposal?JobOfferId=" + $("#JobOfferId").val(), function (data) {
+            //          window.open("http://109.73.162.9:5050/JobOffers/SAMPLE_OFFER.docx");
+            //    });
+                $.ajax({
+                    url: applicationName + "HumanResource/JobOffers/PrintProposal",
+                    async: false,
+                    type: "POST",
+                    data: { JobOfferId: $("#JobOfferId").val() },
+                    success: function (data) {
+                        window.open("http://109.73.162.9:5050/JobOffers/SAMPLE_OFFER.docx");
+                        //window.open("http://localhost:63232/JobOffers/SAMPLE_OFFER.docx");
+                        //console.log(data);
+                        //var blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+                        //debugger;
+                        //var fileURL = URL.createObjectURL(blob);
+                        window.open(fileURL);
+                    }
+                });
+
+             
+            });
+
+
+
+            $('.DatePicker1').css('cursor', 'default');
+
+            $('.DatePicker1').calendarsPicker({
+                maxDate: '+1M',
+                minDate: 0,
+                dateFormat: 'dd-M-yyyy'
+            });
+
+
+
+            $('.DatePicker1').attr('autocomplete', 'off');
+
+            $('.DatePicker1').on("keypress paste", function (e) {
+                e.preventDefault();
+            });
+            $('#CompanyId').change(function () {
+
+                var id = $('#CompanyId').val();
+
+                $.ajax({
+                    url: applicationName + "Ajax/BranchCascading",
+                    async: false,
+                    type: "POST",
+                    data: { id: id },
+                    success: function (data) {
+
+                        var item = '';
+
+                        $.each(data.result, function (i, product) {
+
+                            item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                        });
+
+                        $("#BranchId").html(item);
+
+                    }
+                });
+
+            });
+
+
+        });
+
+
+
+        function CalculateGosiAndSanid() {
+            var basicSalary = $("#BasicSalary").val();
+            var housingAllowance = $("#HousingAllowance").val();
+
+            var total = (basicSalary != null ? parseInt(basicSalary) : 0) + (housingAllowance != null ? parseInt(housingAllowance) : 0);
+
+            if (total != null || total != 0) {
+                $("#GosiDeduction").val(total * 0.09);
+                $("#SanedDeduction").val(total * 0.01);
+            }
+            else {
+                $("#GosiDeduction").val(0);
+                $("#SanedDeduction").val(0);
+            }
+
+            calculateTotalSalary();
+
+        };
+
+        function calculateTotalSalary() {
+            var basicSalary = $("#BasicSalary").val();
+            var housingAllowance = $("#HousingAllowance").val();
+            var transportationAllowance = $("#TransportationAllowance").val();
+            var ticketAllowance = $("#TicketAllowance").val();
+            var gosiDeduction = $("#GosiDeduction").val();
+            var sanedDeduction = $("#SanedDeduction").val();
+
+            var totalSalary = 0;
+            if ($("#NationalityId").val() == "012101") {
+                totalSalary = (basicSalary != null ? parseInt(basicSalary) : 0) + (housingAllowance != null ? parseInt(housingAllowance) : 0) + (transportationAllowance != null ? parseInt(transportationAllowance) : 0) + (ticketAllowance != null ? parseInt(ticketAllowance) : 0) - (gosiDeduction != null ? parseInt(gosiDeduction) : 0) - (sanedDeduction != null ? parseInt(sanedDeduction) : 0);
+            } else {
+                totalSalary = (basicSalary != null ? parseInt(basicSalary) : 0) + (housingAllowance != null ? parseInt(housingAllowance) : 0) + (transportationAllowance != null ? parseInt(transportationAllowance) : 0) + (ticketAllowance != null ? parseInt(ticketAllowance) : 0);
+            }
+
+
+            $("#TotalSalary").val(totalSalary);
+
+        };
+
+        $('#NationalityId').change(function () {
+
+            if ($("#NationalityId").val() == "012101") {
+                CalculateGosiAndSanid();
+            } else {
+                $("#SanedDeduction").val(0);
+                $("#GosiDeduction").val(0);
+            }
+            calculateTotalSalary();
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+                    $.ajax({
+                        url: applicationName + "HumanResource/JobOffers/" + actionType,
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                var id = data.result.scalerVal;
+
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + `HumanResource/JobOffers/edit/${id}`;
+                                }, 1000);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        $('#Email').focusout(function () {
+
+            var email = $('#Email').val();
+            var expr = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+            if (!expr.test(email)) {
+                showMsg('Invalid Email !', 'Please enter a valid Email', 'error');
+
+            }
+
+        });
+
+    </script>
+
+}

@@ -1,0 +1,349 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Emp> empList = Model.empList;
+    IList<Lookups> LoansTypeList = Model.LoansTypeList;
+    IList<Lookups> attachmentTypeList = Model.attachmentTypeList;
+    IList<Lookups> LoansStatusList = Model.LoansStatusList;
+
+    Loans LoansDetails = Model.LoansDetails;
+    var empId = Model.empId;
+    Emp empDetails = Model.empDetails;
+
+    bool isEdit = (LoansDetails != null);
+}
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="LoanId" name="LoanId" class="form-control" value="@(LoansDetails != null ? LoansDetails.LoanId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(LoansDetails != null ? LoansDetails.CompanyId : 0)">
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(LoansDetails != null ? LoansDetails.BranchId : 0)">
+
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header p-0 border-bottom-0">
+            <div class="card" style="background-color: #496b6a">
+            </div>
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="navigation('@empId')" href="javascript:void(0)"><i class="fa fa-info"></i> @SharedLocalizer.GetLocalizedHtmlString("General Info")</a>
+                </li>
+
+
+                @Html.Partial("/Areas/HumanResource/Views/Emp/_tabsPartial.cshtml", empDetails)
+
+
+            </ul>
+        </div>
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/HumanResource/EmpLoan/emp/@empId" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-2 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Employee")</label>
+                        <select id="EmpId" name="EmpId" class="form-control">
+                            <option></option>
+                            @foreach (var item in empList)
+                            {
+                                <option value="@item.EmpId" selected>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn + " " + item.GrandNameEn + " " + item.FamilyNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Date Start")</label>
+                        <input type="text" id="DateStart" name="DateStart" class="form-control DatePicker" value="@(LoansDetails != null && LoansDetails.DateStart !=null ? Convert.ToDateTime(LoansDetails.DateStart).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Loan Amount")</label>
+                        <input type="number" id="LoanAmount" step="any" name="LoanAmount" class="form-control" value="@(LoansDetails!=null?LoansDetails.LoanAmount: 0)">
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("No Of Installments")</label>
+                        <input type="number" id="NoOfInstallments" name="NoOfInstallments" class="form-control" value="@(LoansDetails!=null?LoansDetails.NoOfInstallments: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Deduct Amount")</label>
+                        <input type="number" id="DeductAmount" name="DeductAmount" class="form-control" value="@(LoansDetails!=null?LoansDetails.DeductAmount: 0)">
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Loans Type")</label>
+                        <select id="LoanTypeId" name="LoanTypeId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in LoansTypeList)
+                            {
+                                <option value="@item.Code" @(LoansDetails != null && LoansDetails.LoanTypeId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Loans Status")</label>
+                        <select id="LoanStatus" name="LoanStatus" class="form-control" required>
+
+                            @foreach (var item in LoansStatusList)
+                            {
+                                <option value="@item.Code" @(LoansDetails != null && LoansDetails.LoanStatus == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Attachment Type")</label>
+                        <select id="AttachmentType" name="AttachmentType" class="form-control">
+                            <option></option>
+                            @foreach (var item in attachmentTypeList)
+                            {
+                                <option value="@item.Code" @(LoansDetails != null && LoansDetails.AttachmentType == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Attachment")</label>
+                        @if (LoansDetails != null && LoansDetails.Attachment != null)
+                        {
+                            <a href="~/Files/@LoansDetails.Attachment" download="">@SharedLocalizer.GetLocalizedHtmlString("DownloadPDF")</a>
+                            <input type="text" hidden value="@(LoansDetails!=null?LoansDetails.Attachment: "")" id="Attachment" name="Attachment" class="form-control">
+                        }
+                        else
+                        {
+                            <input type="file" id="AttachmentFile" name="AttachmentFile" class="form-control">
+                        }
+
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                </div>
+                <div class="col-md-12 card-header">
+                    <label>@SharedLocalizer.GetLocalizedHtmlString("Reason")</label>
+                    <textarea required id="Reason" rows="4" name="Reason"
+                              style="width: 100%; height: 80px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(LoansDetails != null? LoansDetails.Reason : "")</textarea>
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-12" style="display:none">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(LoansDetails != null && LoansDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option></option>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(empDetails != null && empDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+
+
+        });
+        var applicationName = getApplicationName();
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+                    $.ajax({
+                        url: applicationName + "HumanResource/EmpLoans/" + actionType,
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'HumanResource/EmpLoans/emp/@empId';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+        $('#btnEmpSearch').click(function () {
+
+
+            confirmAction('Confirm ?', 'Are you sure you want to Search  ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+                    var empCode = $('#empCode').val();
+
+                    $.ajax({
+                        url: applicationName + "Ajax/GetEmployee",
+                        async: false,
+                        type: "POST",
+                        data: { empCode: empCode },
+                        success: function (data) {
+                            if (data.result != "") {
+                                var displayDAta = "<div class='row' id='empDetail' ><div class='col-sm-4'><div id='DP' style='top: 58px;' class='widget-user-image'><img style=' margin-bottom: 6px; height:155px' id='profilePic' class='img-circle elevation-2'  src='https://www.w3schools.com/html/pic_trulli.jpg' /></div></div><div class='col-sm-8'><div class='row'><div class='col-sm-6'><div class='form-group'><label>Name</label><input type='text'  class='form-control' value='" + data.result.empName + "' disabled></div></div><div class='col-sm-6'><div class='form-group'><label>Title</label><input type='text' class='form-control' value='" + data.result.jobTitle + "' disabled></div></div><div class='col-sm-6'><div class='form-group'><label>Department</label><input type='text'  class='form-control' value='" + data.result.departMent + "' disabled></div></div><div class='col-sm-6'><div class='form-group'><label>Joining Date</label><input type='text' class='form-control' value='" + data.result.joiningDate + "' disabled></div></div></div></div></div>"
+
+
+                                $('#searchEmpCardBody').show();
+                                $('#searchEmpCardBody').html(displayDAta);
+
+
+                                $("#EmpId option").each(function () {
+                                    var empId = $(this).val();
+                                    if (empId == data.result.empId) {
+                                        $(this).prop('selected', true);
+                                    }
+
+                                });
+
+
+                            }
+                            else {
+                                showMsg("No Employee for this code found , Please try again!");
+                            }
+
+
+                        }
+                    });
+
+                }
+            });
+
+
+
+
+        });
+    </script>
+
+}

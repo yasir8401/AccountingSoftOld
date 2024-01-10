@@ -1,0 +1,109 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    List<Documents> documentList = Model.documentList;
+
+}
+
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>File</th>
+                <th>Issued Date</th>
+                <th>Issued Date Hijri</th>
+                <th>End Date</th>
+                <th>End Date Hijri</th>
+                <th>Title</th>
+
+                <th width="30px"></th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th>Id</th>
+                <th>Name</th>
+                <th>File</th>
+                <th>IssuedDate</th>
+                <th>IssuedDateH</th>
+                <th>EndDate</th>
+                <th>EndDateH</th>
+                <th>Title</th>
+
+                <td></td>
+                <td></td>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in documentList)
+            {
+
+                <tr class="text-center">
+                    <td>@item.DocId</td>
+                    <td>@item.DocNameEn</td>
+                    <td>
+                        @if (!String.IsNullOrWhiteSpace(item.DocFile))
+                        {
+                            <a href="~/Files/@item.DocFile" download="">DownloadDPF</a>
+                        }
+                    </td>
+                    <td>@(item.DocIssuedDate != null ? Convert.ToDateTime(item.DocIssuedDate).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@(item.DocIssuedDateH != null ? Convert.ToDateTime(item.DocIssuedDateH).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@(item.DocEndDate != null ? Convert.ToDateTime(item.DocEndDate).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@(item.DocEndDateH != null ? Convert.ToDateTime(item.DocEndDateH).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@item.TitleEnInDoc</td>
+
+                    <td class="text-center padding-5">
+                        <a href="~/admin/document/edit/@item.DocId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td class="text-center padding-5">
+                        <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.DocId')"><i class="fa fa-times text-danger"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName+ "admin/document/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName+'admin/document';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

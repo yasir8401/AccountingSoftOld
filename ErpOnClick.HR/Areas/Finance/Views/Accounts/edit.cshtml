@@ -1,0 +1,356 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    Accounts AccountDetail = Model.IdDetail;
+    List<Branch> BranchDetails = Model.branchList;
+    List<Accounts> AccountList = Model.AccountList;
+    List<AccountGroups> AccountGroupsList = Model.AccountGroupsList;
+    List<AccountTypes> AccountTypesList = Model.AccountTypesList;
+    bool isEdit = (AccountDetail != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="AccountId" name="AccountId" class="form-control" value="@(AccountDetail != null ? AccountDetail.AccountId : 0)" />
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(AccountDetail != null ? AccountDetail.CompanyId : 0)" />
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(AccountDetail != null ? AccountDetail.BranchId : 0)" />
+
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Account")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/Finance/Accounts" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+    </div>
+
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Account Info")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
+                        <input type="text" id="AccountNameEn" name="AccountNameEn" class="form-control" required value="@(AccountDetail != null ? AccountDetail.AccountNameEn : "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Name (Arabic)")</label>
+                        <input type="text" id="AccountNameAr" name="AccountNameAr" class="form-control" value="@(AccountDetail != null ? AccountDetail.AccountNameAr : "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Code")</label>
+                        <input type="number" id="AccountCode" name="AccountCode" class="form-control" value="@(AccountDetail != null ? AccountDetail.AccountCode : "")" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Default Type")</label>
+                        <select id="DefaultType" name="DefaultType" class="form-control">
+                            <option value="" selected disabled></option>
+                            <option value="Debit" @(AccountDetail != null && AccountDetail.DefaultType == "Debit" ? "selected" : "")>Debit</option>
+                            <option value="Credit" @(AccountDetail != null && AccountDetail.DefaultType == "Credit" ? "selected" : "")>Credit</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Parent Account")</label>
+                        <select id="ParentAccountId" name="ParentAccountId" class="form-control select2">
+                            <option value="" selected disabled></option>
+                            @foreach (var head in AccountList.Where(c => c.AccountLevel == 1))
+                            {
+                                <option value="@head.AccountId" @(AccountDetail != null && AccountDetail.ParentAccountId == head.AccountId ? "selected" : "")>@head.AccountCode (@head.AccountNameEn)</option>
+                                foreach (var subhead in AccountList.Where(c => c.AccountLevel == 2 && c.AccountCode.Substring(0, 1) == head.AccountCode))
+                                {
+                                    <option value="@subhead.AccountId" @(AccountDetail != null && AccountDetail.ParentAccountId == subhead.AccountId ? "selected" : "")>--@subhead.AccountCode (@subhead.AccountNameEn)</option>
+
+                                    foreach (var subsubhead in AccountList.Where(c => c.AccountLevel == 3 && c.AccountCode.Substring(0, 2) == subhead.AccountCode))
+                                    {
+                                        <option value="@subsubhead.AccountId" @(AccountDetail != null && AccountDetail.ParentAccountId == subsubhead.AccountId ? "selected" : "")>----@subsubhead.AccountCode (@subsubhead.AccountNameEn)</option>
+                                        foreach (var lowerhead in AccountList.Where(c => c.AccountLevel == 4 && c.AccountCode.Substring(0, 4) == subsubhead.AccountCode))
+                                        {
+                                            <option value="@lowerhead.AccountId" @(AccountDetail != null && AccountDetail.ParentAccountId == lowerhead.AccountId ? "selected" : "")>------@lowerhead.AccountCode (@lowerhead.AccountNameEn)</option>
+                                        }
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-12 pt-lg-2">
+                    <div class="form-group">
+                        <label class="customcheck">
+                            @SharedLocalizer.GetLocalizedHtmlString("Is Transactionable")
+                            <input type="checkbox" @(isEdit == true && AccountDetail.IsTransactionable == true ? "checked" : "") id="IsTransactionable" name="IsTransactionable" value="true">
+                            <span class="checkmark"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Account Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Opening Balance")</label>
+                        <input type="number" step="any" id="OpeningBalance" name="OpeningBalance" value="@(AccountDetail != null ? AccountDetail.OpeningBalance : 0)" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Closing Balance")</label>
+                        <input type="number" step="any" id="ClosingBalance" name="ClosingBalance" value="@(AccountDetail != null ? AccountDetail.ClosingBalance : 0)" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Type")</label>
+                        <select id="AccountTypeId" name="AccountTypeId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in Model.AccountTypesList)
+                            {
+                                <option value="@item.AccountTypeId" @(AccountDetail != null && AccountDetail.AccountTypeId == item.AccountTypeId ? "selected" : "")> @item.AccountTypeNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Group")</label>
+                        <select id="AccountGroupId" name="AccountGroupId" class="form-control">
+                            <option></option>
+                            @foreach (var item in AccountGroupsList)
+                            {
+                                <option value="@item.AccountGroupId" @(AccountDetail != null && AccountDetail.AccountGroupId == item.AccountGroupId ? "selected" : "")> @item.AccountGroupNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8" style="display:none">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in Model.CompanyDetail)
+                            {
+                                <option value="@item.CompanyId" @(AccountDetail != null && AccountDetail.CompanyId == item.CompanyId ? "selected" : "")> @item.CoNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            @if (isEdit)
+                            {
+                                @foreach (var item in BranchDetails)
+                                {
+                                    <option value="@item.BranchId" @(AccountDetail != null && AccountDetail.BranchId == item.BranchId ? "selected" : "")> @item.BranchNameEn</option>
+
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+<style>
+
+
+    /* The customcheck */
+    .customcheck {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        /* Hide the browser's default checkbox */
+        .customcheck input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #dbefef;
+        border-radius: 5px;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .customcheck:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .customcheck input:checked ~ .checkmark {
+        background-color: #84ceeb;
+        border-radius: 5px;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .customcheck input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .customcheck .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+</style>
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+            $('#Accli').addClass("menu-open");
+            $('#Reportsli').removeClass("menu-open");
+            $('#Statementsli').removeClass("menu-open");
+            $('#AccPli').removeClass("menu-open");
+            $('#AccRli').removeClass("menu-open");
+            $('#Setupli').removeClass("menu-open");
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() + 'Finance/Accounts/' + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'Finance/Accounts';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#CompanyId').change(function () {
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName() + 'Ajax/BranchCascading',
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+    </script>
+
+}

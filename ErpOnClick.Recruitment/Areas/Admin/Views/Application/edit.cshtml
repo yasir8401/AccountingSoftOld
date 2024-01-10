@@ -1,0 +1,324 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+
+    IList<Lookups> applicationSourceList = Model.applicationSourceList;
+    IList<Lookups> applicationStatusList = Model.applicationStatusList;
+    IList<Lookups> degreeList = Model.degreeList;
+    IList<Lookups> deptList = Model.deptList;
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<VacantJobs> vacantJobList = Model.vacantJobList;
+
+
+    Applications applicationDetails = Model.applicationDetails;
+    bool isEdit = (applicationDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="ApplicationId" name="ApplicationId" class="form-control" value="@(applicationDetails != null ? applicationDetails.ApplicationId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                Details
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> Save
+                </button>
+                <a href="~/admin/application" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> Return
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Applicant Id</label>
+                        <input type="text" id="ApplicantId" name="ApplicantId" class="form-control" value="@(applicationDetails!=null?applicationDetails.ApplicantId: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="ApplicantName" name="ApplicantName" class="form-control" value="@(applicationDetails!=null?applicationDetails.ApplicantName: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="Email" name="Email" class="form-control" value="@(applicationDetails!=null?applicationDetails.Email: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="number" id="Phone" name="Phone" class="form-control" value="@(applicationDetails!=null?applicationDetails.Phone: null)" required>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Expected Salary</label>
+                        <input type="number" id="ExpectedSalary" name="ExpectedSalary" class="form-control" value="@(applicationDetails!=null?applicationDetails.ExpectedSalary: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Expected Extra</label>
+                        <input type="number" id="ExpectedExtra" name="ExpectedExtra" class="form-control" value="@(applicationDetails!=null?applicationDetails.ExpectedExtra: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Proposed Salary</label>
+                        <input type="number" id="ProposedSalary" name="ProposedSalary" class="form-control" value="@(applicationDetails!=null?applicationDetails.ProposedSalary: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Proposed Extra</label>
+                        <input type="number" id="ProposedExtra" name="ProposedExtra" class="form-control" value="@(applicationDetails!=null?applicationDetails.ProposedExtra: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Availability</label>
+                        <input type="text" id="Availability" required name="Availability" class="form-control DatePicker" value="@(applicationDetails != null && applicationDetails.Availability !=null ? Convert.ToDateTime(applicationDetails.Availability).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                More Details
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Source Type</label>
+                        <select id="ApplicationSourceType" name="ApplicationSourceType" class="form-control" required>
+
+                            @foreach (var item in applicationSourceList)
+                            {
+                                <option value="@item.Code" @(applicationDetails != null && applicationDetails.ApplicationSourceType == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Degree</label>
+                        <select id="DegreeId" name="DegreeId" class="form-control" required>
+
+                            @foreach (var item in degreeList)
+                            {
+                                <option value="@item.Code" @(applicationDetails != null && applicationDetails.DegreeId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label> Job</label>
+                        <select id="VacantJobId" name="VacantJobId" class="form-control" required>
+
+                            @foreach (var item in vacantJobList)
+                            {
+                                <option value="@item.JobId" @(applicationDetails != null && applicationDetails.VacantJobId == item.JobId ? "selected" : "")>
+                                    @item.JobTitle
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Job Department</label>
+                        <select id="JobDepartmentId" name="JobDepartmentId" class="form-control" required>
+
+                            @foreach (var item in deptList)
+                            {
+                                <option value="@item.Code" @(applicationDetails != null && applicationDetails.JobDepartmentId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(applicationDetails != null && applicationDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Branch</label>
+                        <select id="BranchId" name="BranchId" class="form-control" required>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(applicationDetails != null && applicationDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="ApplicationStatus" name="ApplicationStatus" class="form-control" required>
+
+                            @foreach (var item in applicationStatusList)
+                            {
+                                <option value="@item.Code" @(applicationDetails != null && applicationDetails.ApplicationStatus == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-outline card-outline col-lg-8">
+        <div class="card-header">
+            <h3 class="card-title">
+                Summary
+            </h3>
+
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body pad">
+            <div class="mb-3">
+                <textarea id="ApplicationSummary" rows="8" name="ApplicationSummary"
+                          style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(applicationDetails != null? applicationDetails.ApplicationSummary : "")</textarea>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+
+            $('#ApplicationSummary').summernote(
+                {
+                    height: 200,
+
+                }
+            );
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: applicationName+"admin/application/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName+'admin/application';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#CompanyId').change(function () {
+            debugger;
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName+"Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+               
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+                        debugger;
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+    </script>
+
+}

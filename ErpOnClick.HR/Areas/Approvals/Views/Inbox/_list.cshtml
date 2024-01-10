@@ -1,0 +1,140 @@
+﻿@using ErpOnClick.ErpMain.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<ApprovalRouteDetailViewModel> InboxList = Model.ApprovalRouteDetailViewModelList;
+}
+<style>
+    .btnwidth {
+        width: 75px;
+    }
+</style>
+@Html.Partial("/Views/Shared/ApprovalLayout/_generalModalPartial.cshtml")
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Subject") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Record Name") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Requested By")  </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Requested Date")  </th>
+
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Approval")  </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Action Date ")  </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Approval Status")  </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Actions")  </th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+
+                <th> Subject </th>
+                <th> Record Name </th>
+                <th> Requested By </th>
+                <th> Requested Date </th>
+
+                <th> Approval </th>
+                <th> Action Date </th>
+
+                <th> Approval Status </th>
+
+                <th> Actions </th>
+
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in InboxList)
+            {
+
+                <tr class="text-center">
+
+                    <td align="left"> @item.Route.RecordNotes </td>
+                    <td align="left"> @item.Route.RecordName </td>
+                    <td align="left"> @item.RequestedBy </td>
+                    <td>@(item.Route.CreatedDate != null ? Convert.ToDateTime(item.Route.CreatedDate).ToString("dd-MMM-yyyy") : "")</td>
+
+                    <td align="left"> @item.ApprovarUser </td>
+                    <td>@(item.Route.ActionDate != null ? Convert.ToDateTime(item.Route.ActionDate).ToString("dd-MMM-yyyy") : "Waiting for action")</td>
+
+                    <td align="center">
+                        @if (item.Status == "Rejected")
+                        {
+                            <label class="text-danger"><i class="fa fa-times mr-2"></i>Rejected</label>
+                        }
+                        else if (item.Status == "Approved")
+                        {
+                            <label class="text-success"><i class="fa fa-check mr-2"></i>Approved</label>
+                        }
+                        else
+                        {
+                            <label class="text-warning"><i class="fa fa-spinner fa-spin mr-2"></i>Pending</label>
+                        }
+                    </td>
+
+                    <td class="text-center" width="20px">
+                        <a href="javascript:void(0)" class="btn btn-block btn-sm btn-primary" onclick="showDetail('@System.Text.Json.JsonSerializer.Serialize(item.Route)','@item.RequestedBy','@System.Text.Json.JsonSerializer.Serialize(item.ApproverUsersList)')" title="Edit"><i class="fa fa-search"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+
+    function showDetail(LogDetail, requestedBy, approvalUsers) {
+
+        var jsonData = JSON.parse(LogDetail);
+        var approvalUsersJson = JSON.parse(approvalUsers);
+
+
+
+        var displayDAta = "<form action='" + applicationName + "Approvals/Inbox/ChangeStatus'><input type='hidden' id='id' name='id' value='" + jsonData.RouteDetailId + "'> <div class='row'><h5>@SharedLocalizer.GetLocalizedHtmlString("Request Details")</h5><hr/><br/><div class='col-sm-12'><table id='dtList' class='table table-bordered'><thead><tr><th>@SharedLocalizer.GetLocalizedHtmlString("Subject")</th><th>@SharedLocalizer.GetLocalizedHtmlString("Record Name")</th><th>@SharedLocalizer.GetLocalizedHtmlString("Requested By")</th><th>@SharedLocalizer.GetLocalizedHtmlString("Requested Date")</th></tr></thead><tbody><tr><td>" + jsonData.RecordNotes + "</td ><td>" + jsonData.RecordName + "</td > <td>" + requestedBy + "</td><td>" + new Date(jsonData.CreatedDate).toDateString("yyyy-MM-dd")  + "</td></tr></tbody></table></div><br/><hr/><h5>@SharedLocalizer.GetLocalizedHtmlString("Approvers")</h5><div class='col-sm-12' ><hr /><ul >";
+
+
+        $.each(approvalUsersJson, function (key, value) {
+
+            displayDAta += "<li class='box' style='font-weight:900;font-size:20px;letter-spacing:1px'>" + value.UserName + "   ";
+            if (value.Status == "Pending") {
+                displayDAta += "<label class='text-warning right pl-3'><i class='fa fa-spinner fa-spin mr-2'></i>" + value.Status + "</label></li>";
+            }
+            else if (value.Status == "Rejected") {
+                displayDAta += "<label class='text-danger right pl-3'><i class='fa fa-times mr-2'></i>" + value.Status + "</label></li>";
+            }
+            else {
+                displayDAta += "<label class='text-success right pl-3'><i class='fa fa-check mr-2'></i>" + value.Status + "</label></li>";
+            }
+        });
+
+        if (jsonData.ApprovalStatus == "007002" || jsonData.ApprovalStatus == "007003") {
+                    displayDAta += "</ul ></div ></form>"
+
+        }
+        else {
+
+            displayDAta += "</ul ></div ><h5>@SharedLocalizer.GetLocalizedHtmlString("Submit Your Action")</h5><div class='col-sm-12'><hr /> <label>@SharedLocalizer.GetLocalizedHtmlString("Status")</label><select name='Status' class='form-control'><option value='007001'>Pending</option><option value='007002'>Approved</option><option value='007003'>Rejected</option></select><label>@SharedLocalizer.GetLocalizedHtmlString("Comments")</label><textarea id='APPROVER_NOTES' name='APPROVER_NOTES' class='form-control border-0' style='background-color: whitesmoke;width: 100%;' borderrows=6 placeholder = 'Enter your comments here ...' ></textarea > <div class='clearfix margin-5'></div><hr><button type='submit' class='btn btn-primary' style='width:inherit'><i class='fa fa-check'></i> @SharedLocalizer.GetLocalizedHtmlString("Submit")</button></div></div></form> "
+
+        }
+
+        $('#generalModal .modal-body').html(displayDAta);
+        $('#generalModal').modal('show');
+        $('#generalModal .modal-title').html('Request Detail');
+
+    }
+    function setStatusVal(status) {
+        var valueNotes = $("#APPROVER_NOTES").val();
+        var id = $("#ROUTE_DETAIL_ID").val();
+
+    }
+
+</script>

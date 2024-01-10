@@ -1,0 +1,36 @@
+
+************ Release Notes 1.1.0 *************
+
+This document contains the information regarding the new features, enhancemen, bug fixed and deployment instructions.
+
+New Features:
+
+1. Added a new module ESS (Employee Self Service) for employee. This Module have following new features
+	* Employee Dashboard
+	* Employee Details
+	* Attendance
+	* Leaves Detail
+
+*************************************************
+
+New Enhancements:
+
+1. Added employee dropdown on User screen in Admin module to link employee with user.
+
+
+*************************************************
+
+Bug Fixed:
+
+
+*************************************************
+
+Deployment Instructions:
+
+Please follow the below instructions to deploy the release on production server.
+
+1. Take backup of exisitng database.
+2. Execute the script from DB Scripts folder in sequence
+3. Take backup of exisiting deployed application.
+4. Replace the existing deployed folder with new published folder. 
+

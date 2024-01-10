@@ -1,0 +1,111 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Layout = "_LayoutReport";
+    List<TaxRates> TaxRates = Model.TaxRatesIdList;
+    Company CompanyDetail = Model.CompanyDetail;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        TAXRATES
+                    </h2>
+                    <br>
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="100%"><i class="fa fa-filter"></i>Status </td>
+
+                            </tr>
+
+                            <tr class="ItemColor text-center">
+
+                                @if (Model.Status == "015001")
+                                {
+                                    <td width="100%" nowrap=""> Active</td>
+
+                                }
+                                else if (Model.Status == "015002")
+                                {
+                                    <td width="100%" nowrap=""> Inactive</td>
+                                }
+                                else
+                                {
+                                    <td width="100%" nowrap="">All</td>
+                                }
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            @*<tr class="Grid_HeaderStyle Grid_HeaderStyle_Arabic">
+                                    <th style="width:20px">الوصف</th>
+
+                                    <th width="60px">مبلغ الفاتورة</th>
+                                    <th width="40px">ضريبة</th>
+                                    <th width="40px">قيمة الضريبة</th>
+                                    <th width="40px">إجمالي</th>
+                                </tr>*@
+                            <tr class="Grid_HeaderStyle">
+                                <th style="width:20px">Tax Rate Id</th>
+
+                                <th>Tax Rate Name EN</th>
+                                <th>Tax Rate Name AR</th>
+                                <th>Tax Percent</th>
+                                <th>Active Status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (TaxRates.Count() > 0)
+                            {
+                                @foreach (var item in TaxRates)
+                                {
+                                    <tr class="ItemColor text-center">
+                                        <td class="text-center">@item.TaxRateId</td>
+                                        <td class="text-center">@item.TaxRateNameEn</td>
+                                        <td class="text-center">@item.TaxRateNameAr</td>
+
+                                        <td class="text-center">@item.TaxPercent</td>
+                                        <td class="text-center">
+                                            @if (item.ActiveStatus == "015001")
+                                            {
+                                                <i class="fa fa-check text-color-green"></i>
+                                            }
+                                            else if (item.ActiveStatus == "015002")
+                                            {
+                                                <i class="fa fa-times text-color-red"></i>
+                                            }
+                                        </td>
+                                    </tr>
+                                } }
+                            else
+                            {
+                                <tr class="ItemColor text-center">
+                                    <td colspan="5" class="text-center">Sorry! No Data Found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

@@ -1,0 +1,83 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+
+
+@{
+
+    List<SalaryPayablesPerMonth> empSalaryPayablesPerMonthList = Model.empSalaryPayablesPerMonthList;
+
+}
+
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th>PayableId </th>
+                <th>EMP</th>
+                <th>OtherDeduction </th>
+                <th>AbsentFine </th>
+                <th>Loan Deduction </th>
+                <th>TotalDeduction </th>
+                <th>Additions </th>
+                <th>SalaryMonth </th>
+                <th>SalaryYear </th>
+                <th>SalaryDate </th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th>PayableId </th>
+                <th>EMP</th>
+                <th>OtherDeduction </th>
+                <th>AbsentFine </th>
+                <th>Loan Deduction </th>
+                <th>TotalDeduction </th>
+                <th>Additions </th>
+                <th>SalaryMonth </th>
+                <th>SalaryYear </th>
+                <th>SalaryDate </th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in empSalaryPayablesPerMonthList)
+            {
+
+            <tr class="text-center">
+
+                <td><input type="text" id="PayableId" hidden value="@(item !=null ? item.PayableId : 0)" readonly name="PayableId" class="form-control" /> @item.PayableId</td>
+                <td><input type="text" id="EmpId" hidden value="@(item !=null ? item.EmpId : 0)" readonly name="EmpId" class="form-control" />@(item.Emp.FirstNameEn + " " + item.Emp.FatherNameEn + " " + item.Emp.GrandNameEn + " " + item.Emp.FamilyNameEn)</td>
+                <td><input type="number" id="OtherDeduction" value="@(item !=null ? item.OtherDeduction : 0)" name="OtherDeduction" class="form-control" />    </td>
+                <td><input type="number" id="AbsentFine" value="@(item !=null ? item.AbsentFine : 0)" name="AbsentFine" class="form-control" />    </td>
+                <td><input type="number" id="LoadDeductionThisMonth" value="@(item !=null ? item.LoadDeductionThisMonth : 0)" name="LoadDeductionThisMonth" class="form-control" />    </td>
+                <td><input type="number" id="TotalDeduction" readonly value="@(item !=null ? item.TotalDeduction : 0)" name="TotalDeduction" class="form-control" />    </td>
+                <td><input type="number" id="Additions" value="@(item !=null ? item.Additions : 0)" name="Additions" class="form-control" />    </td>
+
+                <td><input type="text" id="SalaryMonth" value="@(item !=null ? item.SalaryMonth : 0)" readonly name="SalaryMonth" class="form-control" />     </td>
+                <td><input type="text" id="SalaryYear" value="@(item !=null ? item.SalaryYear : 0)" readonly name="SalaryYear" class="form-control" />    </td>
+                <td><input type="text" id="SalaryDate" value="@(item !=null ? item.SalaryDate : DateTime.Now)" readonly name="SalaryDate" class="form-control" />    </td>
+
+
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        initDatePicker();
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+   
+
+</script>

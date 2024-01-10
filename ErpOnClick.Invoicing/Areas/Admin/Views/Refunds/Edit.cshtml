@@ -1,0 +1,623 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Invoicing.Resources
+@inject LocService SharedLocalizer
+
+@{ Refunds RefundMDetails = Model.refundMDetail;
+    List<RefundsLines> RefundDList = Model.refundDList;
+    List<ErpOnClick.DAL.Models.Items> ItemsList = Model.ItemsList;
+    //List<Branch> BranchDetails = Model.branchList;
+    List<Vendors> VendorsDetails = Model.vendorsList;
+    List<TaxRates> TaxList = Model.TaxList;
+    bool isEdit = (RefundMDetails != null);
+}
+
+<link rel="stylesheet" href="~/adminlte/dist/css/invoice.css">
+
+
+
+<form id="formEdit" role="form" method="post">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "Update" : "Save")" />
+    <input type="hidden" id="RefundId" name="RefundId" value="@(RefundMDetails != null ? RefundMDetails.RefundId : 0)" />
+
+
+    <div class="card card-default card-outline">
+        <div class="card-header">
+            <h2 class="card-title pt-1">
+                @SharedLocalizer.GetLocalizedHtmlString("Refunds")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                @if (RefundMDetails != null)
+                {
+                <a href="~/Admin/Refunds/Print/@RefundMDetails.RefundId" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Print")</a>
+                }
+            <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")</button>
+            <a href="~/Admin/Refunds/Index" class="btn btn-default btn-sm"><i class="fa fa-arrow-left fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Return")</a>
+            </div>
+        </div>
+        <div class="card-body pb-0 pt-2 text-sm">
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Refund Date")</label>
+                        <input name="RefundDate" id="RefundDate" class="form-control DatePicker" value="@(RefundMDetails != null && RefundMDetails.RefundDate != null ? Convert.ToDateTime(RefundMDetails.RefundDate).ToString("dd-MMM-yyyy") : "")" />
+
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Refund #")</label>
+                        <input type="text" required name="RefundNo" id="RefundNo" class="form-control" value="@(RefundMDetails != null && RefundMDetails.RefundNo != null ? RefundMDetails.RefundNo : "")" />
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Refund To")</label>
+                        <select name="VendorId" id="VendorId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in VendorsDetails)
+                            {
+                                <option value="@item.VendorId" @(RefundMDetails != null && RefundMDetails.VendorId == item.VendorId ? "selected" : "")>
+                                    @item.VendorNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Due Date")</label>
+                        <input name="DueDate" id="DueDate" class="form-control DatePicker" value="@(RefundMDetails != null && RefundMDetails.DueDate != null ? Convert.ToDateTime(RefundMDetails.DueDate).ToString("dd-MMM-yyyy") : "")" />
+
+                    </div>
+                </div>
+                @*<div class="col-sm-3">
+                            <div class="form-group ">
+                                <label>Ref No</label>
+                                <input name="RefNo" id="RefNo" required class="form-control" value="@(InvoiceMDetails != null && InvoiceMDetails.RefNo != null ? InvoiceMDetails.RefNo : "")" />
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group ">
+                                <label>Currency</label>
+                                <select name="Currency" id="Currency" class="form-control" required>
+                                    <option></option>
+                                    @if (InvoiceMDetails != null)
+                                    {
+                                        if (InvoiceMDetails.Currency == "USD")
+                                        {
+                                            <option value="USD" selected>USD</option>
+                                            <option value="SAD">SAD</option>
+                                        }
+                                        else if (InvoiceMDetails.Currency == "SAD")
+                                        {
+                                            <option value="USD">USD</option>
+                                            <option value="SAD" selected>SAD</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="USD">USD</option>
+                                        <option value="SAD">SAD</option>
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group ">
+                                <label>Tax Rate</label>
+                                <select name="TaxRateId" id="TaxRateId" class="form-control">
+                                    <option></option>
+                                    @foreach (var item in TaxList)
+                                    {
+                                        <option value="@item.TaxRateId" @(InvoiceMDetails != null && InvoiceMDetails.TaxRateId == item.TaxRateId ? "selected" : "")>
+                                            @item.TaxRateNameEn
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="form-group ">
+                                <label>Discount Percentage</label>
+                                <input name="DiscountPer" id="DiscountPer" min="0" max="100" class="form-control" value="@(InvoiceMDetails != null && InvoiceMDetails.DiscountPer != null ? InvoiceMDetails.DiscountPer : 0)" />
+
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <div class="card card-default card-outline">
+        <div class="card-header">
+            <h2 class="card-title pt-1">
+                @SharedLocalizer.GetLocalizedHtmlString("Items")
+            </h2>
+            <div class="card-tools">
+                <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="addRow(1)">@SharedLocalizer.GetLocalizedHtmlString("Add Row")</a>
+                <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="addRow(3)">@SharedLocalizer.GetLocalizedHtmlString("Add 3 Rows")</a>
+                <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="addRow(5)">@SharedLocalizer.GetLocalizedHtmlString("Add 5 Rows")</a>
+
+            </div>
+        </div>
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+                <table id="tblLines" class="table table-bordered m-0 table-condensed">
+                    <thead>
+                        <tr>
+                            <th style="display:none">@SharedLocalizer.GetLocalizedHtmlString("S.No") </th>
+                            <th style="width:10%!important">@SharedLocalizer.GetLocalizedHtmlString("Item")</th>
+                            <th>@SharedLocalizer.GetLocalizedHtmlString("Description")</th>
+                            <th>@SharedLocalizer.GetLocalizedHtmlString("Qty")</th>
+                            <th>@SharedLocalizer.GetLocalizedHtmlString("Unit Price")</th>
+                            <th>@SharedLocalizer.GetLocalizedHtmlString("Item Price")</th>
+                            @*<th style="width:10%!important">Tax Rate</th>
+                                <th>Tax Amount</th>*@
+                            @*<th>Discount Percantage</th>
+                                <th>Discount Amount</th>*@
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("Amount")</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr id="trSample" style="display:none">
+                            <td style="display:none">
+                                <input type="hidden" id="LineId" name="LineId" value=0>
+                            </td>
+                            <td style="width:10%!important">
+                                <select id="ItemId" name="ItemId">
+                                    <option></option>
+                                    @foreach (var item in ItemsList)
+                                    {
+                                        <option value="@item.ItemId">@item.ItemNameEn</option>
+                                    }
+                                </select>
+                            </td>
+                            <td><input type="text" id="Description" name="Description" class="text-left" /></td>
+                            <td><input min="0" type="number" step="any" id="Qty" name="Qty" /></td>
+                            <td><input type="number" min="0" step="any" id="UnitPrice" name="UnitPrice" /></td>
+                            <td><input type="number" min="0" step="any" id="ItemPrice" name="ItemPrice" readonly /></td>
+                            @*<td style="width:10%!important">
+                                    <select name="TaxPercent" id="TaxPercent" class="form-control">
+                                        <option></option>
+
+                                        @foreach (var taxitem in TaxList)
+                                        {
+                                            <option id="@taxitem.TaxPercent" value="@taxitem.TaxPercent">
+                                                @taxitem.TaxRateNameEn
+                                            </option>
+                                        }
+                                    </select>
+                                </td>
+                                <td><input type="number" min="0" step="any" id="TaxAmount" name="TaxAmount" readonly /></td>*@
+                            @*<td><input type="number" min="0" max="100" step="any" id="DiscountPercent" name="DiscountPercent" /></td>
+                                <td><input type="number" min="0" step="any" id="DiscountAmount" name="DiscountAmount" readonly /></td>*@
+
+                            <td><input type="number" min="0" step="any" id="LineAmount" name="LineAmount" readonly /></td>
+                            <td align="center">
+                                <input type="hidden" id="IsDeleted" name="IsDeleted" value="false">
+
+                                <a href="javascript:void(0)" id="lineDelete" class="btn btn-sm text-danger" onclick="deleteRow($(this).parent().parent())">
+                                    <i id="faDelete" class="fa fa-trash"></i>
+                                    <i id="faUndo" class="fa fa-undo text-white" style="display:none"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                        @foreach (var item in RefundDList)
+                        {
+                            <tr>
+                                <td style="display:none">
+                                    <input type="hidden" id="LineId" name="LineId" value="@(item.LineId != 0 ? item.LineId : 0)">
+                                </td>
+                                <td style="width:10%!important">
+                                    <select id="ItemId" name="ItemId">
+                                        <option></option>
+                                        @foreach (var items in ItemsList)
+                                        {
+                                            <option value="@items.ItemId" @(item != null && item.ItemId == items.ItemId ? "selected" : "")>@items.ItemNameEn</option>
+                                        }
+                                    </select>
+                                </td>
+                                <td><input type="text" id="Description" name="Description" class="text-left" value="@(item.Description != null ? item.Description : "")" /></td>
+                                <td><input type="number" min="0" step="any" id="Qty" name="Qty" value="@(item.Qty != null ? item.Qty : 0)" /></td>
+                                <td><input type="number" step="any" min="0" id="UnitPrice" name="UnitPrice" value="@(item.UnitPrice != null ? item.UnitPrice : 0)" /></td>
+                                <td><input type="number" min="0" step="any" id="ItemPrice" name="ItemPrice" readonly value="@(item.ItemPrice != null ? item.ItemPrice : 0)" /></td>
+
+                                @*<td style="width:10%!important">
+                                        <select name="TaxPercent" id="TaxPercent" class="form-control">
+                                            <option></option>
+                                            @foreach (var taxitem in TaxList)
+                                            {
+                                                <option value="@taxitem.TaxPercent" id="@taxitem.TaxPercent" @(item != null && item.TaxRateId == taxitem.TaxRateId ? "selected" : "")>
+                                                    @taxitem.TaxRateNameEn
+                                                </option>
+                                            }
+                                        </select>
+                                    </td>
+                                    <td><input type="number" min="0" step="any" id="TaxAmount" name="TaxAmount" readonly value="@(item.TaxAmount != null ? item.TaxAmount : 0)" /></td>*@
+                                @*<td><input type="number" min="0" max="100" step="any" id="DiscountPercent" name="DiscountPercent" value="@(item.DiscountPercent != null ? item.DiscountPercent : 0)" /></td>
+                                    <td><input type="number" min="0" step="any" id="DiscountAmount" name="DiscountAmount" readonly value="@(item.DiscountAmount != null ? item.DiscountAmount : 0)" /></td>*@
+
+
+
+                                <td><input type="number" min="0" step="any" id="LineAmount" name="LineAmount" readonly value="@(item.LineAmount != null ? item.LineAmount : 0)" /></td>
+                                <td align="center">
+                                    <input type="hidden" id="IsDeleted" name="IsDeleted" value="false">
+
+                                    <a href="javascript:void(0)" id="lineDelete" class="btn btn-sm text-danger" onclick="deleteRow($(this).parent().parent())">
+                                        <i id="faDelete" class="fa fa-trash"></i>
+                                        <i id="faUndo" class="fa fa-undo text-white" style="display:none"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    @*<tfoot id="Summary">
+                            <tr>
+                                <th colspan="5" class="text-right">Total:</th>
+                                <th style="text-align:center;"><input value="@(InvoiceMDetails!= null && InvoiceMDetails.SubTotal != null ? InvoiceMDetails.SubTotal : 0)" name="Total" id="Total" class="form-control" readonly /> </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>*@
+
+                    <tfoot id="Summary">
+                        <tr>
+                            <th colspan="5" style="text-align: right !important;padding-right: 10px !important;">@SharedLocalizer.GetLocalizedHtmlString("Sub Total")</th>
+                            <th><input type="number" step="any" id="SubTotal" name="SubTotal" readonly class="form-control text-right" value="@(RefundMDetails!=null?RefundMDetails.SubTotal: 0)"></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th colspan="3"></th>
+                            <th style="text-align:right !important; padding-right:10px !important;">@SharedLocalizer.GetLocalizedHtmlString("VAT %")</th>
+                            <th>
+                                <select name="TaxRateId" id="TaxRateId" class="form-control" required>
+                                    <option></option>
+                                    @foreach (var taxitem in TaxList)
+                                    {
+                                        <option value="@taxitem.TaxPercent" id="@taxitem.TaxPercent" @(RefundMDetails != null && RefundMDetails.TaxRateId == taxitem.TaxRateId ? "selected" : "")>
+                                            @taxitem.TaxRateNameEn
+                                        </option>
+                                    }
+                                </select>
+                            </th>
+                            @*<th><input type="number" step="any" id="TaxRate" name="TaxRate" class="form-control text-right" value="@(InvoiceMDetails!=null?InvoiceMDetails.TaxRate: null)"></th>*@
+                            <th><input type="number" step="any" id="TotalTax" name="TotalTax" readonly class="form-control text-right" value="@(RefundMDetails!=null?RefundMDetails.TotalTax: null)"></th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <th colspan="5" style="text-align: right !important;padding-right: 10px !important;">@SharedLocalizer.GetLocalizedHtmlString("Net Amount")</th>
+                            <th><input type="number" step="any" id="Total" name="Total" readonly class="form-control text-right" value="@(RefundMDetails!=null?RefundMDetails.Total: null)"></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="card card-default card-outline">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Notes / Remarks")
+            </h2>
+        </div>
+        <div class="card-body p-2">
+            <textarea id="Note" name="Note" class="form-control " style="border:none" placeholder="Enter your comments here...">@(RefundMDetails != null ? RefundMDetails.Note:"")</textarea>
+        </div>
+    </div>
+
+</form>
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+
+            if ($('#RefundId').val() == 0) {
+                addRow(5);
+            }
+            else if ($('#RefundId').val() != 0) {
+                var table = $('#tblLines');
+                table.find('tbody tr').each((i, item) => {
+                    var tr = $(item);
+                    var itemName = tr.find('#ItemId option:selected').text();
+                    if (itemName != "") {
+                        tr.find('#TaxPercent').prop("required", true);
+                    }
+                });
+            }
+            setTriggers();
+        });
+
+
+        $('#formEdit').submit(function (e) {
+            e.preventDefault();
+
+
+            var InvoiceM = Array();
+            //InvoiceM.CreatedDate = $('#CreatedDate').val();
+            InvoiceM.BillNo = $('#BillNo').val();
+            InvoiceM.VendorId = parseInt($('#VendorId').val());
+            console.log(InvoiceM);
+
+            var RefundD = Array();
+            $("#tblLines TBODY TR").each(function () {
+                ;
+                var row = $(this);
+                var InvoiceRows = {};
+                var itemname = row.find('#ItemId').val();
+                var itemname = row.find('#ItemId').val();
+                if (itemname != "") {
+                        InvoiceRows.LineId = row.find('#LineId').val();
+                        InvoiceRows.ItemId = row.find('#ItemId').val();
+                        InvoiceRows.Description = row.find('#Description').val();
+                        InvoiceRows.Qty = parseFloat(row.find('#Qty').val());
+                        InvoiceRows.UnitPrice = parseFloat(row.find('#UnitPrice').val());
+                        InvoiceRows.ItemPrice = parseFloat(row.find('#ItemPrice').val());
+                        //InvoiceRows.DiscountPercent = parseFloat(row.find('#DiscountPercent').val());
+                        //InvoiceRows.DiscountAmount = parseFloat(row.find('#DiscountAmount').val());
+                        InvoiceRows.TaxPercent = parseFloat(row.find('#TaxPercent').val());
+                        InvoiceRows.TaxAmount = parseFloat(row.find('#TaxAmount').val());
+                        InvoiceRows.LineAmount = parseFloat(row.find('#LineAmount').val());
+                        InvoiceRows.IsDeleted = row.find('#IsDeleted').val();
+                    RefundD.push(InvoiceRows);
+                }
+            });
+            console.log(RefundD);
+            var Invoice = {
+
+                RefundD: RefundD,
+                InvoiceM: InvoiceM,
+                //IsInternationalCust: $('#IsInternationalCust').val(),
+                VendorId: parseInt($('#VendorId').val()),
+                //Currency: $('#Currency').val(),
+                DueDate: $('#DueDate').val(),
+                RefundDate: $('#RefundDate').val(),
+                RefundNo: $('#RefundNo').val(),
+                RefundId: $('#RefundId').val(),
+                //RefNo: $('#RefNo').val(),
+                SubTotal: $('#SubTotal').val(),
+                Total: $('#Total').val(),
+                TaxRateId: $('#TaxRateId option:selected').val(),
+                TotalTax: $('#TotalTax').val(),
+                //DiscountPer: $('#DiscountPer').val(),
+                Note: $('#Note').val()
+            };
+
+            console.log(Invoice);
+            var params = $('#formEdit').serialize();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+                    $.ajax({
+                        url: `@Url.Content("~")/Admin/Refunds/${actionType}`,
+                        data: Invoice,
+                        type: 'POST',
+                        async: false,
+                        success: function (response) {
+                            if (response.result.isError == false) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() +'Admin/Refunds/Index';
+                                }, 1000);
+                            }
+                        }
+                    });
+                }
+                });
+
+        });
+
+
+
+        function addRow(n) {
+            var table = $('#tblLines');
+            trSample = table.find('#trSample');
+            for (var i = 0; i < n; i++) {
+                var newRow = trSample.clone();
+                newRow.removeAttr('id');
+                table.find('tbody').append(newRow);
+            }
+            table.find('tbody tr').not('#trSample').show();
+            setTriggers();
+
+        }
+
+
+        $('#TaxRateId').change(function () {
+
+            var table = $('#tblLines');
+            var tr;
+            table.find('tbody tr').each((i, item) => {
+                tr = $(item);
+            });
+            calculateTotal(tr);
+        });
+
+
+
+        function setTriggers() {
+            var table = $('#tblLines');
+            table.find('tbody tr').each((i, item) => {
+                var tr = $(item);
+                tr.find('#Qty,#UnitPrice').change(function () {
+
+                    var qty = tr.find('#Qty').val();
+                    var unitPrice = tr.find('#UnitPrice').val();
+                    var itemprice = parseFloat(qty) * parseFloat(unitPrice);
+                    tr.find('#ItemPrice').val(parseFloat(qty) * parseFloat(unitPrice));
+                    tr.find('#LineAmount').val((itemprice));
+                    calculateTotal(tr);
+
+                    //var taxper = tr.find('#TaxPercent').val();
+                    //if (taxper != "") {
+                    //    var taxam = ((parseFloat(qty) * parseFloat(unitPrice)) * taxper) / 100;
+                    //    tr.find('#TaxAmount').val(taxam);
+                    //    tr.find('#LineAmount').val((itemprice + taxam));
+                    //    calculateTotal(tr);
+                    //}
+                    //else {
+                    //    tr.find('#LineAmount').val(itemprice);
+                    //    calculateTotal(tr);
+                    //}
+
+
+                });
+                tr.find('#ItemId').change(function () {
+
+                    var itemName = tr.find('#ItemId option:selected').text();
+                    var description = tr.find('#Description').val();
+
+                    if (description == '') {
+                        tr.find('#Description').val(itemName);
+                    }
+                    if (itemName != null) {
+                        tr.find('#TaxPercent').prop("required", true);
+                    }
+                });
+
+
+                tr.find('#DiscountPercent').change(function () {
+
+                    var qty = tr.find('#Qty').val();
+                    var unitPrice = tr.find('#UnitPrice').val();
+                    var itemprice = parseFloat(qty) * parseFloat(unitPrice);
+                    var Vat = tr.find('#TaxRateId').val();
+                    if (Vat != "") {
+                        var Vat = tr.find('#TaxRateId').val();
+                        var taxam = ((parseFloat(qty) * parseFloat(unitPrice)) * Vat) / 100;
+                        tr.find('#TaxAmount').val(taxam);
+                        var discount = tr.find('#DiscountPercent').val();
+                        if (discount != "") {
+                            var totalamount = (itemprice + taxam);
+                            var disam = totalamount * discount / 100;
+                            tr.find('#DiscountAmount').val(disam);
+                            var linediscount = (parseFloat(totalamount) - disam);
+                            tr.find('#LineAmount').val(linediscount);
+                            calculateTotal(tr);
+
+                        }
+                        else {
+                            var lineamount = itemprice + taxam;
+                            tr.find('#LineAmount').val(lineamount);
+                            calculateTotal(tr);
+
+                        }
+                    }
+                    else {
+                        tr.find('#TaxAmount').val(0);
+                        var discount = tr.find('#DiscountPercent').val();
+                        if (discount != "") {
+                            var totalamount = (itemprice);
+                            var disam = totalamount * discount / 100;
+                            tr.find('#DiscountAmount').val(disam);
+                            var linediscount = (parseFloat(totalamount) - disam);
+                            tr.find('#LineAmount').val(linediscount);
+                            calculateTotal(tr);
+
+                        }
+                        else {
+                            var lineamount = itemprice;
+                            tr.find('#LineAmount').val(lineamount);
+                            calculateTotal(tr);
+
+                        }
+                    }
+
+                });
+
+                tr.find('#TaxPercent').change(function () {
+
+
+                    var qty = tr.find('#Qty').val();
+                    var unitPrice = tr.find('#UnitPrice').val();
+                    var itemprice = parseFloat(qty) * parseFloat(unitPrice);
+                    var Vat = tr.find('#TaxPercent').val();
+                    if (Vat != "") {
+                        var Vat = tr.find('#TaxPercent').val();
+                        var taxam = ((parseFloat(qty) * parseFloat(unitPrice)) * Vat) / 100;
+                        tr.find('#TaxAmount').val(taxam);
+                        var totalamount = (itemprice + taxam);
+                        tr.find('#LineAmount').val(totalamount);
+                        calculateTotal(tr);
+                    }
+                    else {
+                        tr.find('#TaxAmount').val(0);
+                        var totalamount = (itemprice);
+                        tr.find('#LineAmount').val(totalamount);
+                        calculateTotal(tr);
+                    }
+                });
+
+
+            });
+        }
+        function deleteRow(tr) {
+
+            tr.toggleClass('bg-danger');
+            tr.find('a > #faDelete').toggle();
+            tr.find('a > #faUndo').toggle();
+            var inputFields = tr.find('#IsDeleted');
+
+            var isDelete = tr.find('#IsDeleted').val();
+            if (isDelete == "false") {
+                tr.find('#IsDeleted').val("true");
+            }
+            if (isDelete == "true") {
+                tr.find('#IsDeleted').val("false");
+            }
+            calculateTotal(tr);
+        }
+        function isNull(val) {
+            if (parseFloat(val) > 0 || parseFloat(val) < 0) {
+                return parseFloat(val);
+            } else {
+                return 0;
+            }
+        }
+
+        function calculateTotal(tr) {
+
+            var netPrice = 0;
+            $("#tblLines > tbody  > tr").not(".bg-danger").each(function () {
+                var tr = $(this);
+                netPrice += isNull(tr.find('#LineAmount').val());
+
+            });
+
+            $('#Summary').find('#SubTotal').val(netPrice);
+
+            var SubTotal = isNull($('#Summary').find('#SubTotal').val());
+            var VatPercent = isNull($('#Summary').find('#TaxRateId').val());
+
+            $('#Summary').find('#TotalTax').val(SubTotal * VatPercent / 100);
+
+            var VatAmount = isNull($('#Summary').find('#TotalTax').val());
+
+
+
+            $('#Summary').find('#Total').val(SubTotal + VatAmount);
+        }
+
+    </script>
+
+}

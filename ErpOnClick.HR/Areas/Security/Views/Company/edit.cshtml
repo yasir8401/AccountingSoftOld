@@ -1,0 +1,285 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Company CompanyDetail = Model.CompanyIdDetail;
+    bool isEdit = (CompanyDetail != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(CompanyDetail != null ? CompanyDetail.CompanyId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                Company Info
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> Save
+                </button>
+                <a href="~/Security/Company" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> Return
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input type="text" id="CoNameEn" name="CoNameEn" class="form-control" value="@(CompanyDetail!=null?CompanyDetail.CoNameEn: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Company Name in Arabic</label>
+                        <input type="text" id="CoNameAr" name="CoNameAr" class="form-control" dir="rtl" value="@(CompanyDetail!=null?CompanyDetail.CoNameAr: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>CR Number</label>
+                        <input type="text" id="CrNo" name="CrNo" class="form-control" value="@(CompanyDetail!=null?CompanyDetail.CrNo: "")">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>VAT Number</label>
+                        <input type="text" id="VatNo" name="VatNo" class="form-control" value="@(CompanyDetail!=null?CompanyDetail.VatNo: "")">
+                    </div>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                @*<div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Language</label>
+                            <input type="text" id="Language" name="Language" class="form-control" value="@(CompanyDetail!=null?CompanyDetail.Language: "")" >
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Currency</label>
+                            <input type="text" id="Currency" name="Currency" class="form-control" value="@(CompanyDetail!=null?CompanyDetail.Currency: "")" >
+                        </div>
+                    </div>*@
+
+
+
+
+
+
+                <div class="col-sm-6 d-none">
+                    <div class="form-group">
+                        <label>Active Status</label>
+                        <select id="IsEnable" name="IsEnable" class="form-control">
+                            @*<option></option>*@
+                            <option value="True" @(CompanyDetail != null && CompanyDetail.IsEnable == true ? "selected" : "")>Active</option>
+                            <option value="False" @(CompanyDetail != null && CompanyDetail.IsEnable == false ? "selected" : "")>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                Contact Info
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="CoEmail" name="CoEmail" class="form-control" value="@(CompanyDetail!=null?CompanyDetail.CoEmail: "")">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="number" id="CoPhone" name="CoPhone" class="form-control" value="@(CompanyDetail!=null?CompanyDetail.CoPhone: "")">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Website</label>
+                        <input type="url" id="CoWebsite" name="CoWebsite" class="form-control" value="@(CompanyDetail!=null?CompanyDetail.CoWebsite: "")">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                Address
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea id="CoAddressEn" name="CoAddressEn" rows="5" class="form-control">@(CompanyDetail!=null?CompanyDetail.CoAddressEn: "")</textarea>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Address in Arabic</label>
+                        <textarea id="CoAddressAr" name="CoAddressAr" rows="5" class="form-control" dir="rtl">@(CompanyDetail!=null?CompanyDetail.CoAddressAr: "")</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                Accounting
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Fiscal Start Month</label>
+                        <input type="number" id="FiscalYearStartMonth" name="FiscalYearStartMonth" class="form-control" value="@(CompanyDetail!=null?CompanyDetail.FiscalYearStartMonth: 0)">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Fiscal Year Based on</label>
+                        <input type="number" id="FiscalYearIsBasedOn" name="FiscalYearIsBasedOn" class="form-control" value="@(CompanyDetail!=null?CompanyDetail.FiscalYearIsBasedOn: "")">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                Bank Detail
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Bank Detail in English</label>
+                        <textarea id="BankDetailEn" name="BankDetailEn" rows="5" class="form-control">@(CompanyDetail!=null?CompanyDetail.BankDetailEn : "")</textarea>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Bank Detail in Arabic</label>
+                        <textarea id="BankDetailAr" name="BankDetailAr" rows="5" class="form-control">@(CompanyDetail!=null?CompanyDetail.BankDetailAr : "")</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() +"Security/Company/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() +'Security/Company';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

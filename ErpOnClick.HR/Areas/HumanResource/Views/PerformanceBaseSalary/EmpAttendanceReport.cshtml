@@ -1,0 +1,81 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+
+
+    
+}
+
+
+
+<form id="frmEdit" role="form">
+  
+
+    <div class="card card-default card-outline col-lg-12">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Emp Attendance Report")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+
+            </div>
+            <br />
+            <br />
+
+            @{
+                    DateTime? dateM = DateTime.Now;
+
+                <input type="month" class="form-control col-md-3" value="@(dateM.Value.Year+"-"+dateM.Value.ToString("MM"))" id="DatePayRun" />
+            }
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+                <div id="divList" class="table-responsive"></div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</form>
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+            BindGrid();
+        });
+        var applicationName = getApplicationName();
+
+        function BindGrid() {
+            var date = $('#DatePayRun').val();
+        
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'HumanResource/EmpAttendances/_ListEmpAttendanceReport',
+                data: { date: date, id: 1 },
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+        $('#DatePayRun').change(function () {
+            BindGrid();
+        });
+
+
+
+    </script>
+
+}

@@ -1,0 +1,139 @@
+﻿@using ErpOnClick.Invoicing.Resources
+@inject LocService SharedLocalizer
+
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
+
+
+        <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("A/c Receivables")
+                    <i class="fas fa-angle-left right"></i>
+
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/admin/Customers" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Customers")</p></a></li>
+                <li class="nav-item"><a href="~/admin/Invoice" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Invoices")</p></a></li>
+                <li class="nav-item"><a href="~/admin/Receipts" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Receipts")</p></a></li>
+                <li class="nav-item"><a href="~/admin/CreditNotes" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Credit Notes")</p></a></li>
+
+
+            </ul>
+        </li>
+
+
+
+
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("A/c Payables")
+                    <i class="fas fa-angle-left right"></i>
+
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/admin/Vendors" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Vendors")</p></a></li>
+                <li class="nav-item"><a href="~/admin/Bills" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Bills")</p></a></li>
+                <li class="nav-item"><a href="~/admin/payments" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Payments")</p></a></li>
+                <li class="nav-item"><a href="~/admin/Refunds" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Refunds")</p></a></li>
+
+
+            </ul>
+        </li>
+
+
+
+
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Accounting")
+                    <i class="fas fa-angle-left right"></i>
+
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/fn/AccountTypes" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Account Types")</p></a></li>
+                <li class="nav-item"><a href="~/fn/AccountGroups" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Account Groups")</p></a></li>
+                <li class="nav-item"><a href="~/fn/Accounts" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Accounts")</p></a></li>
+                <li class="nav-item"><a href="~/fn/GeneralEntries" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("General Entries")</p></a></li>
+                <li class="nav-item"><a href="~/fn/FixedAsset" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Fixed Asset")</p></a></li>
+                <li class="nav-item"><a href="~/fn/Banks" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Banks")</p></a></li>
+
+
+                <li class="nav-item has-treeview">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-copy"></i>
+                        <p>
+                            @SharedLocalizer.GetLocalizedHtmlString("Reports")
+                            <i class="fas fa-angle-left right"></i>
+
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item"><a href="~/fn/TrailReport" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Trail Balance")</p></a></li>
+                        <li class="nav-item"><a href="~/fn/AccountLedger" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Account Ledger")</p></a></li>
+                        @*<li class="nav-item"><a href="~/fn/CustomerReport" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>Customer Report</p></a></li>*@
+                        <li class="nav-item"><a href="~/fn/CustomerLedgerReport" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Customer Ledger Report")</p></a></li>
+                        @*<li class="nav-item"><a href="~/fn/VendorReport" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>Vendor Report</p></a></li>*@
+                        <li class="nav-item"><a href="~/fn/VendorLedgerReport" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Vendor Ledger Report")</p></a></li>
+
+
+                    </ul>
+                </li>
+            </ul>
+        </li>
+
+
+
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Inventory")
+                    <i class="fas fa-angle-left right"></i>
+
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/admin/Items" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Item's")</p></a></li>
+                <li class="nav-item"><a href="~/admin/ItemCategories" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Item Categories")</p></a></li>
+
+
+            </ul>
+        </li>
+
+
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-copy"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Setup")
+                    <i class="fas fa-angle-left right"></i>
+
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/admin/TaxRates" class="nav-link "><i class="fas fa-arrow-right nav-icon"></i><p>@SharedLocalizer.GetLocalizedHtmlString("Tax Rate's")</p></a></li>
+
+            </ul>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="~/auth/login/logout" class="nav-link">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Logout")
+
+                </p>
+            </a>
+        </li>
+
+
+    </ul>
+</nav>

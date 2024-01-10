@@ -1,0 +1,92 @@
+﻿@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+@using ErpOnClick.DAL.Models
+@{
+    var userId = Model.userId;
+    Users userDetails = Model.userDetails;
+}
+
+
+@section TabName{
+    Vacant jobs Setup
+}
+
+
+<form id="frmList">
+    <input type="hidden" id="userId" name="userId" class="form-control" value="@userId" />
+
+    <div class="card card-default card-outline">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="navigation()" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("user")</a>
+                </li>
+
+
+                <li class="nav-item">
+                    <a class="nav-link" id="tabUserPrivileges-tab" data-toggle="pill" onclick="navigationTwo()" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("User Privilage")</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="tabUserRole-tab" data-toggle="pill" onclick="navigationThree()" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("User Roles")</a>
+                </li>
+            </ul>
+        </div>
+
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("User Roles")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <a href="~/Security/UserRole/edit/user/@userId" type="button" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add New")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+
+
+
+        <div class="card-body">
+            <div id="divList"></div>
+
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#tabUserRole-tab").addClass("nav-link active");
+            BindGrid();
+        });
+
+
+        function BindGrid() {
+
+
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() + 'Security/UserRole/_list',
+                data: $('#frmList').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+         function navigation() {
+
+             window.location = getApplicationName() + 'Security/User/edit/@userId';
+    };
+          function navigationTwo() {
+
+              window.location = getApplicationName() + 'Security/userprivileges/user/@userDetails.UserId';
+            };
+         function navigationThree() {
+
+              window.location = getApplicationName() + 'Security/userrole/user/@userDetails.UserId';
+            };
+    </script>
+}

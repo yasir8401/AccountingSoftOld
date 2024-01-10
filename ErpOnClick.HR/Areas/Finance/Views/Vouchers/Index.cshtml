@@ -1,0 +1,376 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+@{ List<Lookups> types = Model.types; }
+
+@section TabName{
+    Lookup Setup
+}
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("General Entries")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a href="~/Finance/Vouchers/PostAll" id="postAll()" type="button" class="btn btn-sm btn-success" style="background-color: #86cac9; border-color: #86cac9;">
+                <i class="fas fa-clipboard-check"></i> @SharedLocalizer.GetLocalizedHtmlString("Post All")
+            </a>
+            <a href="@Url.Content("~/")Finance/Vouchers/ExcelDocument" id="exportdata" type="button" class="btn btn-sm btn-primary">
+                <i class="fas fa-file-export"></i> @SharedLocalizer.GetLocalizedHtmlString("Export File")
+            </a>
+            <a href="javascript:void(0)" id="importdata" onclick="importData()" type="button" class="btn btn-sm btn-primary">
+                <i class="fas fa-file-import"></i> @SharedLocalizer.GetLocalizedHtmlString("Import File")
+            </a>
+            <a href="~/Finance/Vouchers/edit" type="button" class="btn btn-sm btn-light">
+                <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add New")
+            </a>
+        </div>
+        <!-- /. tools -->
+    </div>
+
+    <div class="card-footer pb-0 pt-2 text-sm">
+        <form id="frmSearch">
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("From Date")</label>
+                        <input type="text" id="DateFrom" name="DateFrom" class="form-control DatePicker" required>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("To Date")</label>
+                        <input type="text" id="DateTo" name="DateTo" class="form-control DatePicker" required>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <label></label>
+                    <button type="submit" class="form-control btn btn-primary btn-sm" style="margin-top:8px !important">Search</button>
+                </div>
+            </div>
+            <div class="row bg-white">
+                <div class="col-md-3 pt-4">
+                    <div id="jstree">
+                        <ul>
+                            <li id="0">
+                                <span class="head">
+                                    All
+                                </span>
+                            </li>
+                            @foreach (var type in types)
+                            {
+
+                <li id="@type.Code">
+                    <span class="head">
+                        @type.LookupNameEn
+                    </span>
+                </li>}
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-9 card-body">
+                    <div id="divList"></div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+    .accent-orange .btn-link, .accent-orange a:not(.dropdown-item):not(.btn-app):not(.nav-link):not(.brand-link):not(.page-link):not(.btn) {
+        color: #6d8888 !important;
+    }
+
+    .jstree-default .jstree-node {
+        min-height: 28px !important;
+        line-height: 24px;
+        margin-left: 24px;
+        min-width: 24px;
+    }
+
+    .jstree-default .jstree-wholerow-clicked {
+        background: linear-gradient(to bottom,#dbefef 0,#496b6a 100%) !important;
+    }
+
+    .head {
+        font-weight: bold;
+        letter-spacing: 1px;
+        font-size: 16px
+    }
+
+    /* The customcheck */
+    .customcheck {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        /* Hide the browser's default checkbox */
+        .customcheck input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #dbefef;
+        border-radius: 5px;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .customcheck:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .customcheck input:checked ~ .checkmark {
+        background-color: #84ceeb;
+        border-radius: 5px;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .customcheck input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .customcheck .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+</style>
+
+@Html.Partial("/areas/Finance/Views/Vouchers/_generalModalPartial.cshtml")
+
+@section scripts{
+    <script>
+        $(function () {
+            $('#Accli').addClass("menu-open");
+            $('#Reportsli').removeClass("menu-open");
+            $('#Statementsli').removeClass("menu-open");
+            $('#AccPli').removeClass("menu-open");
+            $('#AccRli').removeClass("menu-open");
+            $('#Setupli').removeClass("menu-open");
+
+            var startdate = new Date();
+            var enddate = new Date();
+            startdate.setDate(startdate.getDate() - 30);
+            enddate.setDate(enddate.getDate() + 1);
+            var startdatedd = String(startdate.getDate()).padStart(2, '0');
+            var startdatemm = String(startdate.getMonth() + 1).padStart(2, '0')
+            var startdateyyyy = startdate.getFullYear();
+            var enddatedd = String(enddate.getDate()).padStart(2, '0');
+            var enddatemm = String(enddate.getMonth() + 1).padStart(2, '0')
+            var enddateyyyy = enddate.getFullYear();
+            var start = startdateyyyy + '-' + startdatemm + '-' + startdatedd;
+            today = enddateyyyy + '-' + enddatemm + '-' + enddatedd;
+            $('#DateFrom').val(start);
+            $('#DateTo').val(today);
+            $('#jstree').jstree({
+                "plugins": ["wholerow"]
+            });
+
+            $('#frmSearch button').click();
+        });
+        $('#jstree').on("changed.jstree", function (e, data) {
+            var datefrom = $('#DateFrom').val();
+            var dateto = $('#DateTo').val();
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() + 'Finance/Vouchers/_list?data=' + data.selected + '&DateFrom=' + datefrom + '&DateTo=' + dateto,
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        });
+        //$('#frmSearch').find('input, select').change(() => {
+        //    $('#frmSearch button').click();
+        //});
+
+        $('#frmSearch').submit(function (e) {
+            e.preventDefault();
+            BindGrid();
+        });
+
+
+        function BindGrid() {
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() + 'Finance/Vouchers/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        }
+
+        function importData() {
+            $('#importdataModal').modal('show');
+        }
+
+
+        $('#formimportV').submit(function (e) {
+            e.preventDefault();
+
+            var ext = $('#VoucherFile').val().split('.').pop().toLowerCase();
+            if (!(ext == "xlsx" || ext == "xls")) {
+                document.getElementById(this.id).value = "";
+                showMsg("Invalid File Type !", "You may only upload Excel files. Please ensure your file is in one of these formats.", "error");
+                isValidated = false;
+            }
+            else {
+                var file = $("#VoucherFile")[0].files[0];
+                var reader = new FileReader();
+                var excelData = [];
+                var ImportData = Array();
+                var _ImportData = {};
+                var count = 0;
+                var check = false;
+                reader.onload = function (event) {
+                    var data = event.target.result;
+                    var workbook = XLSX.read(data, {
+                        type: 'binary'
+                    });
+
+                    workbook.SheetNames.forEach(function (sheetName) {
+
+                        // Here is your object
+                        if (sheetName == "Voucher") {
+
+                            var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                            var row = "";
+                            var ImportData = new Array();
+                            $.each(XL_row_object, function (key, value) {
+
+                                var DataRows = {};
+                                DataRows.LineId = value.Code;
+                                DataRows.Name = value.Name;
+                                DataRows.Level = value.Level;
+                                DataRows.Nature = value.Nature;
+                                ImportData.push(DataRows);
+                                count = count + 1;
+                                if (count == XL_row_object.length) {
+                                    check = true;
+                                }
+                            });
+                            var Data = {
+
+                                IData: ImportData
+                            };
+
+                            if (check == true) {
+                                sendData(Data);
+                            }
+                        }
+                        else {
+
+                        }
+                    });
+                };
+
+                reader.onerror = function (ex) {
+                    console.log(ex);
+                };
+
+                reader.readAsBinaryString(file);
+            }
+        });
+
+        function sendData(Data) {
+
+            $('#formimportV').find('#formsubmit').html('<i class="fa fa-spinner fa-spin fa-fw"></i> Please Wait, While Your Data is Importing...');
+            $('#formimportV').find('#formsubmit').prop("disabled", true);
+            var params = $('#formimportV').serialize();
+            var formEl = document.forms.formimportV;
+            var formData = new FormData(formEl);
+            $.ajax({
+                url: getApplicationName() + "Finance/Vouchers/ImportData",
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData ? formData : params,
+                success: function (data) {
+
+                    if (data.result.isError == false) {
+                        setTimeout(function () {
+                            showMsg('Data Imported !', 'Data has been Imported !', 'success');
+                            window.location.href = getApplicationName() + 'Finance/Vouchers/Index?filename=' + data.result.msg;
+
+                        }, 1000);
+                        $('#formimportV').find('#formsubmit').html('<i class="fa fa-paperclip fa-fw"></i> Upload Now');
+                        $('#formimportV').find('#formsubmit').prop("disabled", false);
+                    }
+                    else if (data.result.isError == true) {
+                        setTimeout(function () {
+                            showMsg('Error !', data.result.msg, 'error');
+
+                        }, 1000);
+                        $('#formimportV').find('#formsubmit').html('<i class="fa fa-paperclip fa-fw"></i> Upload Now');
+                        $('#formimportV').find('#formsubmit').prop("disabled", false);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        function postAll() {
+            confirmAction('Confirm ?', 'Are you sure you want to Post Voucher ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+                    $.ajax({
+                        url: getApplicationName() + 'Finance/Vouchers/PostAll',
+                        async: false,
+                        type: "POST",
+                        data: {},
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Posted !', 'All Record has been Posted !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'Finance/Vouchers';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Posted Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Posted Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

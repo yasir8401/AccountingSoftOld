@@ -1,0 +1,154 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models.Finance
+@{ Layout = "_LayoutReport";
+    VoucherViewModel VoucherMDetails = Model.VoucherMDetails;
+
+    Company CompanyDetail = Model.CompanyDetail;
+    List<Emp> Emps = Model.Emps;
+    List<Users> Users = Model.Users;
+    List<VoucherLines> VoucherDList = Model.VoucherDList;
+    List<Accounts> AccountsDetails = Model.AccountsList;
+
+    decimal totaldebit = 0;
+    decimal totalcredit = 0; }
+
+
+<div>
+    <br />
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h4 class="text-center" style="margin:5px 0px 0px 0px; font-weight:500"></h4><br>
+
+                    <br>
+                    <div class="col-md-12 row">
+                        <div class="col-md-3  text-left" style=" float: left;">
+                            <span style="font-weight: 900">Date:</span> @Convert.ToDateTime(VoucherMDetails.voucher.VoucherEntryDate).ToString("dd-MMM-yyyy")
+                        </div>
+                        <div class="col-md-9  text-right" style="float:right">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <span style="font-weight: 900">
+                                            General Entry Type:
+                                        </span>
+                                    </td>
+                                    <td>@VoucherMDetails.voucher.VoucherTypeNavigation.LookupNameEn.Substring(VoucherMDetails.voucher.VoucherTypeNavigation.LookupNameEn.IndexOf('(')).Replace("(", "").Replace(")", "")</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span style="font-weight: 900">
+                                            General Entry Code:
+                                        </span>
+                                    </td>
+                                    <td>@VoucherMDetails.voucher.VoucherCode</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span style="font-weight: 900">
+                                            Month:
+                                        </span>
+                                    </td>
+                                    <td>@Convert.ToDateTime(VoucherMDetails.voucher.VoucherEntryDate).ToString("MMMM-yyyy")</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div style="float:none"></div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+
+                    <span style="border-bottom:1px solid silver;display:block"></span>
+                    <br />
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+
+                                <th nowrap="">Created By <span style="letter-spacing:normal !important;font-family: tahoma;"></span></th>
+                                <th nowrap="">Approved By  <span style="letter-spacing:normal !important;font-family: tahoma;"> </span></th>
+                            </tr>
+                            <tr class="ItemColor text-center">
+                                <td>@Users.Where(c => c.UserId == VoucherMDetails.voucher.CreatedBy).FirstOrDefault().DisplayNameEn</td>
+                                <td>@VoucherMDetails.ApprovedByName</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            <tr class="Grid_HeaderStyle">
+                                <th>Account Code</th>
+                                <th>Account Title</th>
+                                <th>Employee Id/Code</th>
+                                <th>Employee Title</th>
+                                <th>Description</th>
+                                <th nowrap="">Debit</th>
+                                <th nowrap="">Credit</th>
+                                <th>Ref</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in VoucherDList)
+                            {
+                <tr class="ItemColor text-center">
+                    <td class="text-center" width="10%">@(item.Account != null && item.Account.AccountCode != null ? item.Account.AccountCode : "-")</td>
+                    <td class="text-center" width="13%">@(item.Account != null && item.Account.AccountNameEn != null ? item.Account.AccountNameEn : "-")</td>
+                    <td class="text-center" width="10%">@(item.EmployeeId != 0 ? item.EmployeeId : 0)</td>
+                    <td class="text-center" width="13%">@Emps.Where(c => c.EmpId == item.EmployeeId).Select(c => c.FirstNameEn).FirstOrDefault()</td>
+                    <td class="text-center" width="15%">@(item.Voucher != null && item.Voucher.Description != null ? item.Voucher.Description : "-")</td>
+                    @{ totaldebit += Convert.ToDecimal(item.Debit); }
+                    <td class="text-center" width="12%">@(item.Debit != 0 ? item.Debit : 0)</td>
+                    <td class="text-center" width="12%">@(item.Credit != 0 ? item.Credit : 0)</td>
+                    @{ totalcredit += Convert.ToDecimal(item.Credit); }
+                    <td class="text-center" width="15%">@(item.Refno1 != null ? item.Refno1 : "-")</td>
+                </tr>
+}
+                        </tbody>
+                        <thead>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>@(totaldebit != 0 ? totaldebit : 0)</th>
+                                <th>@(totalcredit != 0 ? totalcredit : 0 )</th>
+                                <th></th>
+
+                            </tr>
+                            <tr class="">
+                                <td colspan="8" style="text-align:left">
+                                    <small style="text-transform:capitalize">
+                                        <b>Amount in words: </b>
+                                        one
+                                        Only
+                                        <br>
+                                    </small>
+                                </td>
+                            </tr>
+                        </thead>
+                    </table>
+                    <br />
+                    <br />
+                    <br />
+                    <table width="100%" style="letter-spacing:2px;font-weight:700">
+                        <tr>
+                            <td width="33%" class="text-left"><span style="border-top:2px solid black">Prepared By</span></td>
+                            <td width="33%" class="text-center"><span style="border-top:2px solid black">Review By</span></td>
+                            <td width="33%" class="text-right"><span style="border-top:2px solid black">Approved By</span></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

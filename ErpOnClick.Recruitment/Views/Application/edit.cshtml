@@ -1,0 +1,234 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+
+    IList<Lookups> degreeList = Model.degreeList;
+    Applications applicationDetails = Model.applicationDetails;
+    IList<VacantJobs> vacantJobList = Model.vacantJobList;
+    VacantJobs vacantJobDetail = Model.vacantJobDetail;
+    bool isEdit = (applicationDetails != null);
+}
+
+
+<div class="slider-area ">
+    <div class="single-slider section-overly slider-height2 d-flex align-items-center" data-background="../../assets/img/hero/about.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="hero-cap text-center">
+                        <h2>Apply Now</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Hero Area End -->
+<!-- ================ contact section start ================= -->
+<section class="contact-section">
+    <div class="container">
+
+
+        <div class="row">
+            <div class="col-12">
+                <h2 class="contact-title">Get in Touch</h2>
+            </div>
+            <div class="col-lg-8">
+                <form id="frmEdit" class="form-contact contact_form" action="contact_process.php" method="post" novalidate="novalidate">
+                    <div class="row">
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>CV</label>
+                                <input type="file" id="CVFile" name="CVFile" value="Upload CV" class="form-control">
+
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Cover Letter</label>
+                                <input type="file" id="CoverLetterFile" name="CoverLetterFile" value="Upload CV" class="form-control">
+
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label>Degree</label>
+                                <select id="DegreeId" style="width:100% " name="DegreeId" class="form-control" required>
+                                    <option></option>
+                                    @foreach (var item in degreeList)
+                                    {
+                                        if (applicationDetails != null && item.Code == applicationDetails.DegreeId)
+                                        {
+                                            <option selected value="@item.Code">
+                                                @item.LookupNameEn
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.Code">
+                                                @item.LookupNameEn
+                                            </option>
+                                        }
+
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label> Job</label>
+                                <select id="VacantJobId" name="VacantJobId" class="form-control" required>
+
+                                    @foreach (var item in vacantJobList)
+                                    {
+                                        <option value="@item.JobId">
+                                            @item.JobTitle
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Summary</label>
+                                <textarea id="ApplicationSummary" rows="3" required name="ApplicationSummary"
+                                          style="width: 100%; height: 100px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(applicationDetails != null? applicationDetails.ApplicationSummary : "")</textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-group mt-3">
+                        <button type="submit" class="button button-contactForm boxed-btn">Apply</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-3 offset-lg-1">
+                <div class="media contact-info">
+                    <span class="contact-info__icon"><i class="fas fa-heading"></i></span>
+                    <div class="media-body">
+                        <h3>Title</h3>
+                        <p>
+                            @vacantJobDetail.JobTitle
+                        </p>
+                    </div>
+                </div>
+                <div class="media contact-info">
+                    <span class="contact-info__icon"><i class="fas fa-briefcase"></i></span>
+                    <div class="media-body">
+                        <h3>Description</h3>
+                        <p>
+                            @Html.Raw(Convert.ToString(vacantJobDetail.JobDescription))
+                       
+                        </p>
+                    </div>
+                </div>
+                <div class="media contact-info">
+                    <span class="contact-info__icon"><i class="fas fa-hourglass-start"></i></span>
+                    <div class="media-body">
+                        <h3>Start Date</h3>
+                        <p>
+                            @(vacantJobDetail != null && vacantJobDetail.JobStartDate !=null ? Convert.ToDateTime(vacantJobDetail.JobStartDate).ToString("dd-MMM-yyyy") : "")
+
+                        </p>
+                    </div>
+                </div>
+                <div class="media contact-info">
+                    <span class="contact-info__icon"><i class="fas fa-hourglass-end"></i></span>
+                    <div class="media-body">
+                        <h3>End Date</h3>
+                        <p>  @(vacantJobDetail != null && vacantJobDetail != null ? Convert.ToDateTime(vacantJobDetail.JobEndDate).ToString("dd-MMM-yyyy") : "")</p>
+                    </div>
+                </div>
+                <div class="media contact-info">
+                    <span class="contact-info__icon"><i class="fas fa-calendar-plus"></i></span>
+                    <div class="media-body">
+                        <h3>Created Date</h3>
+                        <p> @(vacantJobDetail != null && vacantJobDetail != null ? Convert.ToDateTime(vacantJobDetail.CreatedDate).ToString("dd-MMM-yyyy") : "")</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ================ contact section end ================= -->
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+        });
+
+        var applicationName = getApplicationName();
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+                    
+                    $.ajax({
+                        url: applicationName+"application/save/",
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName+'application/';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName+"Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+    </script>
+
+}

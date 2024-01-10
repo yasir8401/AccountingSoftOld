@@ -1,0 +1,31 @@
+﻿@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
+        <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-clipboard-list"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Approvals")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/Approvals/Inbox?status=007001" class="nav-link "><p>&nbsp;@SharedLocalizer.GetLocalizedHtmlString("Pending")</p></a></li>
+                <li class="nav-item"><a href="~/Approvals/Inbox?status=007003" class="nav-link "><p>&nbsp;@SharedLocalizer.GetLocalizedHtmlString("Rejected")</p></a></li>
+                <li class="nav-item"><a href="~/Approvals/Inbox?status=007002" class="nav-link "><p>&nbsp;@SharedLocalizer.GetLocalizedHtmlString("Approved")</p></a></li>
+            </ul>
+        </li>
+
+        <li class="nav-item has-treeview">
+            <a href="~/Home/Index" class="nav-link">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Return")
+
+                </p>
+            </a>
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,154 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{ List<Voucher> voucherMDetails = Model.generalEntriesMList; }
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr class="col-lg-12">
+                <th style="width:20px">@SharedLocalizer.GetLocalizedHtmlString("Id")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("General Entry Code") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("General Entry Type")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("General Entry Date")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Total Debit")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Total Credit")</th>
+                <th style="width:25px">@SharedLocalizer.GetLocalizedHtmlString("is Posted?")</th>
+                <th style="width:25px">@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+                <th style="width:25px">@SharedLocalizer.GetLocalizedHtmlString("Delete")</th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th style="width:20px">ID</th>
+                <th>Voucher Code </th>
+                <th>Voucher Type</th>
+                <th>Voucher Date</th>
+                <th>Total Debit</th>
+                <th>Total Credit</th>
+                <td></td>
+                <td></td>
+                <td></td>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in voucherMDetails)
+            {
+
+<tr class="text-center">
+    <td style="width:20px">@item.VoucherId</td>
+    <td>@item.VoucherCode</td>
+    <td>@item.VoucherTypeNavigation.LookupNameEn</td>
+    <td class="text-center">@Convert.ToDateTime(item.VoucherEntryDate).ToString("dd-MMM-yyyy")</td>
+    <td class="text-right">@item.TotalDebit</td>
+    <td class="text-right">@item.TotalCredit</td>
+    <td class="text-center padding-5">
+        <a href="javascript:void(0)" onclick="postItem('@item.VoucherId')" class="btn btn-default btn-block btn-xs @(item != null && (item.IsPosted== false || item.IsPosted==null) ? "" : "disabled")"><i class="fa fa-check text-success"></i></a>
+    </td>
+    <td class="text-center padding-5">
+        <a href="@Url.Content("~/")Finance/Vouchers/edit/@item.VoucherId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+    </td>
+    <td class="text-center padding-5">
+        <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.VoucherId')"><i class="fa fa-times text-danger"></i></a>
+    </td>
+</tr>
+}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function () {
+
+        $('#Accli').addClass("menu-open");
+        $('#Reportsli').removeClass("menu-open");
+        $('#Statementsli').removeClass("menu-open");
+        $('#AccPli').removeClass("menu-open");
+        $('#AccRli').removeClass("menu-open");
+        $('#Setupli').removeClass("menu-open");
+
+        //_initDatatable('#dtList');
+        // Setup - add a text input to each footer cell
+        $('#dtList' + ' tfoot th').each(function () {
+            var title = $(this).text();
+            $(this).html('<input type="text" class="form-control input-sm" placeholder="Search" />');
+        });
+        // DataTable
+        var table = $('#dtList').DataTable({
+            "order": [[0, "desc"]],
+            dom: 'Bfrtip',
+            "pageLength": 15,
+            buttons: [
+                'copy', 'excel'
+            ]
+        });
+        // Apply the search
+        table.columns().every(function () {
+            var that = this;
+            $('input', this.footer()).on('keyup change', function () {
+                if (that.search() !== this.value) {
+                    that
+                        .search(this.value)
+                        .draw();
+                }
+            });
+        });
+        $("#dtList").fadeIn(500);
+
+    });
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+                $.ajax({
+                    url: getApplicationName() + 'Finance/Vouchers/Delete',
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError == true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = getApplicationName() + 'Finance/Vouchers';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function postItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to Post Voucher ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+                $.ajax({
+                    url: getApplicationName() + 'Finance/Vouchers/Posted',
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Posted !', 'Record has been Posted !', 'success');
+                            setTimeout(function () {
+                                window.location = getApplicationName() + 'Finance/Vouchers';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Posted Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Posted Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>

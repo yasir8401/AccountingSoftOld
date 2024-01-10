@@ -1,0 +1,222 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Authorization.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Privileges> privilagesList = Model.privilagesList;
+    IList<Roles> RoleList = Model.RoleList;
+
+    RolePrivileges RolePrivilegeDetails = Model.RolePrivilegesDetails;
+    var RoleId = Model.RoleId;
+    Roles RoleDetails = Model.RoleDetails;
+
+
+
+    bool isEdit = (RolePrivilegeDetails != null);
+}
+
+
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="RolePrivilegeId" name="RolePrivilegeId" class="form-control" value="@(RolePrivilegeDetails != null ? RolePrivilegeDetails.RolePrivilegeId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="navigation()" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Role")</a>
+                </li>
+
+
+                <li class="nav-item">
+                    <a class="nav-link" id="tabRolePrivileges-tab" data-toggle="pill" onclick="navigationTwo()" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Role Privilage")</a>
+                </li>
+
+
+            </ul>
+        </div>
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/admin/Roleprivileges/Role/@RoleId" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Privileges")</label>
+                        <select id="PrivilegeId" name="PrivilegeId" class="form-control" required>
+
+                            @foreach (var item in privilagesList)
+                            {
+                                <option value="@item.PrivilegeId" @(RolePrivilegeDetails != null && RolePrivilegeDetails.PrivilegeId == item.PrivilegeId ? "selected" : "")>
+                                    @item.PrivilegeNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Role")</label>
+                        <select id="RoleId" name="RoleId" class="form-control" required>
+
+                            @foreach (var item in RoleList)
+                            {
+                                <option value="@item.RoleId" @(RolePrivilegeDetails != null && RolePrivilegeDetails.RoleId == item.RoleId ? "selected" : "")>
+                                    @item.RoleNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(RolePrivilegeDetails != null && RolePrivilegeDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control" required>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(RolePrivilegeDetails != null && RolePrivilegeDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("From Date")</label>
+                        <input type="text" id="FromDate" name="FromDate" class="form-control DatePicker" value="@(RolePrivilegeDetails != null && RolePrivilegeDetails.FromDate !=null ? Convert.ToDateTime(RolePrivilegeDetails.FromDate).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</form>
+
+
+
+
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+            $("#tabRolePrivileges-tab").addClass("nav-link active");
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName()+"admin/RolePrivileges/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'admin/RolePrivileges/Role/@RoleId';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName()+"Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+          function navigation() {
+
+             window.location = getApplicationName() +  'admin/Role/edit/@RoleId'
+    };
+          function navigationTwo() {
+
+                     window.location = getApplicationName() +  'admin/Roleprivileges/Role/@RoleDetails.RoleId'
+            };
+
+    </script>
+
+}

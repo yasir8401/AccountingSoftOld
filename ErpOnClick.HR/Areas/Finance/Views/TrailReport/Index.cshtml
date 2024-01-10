@@ -1,0 +1,104 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{ }
+
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("TRIAL BALANCE")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a id="printList" href="" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Print")</a>
+
+
+        </div>
+        <!-- /. tools -->
+    </div>
+    <div class="card-footer pb-0 pt-2 text-sm">
+        <form id="frmSearch">
+            <div class="row">
+
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("From Date") </label>
+                        <input type="text" id="FromDate" name="FromDate" class="form-control DatePicker">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("To Date") </label>
+                        <input type="text" id="ToDate" name="ToDate" class="form-control DatePicker">
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <button style="margin-top:29px" type="submit" class="btn btn-primary btn-block"> @SharedLocalizer.GetLocalizedHtmlString("Search")</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            $('#Accli').addClass("menu-open");
+            $('#Reportsli').addClass("menu-open");
+            $('#Statementsli').removeClass("menu-open");
+            $('#AccRli').removeClass("menu-open");
+            $('#AccPli').removeClass("menu-open");
+            $('#Setupli').removeClass("menu-open");
+
+            $('#newbutton').click();
+            var startdate = new Date();
+            var enddate = new Date();
+            startdate.setDate(startdate.getDate() - 30);
+            enddate.setDate(enddate.getDate() + 1);
+            var startdatedd = String(startdate.getDate()).padStart(2, '0');
+            var startdatemm = String(startdate.getMonth() + 1).padStart(2, '0')
+            var startdateyyyy = startdate.getFullYear();
+            var enddatedd = String(enddate.getDate()).padStart(2, '0');
+            var enddatemm = String(enddate.getMonth() + 1).padStart(2, '0')
+            var enddateyyyy = enddate.getFullYear();
+            var start = startdateyyyy + '-' + startdatemm + '-' + startdatedd;
+            today = enddateyyyy + '-' + enddatemm + '-' + enddatedd;
+            $('#FromDate').val(start);
+            $('#ToDate').val(today);
+            $('#frmSearch').submit(function (e) {
+                e.preventDefault();
+                BindGrid();
+            })
+            BindGrid();
+        });
+
+        function BindGrid() {
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() + 'Finance/TrailReport/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        }
+
+        $('#printList').click(function (e) {
+            var FromDate = $('#FromDate').val();
+            var ToDate = $('#ToDate').val();
+            window.open(getApplicationName() + "Finance/TrailReport/PrintList?FromDate=" + FromDate + "&ToDate=" + ToDate, "_blank");
+        });
+    </script>
+}
+

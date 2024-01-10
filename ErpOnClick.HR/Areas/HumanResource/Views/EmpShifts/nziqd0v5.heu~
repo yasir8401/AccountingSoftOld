@@ -1,0 +1,132 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<EmpShifts> EmpShiftsList = Model.EmpShiftsList;
+    var empId = Model.empId;
+    IList<Shifts> shiftList = Model.ShiftLists;
+}
+
+@Html.Partial("/Views/Shared/HrLayout/_generalModalPartial.cshtml")
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Shift Name") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("From") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("To") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Shift Hours") </th>
+                <th width="30px"></th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+
+                <th>Shift Name </th>
+                <th>From </th>
+                <th>To </th>
+                <th>Shift Hours </th>
+                <th></th>
+                <th></th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in EmpShiftsList)
+            {
+
+            <tr class="text-center">
+                <td>@item.Shift.ShiftNameEn </td>
+                <td>@item.Shift.FromTime </td>
+                <td>@item.Shift.ToTime </td>
+                <td>@item.Shift.ToTime </td>
+
+                <td>
+                    <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="showDetail('@item.RecId','@empId','update','@item.ShiftId')">
+                        <i class="fa fa-edit"></i>
+                    </a>
+                </td>
+                <td class="text-center padding-5">
+                    <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.RecId')"><i class="fa fa-times text-danger"></i></a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName + "HumanResource/EmpShifts/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName +'HumanResource/EmpShifts/emp/@empId';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+    function showDetail(RecId, empId, actionType,shiftId) {
+        var allShifts = null;
+         $.ajax({
+                    url: applicationName +"HumanResource/EmpShifts/GetShifts",
+                    async: false,
+                    type: "POST",
+                    data: "",
+             success: function (data) {
+
+                 allShifts = data.result.scalerVal;
+             }
+                });
+
+
+        var displayDAta = "<form action='/HumanResource/EmpShifts/" + actionType + "' method='post'><input type='hidden' name='RecId' id='RecId' class='form-control' value='" + RecId + "' /><input type='hidden' name='EmpId' id='EmpId' class='form-control' value='" + empId + "' /> <div class='form-group'><label>Shifts</label><select id='ShiftId' name='ShiftId' class='form-control'>";
+        $.each(allShifts, function (key, value) {
+
+            if (value.shiftId == shiftId) {
+                displayDAta += "<option value='" + value.shiftId + "' selected>" + '  ' + value.shiftNameEn + '   (' + value.fromTime + '  to  ' + value.toTime + '  )  ' + "</option>";
+            }
+            else
+            {
+                displayDAta += "<option value='" + value.shiftId + "' >" + '  ' + value.shiftNameEn + '   (' + value.fromTime + '  to  ' + value.toTime + '  )  ' + "</option>";
+            }
+
+        });
+
+        displayDAta += " </select></div> <button type='submit' class='btn  btn-sm btn-primary'><i class='fas fa-save fa-fw'></i> Save</button></form>";
+
+
+        $('#generalModal .modal-body').html(displayDAta);
+        $('#generalModal').modal('show');
+        $('#generalModal .modal-title').html('Shifts');
+
+    }
+</script>

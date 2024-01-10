@@ -1,0 +1,378 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>6079f621-83cb-4cef-a098-34d3c6fb5e5e</UserSecretsId>
+    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Views\Shared\adminlte\_Layout.cshtml" />
+    <None Include="Views\Shared\adminlte\_nav.cshtml" />
+    <None Include="Views\Shared\Error.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_LoginPartial.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
+    <None Include="wwwroot\adminlte\dist\css\adminlte.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\adminlte.min.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\alt\adminlte.components.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\alt\adminlte.components.min.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\alt\adminlte.core.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\alt\adminlte.core.min.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\alt\adminlte.extra-components.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\alt\adminlte.extra-components.min.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\alt\adminlte.pages.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\alt\adminlte.pages.min.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\alt\adminlte.plugins.css.map" />
+    <None Include="wwwroot\adminlte\dist\css\alt\adminlte.plugins.min.css.map" />
+    <None Include="wwwroot\adminlte\dist\js\adminlte.js" />
+    <None Include="wwwroot\adminlte\dist\js\adminlte.js.map" />
+    <None Include="wwwroot\adminlte\dist\js\adminlte.min.js" />
+    <None Include="wwwroot\adminlte\dist\js\adminlte.min.js.map" />
+    <None Include="wwwroot\adminlte\dist\js\demo.js" />
+    <None Include="wwwroot\adminlte\dist\js\pages\dashboard.js" />
+    <None Include="wwwroot\adminlte\dist\js\pages\dashboard2.js" />
+    <None Include="wwwroot\adminlte\dist\js\pages\dashboard3.js" />
+    <None Include="wwwroot\adminlte\plugins\bootstrap\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\adminlte\plugins\bootstrap\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\adminlte\plugins\bootstrap\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\adminlte\plugins\bootstrap\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\adminlte\plugins\bootstrap\js\bootstrap.js" />
+    <None Include="wwwroot\adminlte\plugins\bootstrap\js\bootstrap.js.map" />
+    <None Include="wwwroot\adminlte\plugins\bootstrap\js\bootstrap.min.js" />
+    <None Include="wwwroot\adminlte\plugins\bootstrap\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\adminlte\plugins\datatables\buttons.flash.min.js" />
+    <None Include="wwwroot\adminlte\plugins\datatables\buttons.html5.min.js" />
+    <None Include="wwwroot\adminlte\plugins\datatables\buttons.print.min.js" />
+    <None Include="wwwroot\adminlte\plugins\datatables\dataTables.buttons.min.js" />
+    <None Include="wwwroot\adminlte\plugins\datatables\dataTables.rowReorder.min.js" />
+    <None Include="wwwroot\adminlte\plugins\datatables\jquery.datatables.js" />
+    <None Include="wwwroot\adminlte\plugins\datatables\jquery.dataTables.min.js" />
+    <None Include="wwwroot\adminlte\plugins\datatables\jszip.min.js" />
+    <None Include="wwwroot\adminlte\plugins\datatables\pdfmake.min.js" />
+    <None Include="wwwroot\adminlte\plugins\datatables\vfs_fonts.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome-free\webfonts\fa-brands-400.svg" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome-free\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome-free\webfonts\fa-regular-400.svg" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome-free\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome-free\webfonts\fa-solid-900.svg" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome-free\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\all.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\all.min.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\brands.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\brands.min.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\conflict-detection.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\conflict-detection.min.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\fontawesome.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\fontawesome.min.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\regular.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\regular.min.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\solid.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\solid.min.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\v4-shims.js" />
+    <None Include="wwwroot\adminlte\plugins\fontawesome\js\v4-shims.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-af.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-am.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ar-DZ.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ar-EG.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ar.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-az.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-bg.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-bs.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ca.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-cs.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-da.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-de-CH.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-de.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-el.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-en-AU.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-en-GB.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-en-NZ.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-eo.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-es-AR.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-es-PE.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-es.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-et.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-eu.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-fa.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-fi.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-fo.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-fr-CH.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-fr.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-gl.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-gu.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-he.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-hi-IN.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-hr.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-hu.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-hy.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-id.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-is.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-it.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ja.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ka.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-km.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ko.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-lt.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-lv.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-me-ME.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-me.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-mg.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-mk.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ml.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ms.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-mt.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-nl-BE.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-nl.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-no.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-pa.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-pl.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-pt-BR.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-rm.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ro.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ru.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-sk.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-sl.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-sq.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-sr-SR.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-sr.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-sv.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ta.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-te.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-th.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-tr.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-tt.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-uk.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-ur.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-vi.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-zh-CN.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-zh-HK.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars-zh-TW.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.all.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.all.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.all.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.coptic.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.coptic.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.coptic.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.discworld.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.discworld.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.discworld.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.ethiopian-am.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.ethiopian.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.ethiopian.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.ethiopian.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.hebrew-he.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.hebrew.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.hebrew.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.hebrew.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.islamic-ar.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.islamic-fa.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.islamic.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.islamic.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.islamic.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.julian.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.julian.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.julian.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.lang.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.lang.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.lang.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.mayan.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.mayan.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.mayan.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.nanakshahi-pa.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.nanakshahi.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.nanakshahi.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.nanakshahi.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.nepali-ne.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.nepali.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.nepali.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.nepali.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.persian-fa.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.persian.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.persian.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.persian.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-af.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-am.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ar-DZ.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ar-EG.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ar.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-az.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-bg.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-bs.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ca.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-cs.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-da.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-de-CH.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-de.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-el.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-en-AU.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-en-GB.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-en-NZ.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-eo.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-es-AR.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-es-PE.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-es.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-et.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-eu.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-fa.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-fi.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-fo.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-fr-CH.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-fr.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-gl.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-gu.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-he.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-hi-IN.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-hr.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-hu.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-hy.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-id.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-is.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-it.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ja.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ka.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-km.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ko.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-lt.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-lv.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-me-ME.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-me.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-mk.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ml.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ms.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-mt.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-nl-BE.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-nl.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-no.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-pl.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-pt-BR.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-rm.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ro.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ru.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-sk.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-sl.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-sq.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-sr-SR.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-sr.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-sv.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ta.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-te.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-th.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-tr.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-tt.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-uk.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-ur.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-vi.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-zh-CN.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-zh-HK.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker-zh-TW.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker.ext.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker.ext.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker.ext.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker.lang.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker.lang.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker.lang.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.picker.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.plus.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.plus.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.plus.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.taiwan-zh-TW.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.taiwan.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.taiwan.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.taiwan.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.thai-th.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.thai.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.thai.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.thai.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.ummalqura-ar.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.ummalqura.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.ummalqura.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.ummalqura.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.validation.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.validation.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.calendars.validation.min.map" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.plugin.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.plugin.min.js" />
+    <None Include="wwwroot\adminlte\plugins\JqueryDatepicker\js\jquery.plugin.min.map" />
+    <None Include="wwwroot\adminlte\plugins\jquery\core.js" />
+    <None Include="wwwroot\adminlte\plugins\jquery\jquery.js" />
+    <None Include="wwwroot\adminlte\plugins\jquery\jquery.min.js" />
+    <None Include="wwwroot\adminlte\plugins\jquery\jquery.min.map" />
+    <None Include="wwwroot\adminlte\plugins\jquery\jquery.slim.js" />
+    <None Include="wwwroot\adminlte\plugins\jquery\jquery.slim.min.js" />
+    <None Include="wwwroot\adminlte\plugins\jquery\jquery.slim.min.map" />
+    <None Include="wwwroot\adminlte\plugins\maskedinput\jquery.maskedinput.js" />
+    <None Include="wwwroot\adminlte\plugins\maskedinput\jquery.maskedinput.min.js" />
+    <None Include="wwwroot\adminlte\plugins\select2\select2.min.js" />
+    <None Include="wwwroot\adminlte\plugins\sweetalert\sweetalert2.all.js" />
+    <None Include="wwwroot\adminlte\plugins\sweetalert\sweetalert2.js" />
+    <None Include="wwwroot\js\site.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-reboot.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap.min.css.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.bundle.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
+    <None Include="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\lib\bootstrap\LICENSE" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.js" />
+    <None Include="wwwroot\lib\jquery-validation-unobtrusive\jquery.validate.unobtrusive.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\additional-methods.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.js" />
+    <None Include="wwwroot\lib\jquery-validation\dist\jquery.validate.min.js" />
+    <None Include="wwwroot\lib\jquery-validation\LICENSE.md" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.js" />
+    <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
+    <PackageReference Include="Z.EntityFramework.Classic" Version="7.1.42" />
+    <PackageReference Include="Z.EntityFramework.Plus.QueryIncludeOptimized.EFClassic" Version="1.8.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ErpOnClick.DAL\ErpOnClick.DAL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\assets\fonts\my-icons-collection\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\adminlte\dist\css\custom.css">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

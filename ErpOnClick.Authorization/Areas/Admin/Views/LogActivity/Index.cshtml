@@ -1,0 +1,134 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Authorization.Resources
+@inject LocService SharedLocalizer
+
+@{
+    int? pageNumber = Model.pageNumber;
+    int? pageSize = Model.pageSize;
+
+    IList<Modules> moduleList = Model.moduleList;
+    IList<Navigations> navigationList = Model.navigationList;
+}
+
+<link href="~/css/Admin/ActivityLog.css" rel="stylesheet" />
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Log Activity")
+        </h2>
+    </div>
+    <div class="card-footer pb-0 pt-2 text-sm">
+        <form id="frmSearch">
+            <div class="row">
+                <div class="col-sm-3" hidden>
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Page Number")</label>
+                        <input type="number" hidden name="pageNumber" placeholder="Enter Page Number" class="form-control" value="@(pageNumber!=null ? pageNumber :1)" />
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Page Size")</label>
+                        <select class="form-control" name="pageSize" id="pageSize">
+
+                            <option selected>10</option>
+                            <option>25</option>
+                            <option>50</option>
+                            <option>100</option>
+                        </select>
+                        @*<input type="number" name="pageSize" value="@pageSize" placeholder="Enter Page Size" class="form-control" />*@
+                    </div>
+                </div>
+                <div class="col-md-2"></div>
+                <div class="col-sm-2">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Log Type")</label>
+                        <select class="form-control" name="LogType" id="LogType">
+                            <option selected>All</option>
+                            <option>Create</option>
+                            <option>Update</option>
+                            <option>Delete</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Module")</label>
+                        <select class="form-control" name="moduleId" id="moduleId">
+                            <option selected>All</option>
+                            @foreach (var item in moduleList)
+                            {
+                                <option value="@item.ModuleId">@item.ModuleNameEn</option>
+                            }
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Navigation")</label>
+                        <select class="form-control" name="navigationId" id="navigationId">
+                            <option selected>All</option>
+                            @foreach (var item in navigationList)
+                            {
+                                <option value="@item.NavigationId">@item.NavigationNameEn</option>
+                            }
+
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Reference")</label>
+                        <input type="text" name="RefId" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-sm-1">
+                    <button style="margin-top:29px" type="submit" class="btn btn-primary btn-block">@SharedLocalizer.GetLocalizedHtmlString("Search") </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            $('#frmSearch').submit(function (e) {
+                e.preventDefault();
+                BindGrid();
+            })
+            BindGrid();
+            $('#pageSize').change(function () {
+
+                BindGrid();
+
+            });
+        });
+
+
+        function BindGrid() {
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() + 'admin/LogActivity/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+    </script>
+}

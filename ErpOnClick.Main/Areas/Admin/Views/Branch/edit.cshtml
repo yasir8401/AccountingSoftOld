@@ -1,0 +1,194 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Branch BranchDetail = Model.BranchIdDetail;
+    bool isEdit = (BranchDetail != null);
+    List<Company> companies = Model.companyList;
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(BranchDetail != null ? BranchDetail.BranchId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                Branch Info
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> Save
+                </button>
+                <a href="~/admin/Branch" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> Return
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Branch Name</label>
+                        <input type="text" id="BranchNameEn" name="BranchNameEn" class="form-control" value="@(BranchDetail!=null?BranchDetail.BranchNameEn: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Branch Name in Arabic</label>
+                        <input type="text" id="BranchNameAr" name="BranchNameAr" class="form-control" dir="rtl" value="@(BranchDetail!=null?BranchDetail.BranchNameAr: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control"  required>
+                            <option></option>
+                            @foreach (var item in companies)
+                            {
+                                <option value="@item.CompanyId" @(BranchDetail != null && BranchDetail.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6 d-none">
+                    <div class="form-group">
+                        <label>Active Status</label>
+                        <select id="IsEnable" name="IsEnable" class="form-control">
+                            @*<option></option>*@
+                            <option value="True" @(BranchDetail != null && BranchDetail.IsEnable == true ? "selected" : "")>Active</option>
+                            <option value="False" @(BranchDetail != null && BranchDetail.IsEnable == false ? "selected" : "")>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                Contact Info
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="BranchEmail" name="BranchEmail" class="form-control" value="@(BranchDetail!=null?BranchDetail.BranchEmail: "")">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="number" id="BranchPhone" name="BranchPhone" class="form-control" value="@(BranchDetail!=null?BranchDetail.BranchPhone: "")">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                Address
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea id="BranchAddressEn" name="BranchAddressEn" rows="5" class="form-control">@(BranchDetail!=null?BranchDetail.BranchAddressEn: "")</textarea>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Address in Arabic</label>
+                        <textarea id="BranchAddressAr" name="BranchAddressAr" rows="5" class="form-control" dir="rtl">@(BranchDetail!=null?BranchDetail.BranchAddressAr: "")</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+  
+
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() +"admin/Branch/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() +'admin/Branch';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

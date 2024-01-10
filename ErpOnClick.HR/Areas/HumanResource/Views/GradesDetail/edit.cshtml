@@ -1,0 +1,222 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Grades1> GradesList = Model.gradeList;
+
+
+    IList<Lookups> allowanceTypeList = Model.allowanceTypeList;
+    var GradesId = Model.gradeID;
+    Grades1 GradesDetails = Model.gradeDetails;
+
+    GradesDetail GradesDetailDetails = Model.GradesDetailDetails;
+    bool isEdit = (GradesDetailDetails != null);
+
+
+}
+
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="GradeDetailId" name="GradeDetailId" class="form-control" value="@(GradesDetailDetails != null ? GradesDetailDetails.GradeDetailId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="window.location = getApplicationName() + 'HumanResource/Grades/edit/@GradesId'" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Grades")</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" id="tabGradeDetails-tab" data-toggle="pill" onclick="window.location = getApplicationName() + 'HumanResource/GradesDetail/grade/@GradesDetails.GradeId.'" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Grade Details")</a>
+                </li>
+
+
+            </ul>
+        </div>
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/HumanResource/GradesDetail/Grade/@GradesId" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Allowance Type")</label>
+                        <select id="AllowanceTypeId" name="AllowanceTypeId" class="form-control">
+
+                            @foreach (var item in allowanceTypeList)
+                            {
+                                <option value="@item.Code" @(GradesDetailDetails != null && GradesDetailDetails.AllowanceTypeId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Range From")</label>
+
+                        <input type="number" id="RangeFrom" name="RangeFrom" min="0" max="100" class="form-control" value="@(GradesDetailDetails!=null?GradesDetailDetails.RangeFrom: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Range To")</label>
+
+                        <input type="number" id="RangeTo" name="RangeTo" min="0" max="100" class="form-control" value="@(GradesDetailDetails!=null?GradesDetailDetails.RangeTo: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6" hidden>
+                    <div class="form-group">
+                        <div class="">
+                            <label class="col-md-12">@SharedLocalizer.GetLocalizedHtmlString("IsEnable")</label>
+                            <select id="IsEnable" name="IsEnable" class="form-control" required>
+
+                                <option value="True" @(GradesDetailDetails != null && GradesDetailDetails.IsEnable != null ? (Convert.ToBoolean(GradesDetailDetails.IsEnable) ? "selected" : "") : "")>Enable</option>
+                                <option value="False" @(GradesDetailDetails != null && GradesDetailDetails.IsEnable != null ? (Convert.ToBoolean(GradesDetailDetails.IsEnable) ? "" : "selected") : "")>Not</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 " hidden>
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Grade")</label>
+                        <select id="GradeId" name="GradeId" class="form-control">
+                            @foreach (var item in GradesList)
+                            {
+                                <option value="@item.GradeId" @(GradesDetailDetails != null && GradesDetailDetails.GradeId == item.GradeId ? "selected" : "")>
+                                    @item.GradeNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    @*<div class="card card-default card-outline col-lg-8">
+            <div class="card-header">
+                <h2 class="card-title">
+                    Organisation Details
+                </h2>
+            </div>
+            <div class="card-body">
+                <div class="row">
+
+                    <div class="col-sm-6 ">
+                        <div class="form-group">
+                            <label>Company</label>
+                            <select id="CompanyId" name="CompanyId" class="form-control">
+
+                                @foreach (var item in companyList)
+                                {
+                                    <option value="@item.CompanyId" @(GradesDetailDetails != null && GradesDetailDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                        @item.CoNameEn
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 ">
+                        <div class="form-group">
+                            <label>Branch</label>
+                            <select id="BranchId" name="BranchId" class="form-control">
+
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(GradesDetailDetails != null && GradesDetailDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>*@
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+
+            $("#tabGradeDetails-tab").addClass("nav-link active");
+
+
+        });
+
+        var applicationName = getApplicationName();
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+
+
+                    $.ajax({
+                        url: applicationName +"HumanResource/GradesDetail/" + actionType,
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'HumanResource/GradesDetail/grade/@GradesId';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

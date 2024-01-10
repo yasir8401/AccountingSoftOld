@@ -1,0 +1,241 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Lookups> AllowanceTypeList = Model.AllowanceTypeList;
+
+    GosiSettings GosiSettingDetails = Model.GosiSettingDetails;
+    bool isEdit = (GosiSettingDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="GosiSettingId" name="GosiSettingId" class="form-control" value="@(GosiSettingDetails != null ? GosiSettingDetails.GosiSettingId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(GosiSettingDetails != null ? GosiSettingDetails.CompanyId : 0)" >
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(GosiSettingDetails != null ? GosiSettingDetails.BranchId : 0)" >
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/HumanResource/GosiSettings" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
+                        <input type="text" id="GosiSettingNameEn" name="GosiSettingNameEn" class="form-control" value="@(GosiSettingDetails!=null?GosiSettingDetails.GosiSettingNameEn: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Name Arabic")</label>
+                        <input type="text" id="GosiSettingNameAr" name="GosiSettingNameAr" class="form-control" value="@(GosiSettingDetails!=null?GosiSettingDetails.GosiSettingNameAr: null)">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Code")</label>
+                        <input type="text" id="GosiSettingCode" name="GosiSettingCode" class="form-control" value="@(GosiSettingDetails!=null?GosiSettingDetails.GosiSettingCode: null)" required>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Shares Detail")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Allowance Type")</label>
+                        <select id="AllowanceTypeIds" name="AllowanceTypeIds" class="form-control select2" multiple required>
+
+                            @foreach (var item in AllowanceTypeList)
+                            {
+                                bool isSelected = (GosiSettingDetails != null && !string.IsNullOrEmpty(GosiSettingDetails.AllowanceTypeIds) && GosiSettingDetails.AllowanceTypeIds.Contains(item.Code));
+                                <option value="@item.Code" @(isSelected ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company Share %")</label>
+                        <input type="number" id="CompanySharePercent" name="CompanySharePercent" class="form-control" value="@(GosiSettingDetails!=null?GosiSettingDetails.CompanySharePercent: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company Share MaxValue")</label>
+                        <input type="number" id="CompanyShareMaxValue" name="CompanyShareMaxValue" class="form-control" value="@(GosiSettingDetails!=null?GosiSettingDetails.CompanyShareMaxValue: 0)">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Emp Share MaxValue")</label>
+                        <input type="number" id="EmpShareMaxValue" name="EmpShareMaxValue" class="form-control" value="@(GosiSettingDetails!=null?GosiSettingDetails.EmpShareMaxValue: 0)">
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("EmpShare %")</label>
+                        <input type="number" id="EmpSharePercent" name="EmpSharePercent" class="form-control" value="@(GosiSettingDetails!=null?GosiSettingDetails.EmpSharePercent: 0)">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8" style="display:none">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control" >
+                            <option selected></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(GosiSettingDetails != null && GosiSettingDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control" >
+                            <option selected></option>
+                            @foreach (var item in branchList)
+                            {
+                                <option value="@item.BranchId" @(GosiSettingDetails != null && GosiSettingDetails.BranchId == item.BranchId ? "selected" : "")>
+                                    @item.BranchNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+
+
+        });
+
+        var applicationName = getApplicationName();
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: applicationName + "HumanResource/GosiSettings/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'HumanResource/GosiSettings';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

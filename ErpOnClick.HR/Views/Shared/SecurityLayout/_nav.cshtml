@@ -1,0 +1,72 @@
+﻿@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link active">
+                <i class="nav-icon fas fa-id-card-alt"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Authorization")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/Security/user" class="nav-link "><p>&nbsp;@SharedLocalizer.GetLocalizedHtmlString("Users")</p></a></li>
+                <li class="nav-item"><a href="~/Security/role" class="nav-link "><p>&nbsp;@SharedLocalizer.GetLocalizedHtmlString("Roles")</p></a></li>
+                <li class="nav-item"><a href="~/Security/module" class="nav-link "><p>&nbsp;@SharedLocalizer.GetLocalizedHtmlString("Module")</p></a></li>
+                <li class="nav-item"><a href="~/Security/navigation" class="nav-link "><p>&nbsp;@SharedLocalizer.GetLocalizedHtmlString("Navigations")</p></a></li>
+                <li class="nav-item"><a href="~/Security/privileges" class="nav-link "><p>&nbsp;@SharedLocalizer.GetLocalizedHtmlString("Privileges")</p></a></li>
+                <li class="nav-item"><a href="~/Security/ApprovalTask" class="nav-link "><p>&nbsp;@SharedLocalizer.GetLocalizedHtmlString("Approval Tasks")</p></a></li>
+            </ul>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link active">
+                <i class="nav-icon fas fa-tasks"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Activity")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+
+                <li class="nav-item"><a href="~/Security/LogActivity" class="nav-link "><p>&nbsp;@SharedLocalizer.GetLocalizedHtmlString("Activity Log")</p></a></li>
+            </ul>
+        </li>
+        <li class="nav-item has-treeview">
+            <a href="#" class="nav-link active">
+                <i class="nav-icon fas fa-cog"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Setup Forms")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/Security/company" class="nav-link "><p>&nbsp;Company Info</p></a></li>
+                <li class="nav-item"><a href="~/Security/branch" class="nav-link "><p>&nbsp;Branches</p></a></li>
+
+                <li class="nav-item"><a href="~/Security/LookupTypes" class="nav-link "><p>&nbsp;Lookup Types</p></a></li>
+                <li class="nav-item"><a href="~/Security/Lookups" class="nav-link "><p>&nbsp;Lookups</p></a></li>
+
+                <li class="nav-item"><a href="~/Security/Buildings" class="nav-link "><p>&nbsp;Buildings</p></a></li>
+                <li class="nav-item"><a href="~/Security/Rooms" class="nav-link "><p>&nbsp;Rooms</p></a></li>
+                <li class="nav-item"><a href="~/Security/AppConfig" class="nav-link "><p>&nbsp;App Config</p></a></li>
+                <li class="nav-item"><a href="~/Security/owner" class="nav-link "><p>&nbsp;Owner's</p></a></li>
+                <li class="nav-item"><a href="~/Security/Trusties" class="nav-link "><p>&nbsp;Trusties</p></a></li>
+
+            </ul>
+        </li>
+        <li class="nav-item has-treeview ">
+
+            <a href="~/home/Index" class="nav-link">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Return")
+
+                </p>
+            </a>
+
+
+        </li>
+    </ul>
+</nav>

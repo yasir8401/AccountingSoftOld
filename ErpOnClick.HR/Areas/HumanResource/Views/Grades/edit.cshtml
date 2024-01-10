@@ -1,0 +1,365 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+
+    IList<Lookups> contractStatusList = Model.contractStatusList;
+
+
+
+
+    Grades1 GradesDetails = Model.GradeDetails;
+    bool isEdit = (GradesDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="GradeId" name="GradeId" class="form-control" value="@(GradesDetails != null ? GradesDetails.GradeId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(GradesDetails != null ? GradesDetails.CompanyId : 0)" >
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(GradesDetails != null ? GradesDetails.BranchId : 0)" >
+
+    <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="tabMain-tab" data-toggle="pill" href="#tabMain" role="tab" aria-controls="tabMain" aria-selected="true">@SharedLocalizer.GetLocalizedHtmlString("Grades")</a>
+                </li>
+
+                @if (isEdit)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" id="tabGradeDetails-tab" data-toggle="pill" onclick="window.location = getApplicationName() + 'HumanResource/GradesDetail/grade/@GradesDetails.GradeId'" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Grade Details")</a>
+                    </li>
+
+                }
+            </ul>
+        </div>
+
+
+
+        <div class="card-body bg-gray-light">
+
+            <div class="tab-content" id="custom-content-below-tabContent">
+                <div class="tab-pane fade active show" id="tabMain" role="tabpanel" aria-labelledby="tabMain-tab">
+                    <div>
+                        <div class="card card-default card-outline col-lg-8">
+
+                            <div class="card-header">
+                                <h2 class="card-title mt-3">
+                                    @SharedLocalizer.GetLocalizedHtmlString("Details")
+                                </h2>
+                                <!-- tools box -->
+                                <div class="card-tools pr-0">
+                                    <button type="submit" class="btn  btn-sm btn-primary">
+                                        <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                                    </button>
+                                    <a href="~/HumanResource/Grades" type="button" class="btn  btn-sm btn-default">
+                                        <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                                    </a>
+                                </div>
+                                <!-- /. tools -->
+                            </div>
+                            <div class="card-body">
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
+                                            <input type="text" id="GradeNameEn" name="GradeNameEn" class="form-control" value="@(GradesDetails!=null?GradesDetails.GradeNameEn: null)">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Name Arabic")</label>
+                                            <input type="text" id="GradeNameAr" name="GradeNameAr" class="form-control" value="@(GradesDetails!=null?GradesDetails.GradeNameAr: null)">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Code") </label>
+                                            <input type="text" id="GradeCode" name="GradeCode" class="form-control" value="@(GradesDetails!=null?GradesDetails.GradeCode: null)">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Family Dependencies")</label>
+                                            <input type="number" id="FamilyDependencies" name="FamilyDependencies" class="form-control" value="@(GradesDetails!=null?GradesDetails.FamilyDependencies: 0)">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label> @SharedLocalizer.GetLocalizedHtmlString("Contract Duration Months")</label>
+                                            <input type="number" id="ContractDurationMonths" name="ContractDurationMonths" class="form-control" value="@(GradesDetails!=null?GradesDetails.ContractDurationMonths: 0)">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Yearly Off")</label>
+                                            <input type="number" id="YearlyVacationDays" name="YearlyVacationDays" class="form-control" value="@(GradesDetails!=null?GradesDetails.YearlyVacationDays: 0)">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Increment %")</label>
+                                            <input type="number" id="IncrementPercentage" name="IncrementPercentage" class="form-control" value="@(GradesDetails!=null?GradesDetails.IncrementPercentage: 0)">
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-default card-outline col-lg-8">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    @SharedLocalizer.GetLocalizedHtmlString("Eligibilities")
+                                </h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="">
+                                                <label class="col-md-12">@SharedLocalizer.GetLocalizedHtmlString("Ot Eligibility")</label>
+                                                <select id="OtEligibility" name="OtEligibility" class="form-control" required>
+
+                                                    <option value="True" @(GradesDetails != null && GradesDetails.OtEligibility != null ? (Convert.ToBoolean(GradesDetails.OtEligibility) ? "selected" : "") : "")>Eligible</option>
+                                                    <option value="False" @(GradesDetails != null && GradesDetails.OtEligibility != null ? (Convert.ToBoolean(GradesDetails.OtEligibility) ? "" : "selected") : "")>Not-Eligible</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="">
+                                                <label class="col-md-12">@SharedLocalizer.GetLocalizedHtmlString("Loan Eligibility")</label>
+                                                <select id="LoanEligibility" name="LoanEligibility" class="form-control" required>
+
+                                                    <option value="True" @(GradesDetails != null && GradesDetails.LoanEligibility != null ? (Convert.ToBoolean(GradesDetails.LoanEligibility) ? "selected" : "") : "")>Eligible</option>
+                                                    <option value="False" @(GradesDetails != null && GradesDetails.LoanEligibility != null ? (Convert.ToBoolean(GradesDetails.LoanEligibility) ? "" : "selected") : "")>Not-Eligible</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="">
+                                                <label class="col-md-12">@SharedLocalizer.GetLocalizedHtmlString("Vehicle Eligibility")</label>
+                                                <select id="VehicleEligibility" name="VehicleEligibility" class="form-control" required>
+
+                                                    <option value="True" @(GradesDetails != null && GradesDetails.VehicleEligibility != null ? (Convert.ToBoolean(GradesDetails.VehicleEligibility) ? "selected" : "") : "")>Eligible</option>
+                                                    <option value="False" @(GradesDetails != null && GradesDetails.VehicleEligibility != null ? (Convert.ToBoolean(GradesDetails.VehicleEligibility) ? "" : "selected") : "")>Not-Eligible</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="">
+                                                <label class="col-md-12">@SharedLocalizer.GetLocalizedHtmlString("Comission Eligibility")</label>
+                                                <select id="ComissionEligibility" name="ComissionEligibility" class="form-control" required>
+
+                                                    <option value="True" @(GradesDetails != null && GradesDetails.ComissionEligibility != null ? (Convert.ToBoolean(GradesDetails.ComissionEligibility) ? "selected" : "") : "")>Eligible</option>
+                                                    <option value="False" @(GradesDetails != null && GradesDetails.ComissionEligibility != null ? (Convert.ToBoolean(GradesDetails.ComissionEligibility) ? "" : "selected") : "")>Not-Eligible</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="">
+                                                <label class="col-md-12">@SharedLocalizer.GetLocalizedHtmlString("Business Trips (External)")</label>
+                                                <select id="BusinessTripExternal" name="BusinessTripExternal" class="form-control" required>
+
+                                                    <option value="True" @(GradesDetails != null && GradesDetails.BusinessTripExternal != null ? (Convert.ToBoolean(GradesDetails.BusinessTripExternal) ? "selected" : "") : "")>Eligible</option>
+                                                    <option value="False" @(GradesDetails != null && GradesDetails.BusinessTripExternal != null ? (Convert.ToBoolean(GradesDetails.BusinessTripExternal) ? "" : "selected") : "")>Not-Eligible</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <div class="">
+                                                <label class="col-md-12">@SharedLocalizer.GetLocalizedHtmlString("Business Trips (Internal)")</label>
+                                                <select id="BusinessTripInternal" name="BusinessTripInternal" class="form-control" required>
+
+                                                    <option value="True" @(GradesDetails != null && GradesDetails.BusinessTripInternal != null ? (Convert.ToBoolean(GradesDetails.BusinessTripInternal) ? "selected" : "") : "")>Eligible</option>
+                                                    <option value="False" @(GradesDetails != null && GradesDetails.BusinessTripInternal != null ? (Convert.ToBoolean(GradesDetails.BusinessTripInternal) ? "" : "selected") : "")>Not-Eligible</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12 ">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Contract Status")</label>
+                                            <select id="ContractStatus" name="ContractStatus" class="form-control">
+
+                                                @foreach (var item in contractStatusList)
+                                                {
+                                                    <option value="@item.Code" @(GradesDetails != null && GradesDetails.ContractStatus == item.Code ? "selected" : "")>
+                                                        @item.LookupNameEn
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card card-default card-outline col-lg-8" style="display:none">
+                            <div class="card-header">
+                                <h2 class="card-title">
+                                    @SharedLocalizer.GetLocalizedHtmlString("Organization Details") 
+                                </h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+
+                                    <div class="col-sm-6 ">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                                            <select id="CompanyId" name="CompanyId" class="form-control">
+
+                                                @foreach (var item in companyList)
+                                                {
+                                                    <option value="@item.CompanyId" @(GradesDetails != null && GradesDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                                        @item.CoNameEn
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 ">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                                            <select id="BranchId" name="BranchId" class="form-control">
+
+                                                @foreach (var item in branchList)
+                                                {
+                                                    <option value="@item.BranchId" @(GradesDetails != null && GradesDetails.BranchId == item.BranchId ? "selected" : "")>
+                                                        @item.BranchNameEn
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+            BindGrid_Eduction();
+
+        });
+        var applicationName = getApplicationName();
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: applicationName + "HumanResource/Grades/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                var id = data.result.scalerVal;
+
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + `HumanResource/Grades/edit/${id}`;
+                                }, 100);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+
+
+        function BindGrid_Eduction() {
+
+            var test = $('#frmSearch').serialize();
+
+            $('#divListEduction').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'HumanResource/GradesEducation/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divListEduction').html(data);
+                }
+            })
+        };
+
+
+
+    </script>
+
+}

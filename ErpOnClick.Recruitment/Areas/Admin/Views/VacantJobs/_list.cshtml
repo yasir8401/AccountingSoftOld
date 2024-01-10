@@ -1,0 +1,99 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    List<VacantJobs> vacantJobLists = Model.VacantJobLists;
+   
+}
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th width="30px">Id</th>
+                <th>Job Title</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Publish</th>
+                <th>Created By</th>
+                <th>Created Date</th>
+
+                <th width="30px"></th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th width="30px">JobId</th>
+                <th>JobTitle</th>
+                <th>JobStartDate</th>
+                <th>JobEndDate</th>
+                <th>Publish</th>
+                <th>CreatedBy</th>
+                <th>CreatedDate</th>
+                <td></td>
+                <td></td>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in vacantJobLists)
+            {
+
+            <tr class="text-center">
+                <td width="30px">@item.JobId </td>
+                <td>@item.JobTitle </td>
+                <td>@(item.JobStartDate !=null ? Convert.ToDateTime(item.JobStartDate).ToString("dd-MMM-yyyy") : "")</td>
+                <td>@(item.JobStartDate !=null ? Convert.ToDateTime(item.JobEndDate).ToString("dd-MMM-yyyy") : "")</td>
+                <td><i class="@(Convert.ToBoolean(item.Publish) ? "fa fa-check" : "fa fa-cross")"></i>  </td>
+                <td>@item.CreatedBy </td>
+                <td>@(item.CreatedDate != null ? Convert.ToDateTime(item.CreatedDate).ToString("dd-MMM-yyyy") : "")</td>
+
+                <td class="text-center padding-5">
+                    <a href="~/admin/vacantjobs/edit/@item.JobId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                </td>
+                <td class="text-center padding-5">
+                    <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.JobId')"><i class="fa fa-times text-danger"></i></a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+      
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName+"admin/vacantjobs/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName+'admin/vacantjobs';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,70 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<VendorReportModel> listReportVendor = Model.listReportVendor;
+    int balance = 0;
+}
+<link href="~/css/Report.css" rel="stylesheet" />
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed ">
+        <thead class="text-sm ">
+            <tr class="col-lg-12">
+                <th align="center" width="100px"> @SharedLocalizer.GetLocalizedHtmlString("Date")</th>
+                <th align="left"> @SharedLocalizer.GetLocalizedHtmlString("Account")</th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Debit") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Credit") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Balance")</th>
+
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr>
+                <th align="center" width="100px"> Date</th>
+                <th align="left"> Account</th>
+                <th align="right"> Debit </th>
+                <th align="right"> Credit </th>
+                <th align="right"> Balance</th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+
+            @foreach (var item in listReportVendor)
+            {
+                <tr class="text-center">
+                    <td align="center" width="100px"> @(Convert.ToDateTime(item.CreatedDate).ToString("dd-MMM-yyyy")) </td>
+                    <td align="left"> @item.Account </td>
+                    <td align="right"> @(String.Format("{0:.00}",item.Debit)) </td>
+                    <td align="right"> @(String.Format("{0:.00}",item.Credit))</td>
+                    <td align="right"> @(String.Format("{0:.00}",item.Balance))</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr style="background-color:#fff6ea" class="text-center">
+                <td align="right"></td>
+                <td align="right">Total</td>
+                <td align="right">@(String.Format("{0:.00}", listReportVendor.Sum(x => x.Debit)))</td>
+                <td align="right">@(String.Format("{0:.00}", listReportVendor.Sum(x => x.Credit)))</td>
+                <td align="right"></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+        $('#Accli').addClass("menu-open");
+        $('#Reportsli').addClass("menu-open");
+        $('#Statementsli').removeClass("menu-open");
+        $('#AccRli').removeClass("menu-open");
+        $('#AccPli').removeClass("menu-open");
+        $('#Setupli').removeClass("menu-open");
+        _initDatatable('#dtList');
+
+    });
+</script>

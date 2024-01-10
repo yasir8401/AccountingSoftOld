@@ -1,0 +1,209 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Invoicing.Resources
+@inject LocService SharedLocalizer
+
+@{
+    TaxRates TaxRateDetail = Model.IdDetail;
+    List<Lookups> ActiveStatus = Model.ActiveStatus;
+    List<Branch> BranchDetails = Model.branchList;
+
+    bool isEdit = (TaxRateDetail != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="TaxRateId" name="TaxRateId" class="form-control" value="@(TaxRateDetail != null ? TaxRateDetail.TaxRateId : 0)" />
+
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Customer")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/admin/TaxRates" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Tax Rate Info")
+            </h2>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Tax Rate Name") </label>
+                        <input type="text" id="TaxRateNameEn" name="TaxRateNameEn" class="form-control" required value="@(TaxRateDetail!=null?TaxRateDetail.TaxRateNameEn: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Tax Rate Name (Arabic)")</label>
+                        <input type="text" id="TaxRateNameAr" name="TaxRateNameAr" class="form-control" value="@(TaxRateDetail!=null?TaxRateDetail.TaxRateNameAr: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Tax Percentage")</label>
+                        <input type="text" id="TaxPercent" required name="TaxPercent" class="form-control" value="@(TaxRateDetail != null ? TaxRateDetail.TaxPercent : null )">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Active Status")</label>
+                        <select id="ActiveStatus" name="ActiveStatus" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in ActiveStatus)
+                            {
+                                <option value="@item.Code" @(TaxRateDetail != null && TaxRateDetail.ActiveStatus == item.Code ? "selected" : "")> @item.LookupNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Is Default")</label>
+                        <select id="IsDefault" name="IsDefault" class="form-control" required>
+                            <option disabled selected></option>
+                            <option value=true @(TaxRateDetail != null && TaxRateDetail.IsDefault == true ? "selected" : "" )> True</option>
+                            <option value=false @(TaxRateDetail != null && TaxRateDetail.IsDefault == false ? "selected" : "" )> False</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Tax Rate Info")
+            </h2>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in Model.CompanyDetail)
+                            {
+                                <option value="@item.CompanyId" @(TaxRateDetail != null && TaxRateDetail.CompanyId == item.CompanyId ? "selected" : "")> @item.CoNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in BranchDetails)
+                            {
+                                <option value="@item.BranchId" @(TaxRateDetail != null && TaxRateDetail.BranchId == item.BranchId ? "selected" : "")> @item.BranchNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() + "Admin/TaxRates/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'admin/TaxRates';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName() + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+    </script>
+
+}

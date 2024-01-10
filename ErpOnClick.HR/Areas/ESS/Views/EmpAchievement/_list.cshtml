@@ -1,0 +1,89 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+    var AchievementList = Model.AchievementList;
+
+    var empId = Model.empId;
+}
+
+<table id="dtList" class="table table-hover table-condensed " style="display:none">
+    <thead class="text-sm">
+        <tr>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Id") </th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Year") </th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Award Title") </th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Awarded Date") </th>
+            <th width="30px"></th>
+            <th width="30px"></th>
+        </tr>
+    </thead>
+    <tfoot style="display:table-row-group">
+        <tr class="text-center">
+            <th>Id </th>
+            <th>Year </th>
+            <th>Award Name </th>
+            <th>Awarded Date </th>
+            <th></th>
+            <th></th>
+
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var item in AchievementList)
+        {
+
+            <tr class="text-center">
+                <td>@item.AchievementId </td>
+                <td>@item.Year </td>
+                <td>@item.AwardName </td>
+                <td>@(item.AchievementDate != null ? Convert.ToDateTime(item.AchievementDate).ToString("dd-MMM-yyyy") : "")</td>
+                <td class="text-center padding-5">
+                    <a href="~/ESS/EmpAchievement/edit/emp/@empId/@item.AchievementId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                </td>
+                <td class="text-center padding-5">
+                    <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.AchievementId')"><i class="fa fa-times text-danger"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName + "ESS/EmpAchievement/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName + 'ESS/EmpAchievement/emp/@empId';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

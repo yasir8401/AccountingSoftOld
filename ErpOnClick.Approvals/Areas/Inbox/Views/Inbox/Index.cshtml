@@ -1,0 +1,54 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Approvals.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+    var status = Model.status;
+
+}
+
+
+
+
+<div class="card card-default card-outline">
+    <input id="status" type="text" hidden value="@status" />
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Inbox")
+        </h2>
+
+    </div>
+
+
+
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            BindGrid();
+        });
+
+        var applicationName = getApplicationName();
+        function BindGrid() {
+
+            var status = $('#status').val();
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'Inbox/Inbox/_list',
+                data: { status: status },
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+    </script>
+}

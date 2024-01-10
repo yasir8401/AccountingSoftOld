@@ -1,0 +1,150 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<ActivityLog> ActivityLogList = Model.ActivityLogList;
+    var pageNumber = Model.pageNumber;
+    var pageSize = Model.pageSize;
+    var prevDisabled = !Model.ActivityLogList.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.ActivityLogList.HasNextPage ? "disabled" : "";
+    var countRecords = Model.countRecords;
+}
+@Html.Partial("/Views/Shared/SecurityLayout/_generalModalPartial.cshtml")
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+
+                <th width="10px">@SharedLocalizer.GetLocalizedHtmlString("Id")</th>
+                <th width="10px">@SharedLocalizer.GetLocalizedHtmlString("Ip")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Date")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Remarks")</th>
+
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Module")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Navigation")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Ref Id")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Log Type")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Detail")</th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in ActivityLogList)
+            {
+
+                <tr class="text-center">
+
+                    <td>@item.ActivityLogId</td>
+                    <td>@item.UserIp</td>
+                    <td>@(item.LogDate != null ? Convert.ToDateTime(item.LogDate).ToString("dd-MMM-yyyy") : "")</td>
+                    <td align="left">@item.User.DisplayNameEn</td>
+                    <td>@item.Remarks</td>
+
+                    <td>@item.ModuleId</td>
+                    <td>@item.NavigationId</td>
+                    <td>@item.RefId</td>
+                    <td>@item.LogType</td>
+                    <td> <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs" onclick="showDetail('@item.LogDetail','@item.Remarks')"><i class="fas fa-search"></i></a>  @*@item.LogDetail*@</td>
+
+
+
+                    <td class="text-center padding-5">
+                        <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.ActivityLogId')"><i class="fa fa-times text-danger"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a id="Previous"
+       class="btn btn-primary @prevDisabled">
+        Previous
+    </a>
+    @for (int i = 1; i <= countRecords; i++)
+    {
+        if (i == pageNumber)
+        {
+            <a href="~/Security/LogActivity?pageNumber=@i&pageSize=@pageSize"
+               class="btn btn-primary">
+                @i
+            </a>
+        }
+        else
+        {
+            <a href="~/Security/LogActivity?pageNumber=@i&pageSize=@pageSize"
+               class="btn btn-default">
+                @i
+            </a>
+        }
+
+    }
+
+
+    <a id="Next"
+       class="btn btn-primary @nextDisabled">
+        Next
+    </a>
+</div>
+
+
+<script>
+    $(function () {
+
+        $('#dtList').show();
+        $('#Previous').click(function () {
+            window.location = getApplicationName() +'Security/LogActivity?pageNumber=@(Model.ActivityLogList.PageIndex - 1)&pageSize=@pageSize';
+        });
+        $('#Next').click(function () {
+            window.location = getApplicationName() +'Security/LogActivity?pageNumber=@(Model.ActivityLogList.PageIndex + 1)&pageSize=@pageSize';
+    });
+    });
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    Url: getApplicationName()+"Security/LogActivity/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = getApplicationName() +'Security/LogActivity';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+    function showDetail(LogDetail, remarks) {
+
+        var jsonData = JSON.parse(LogDetail);
+
+        var displayDAta = "<table class='table table-hover table-condensed'><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody>"
+        $.each(jsonData, function (key, value) {
+            displayDAta += "<tr style='border-bottom: 2px solid white;'><th class='text-left p-1 bg-whitesmoke text-right pr-3' style='width:250px; letter-spacing: 1px; color:#777777 '>" + key + ": </th><td class='p-1'>" + value + "</td></tr>"
+        });
+
+        displayDAta += '</tbody></table>';
+
+        $('#generalModal .modal-body').html(displayDAta);
+        $('#generalModal').modal('show');
+        $('#generalModal .modal-title').html('Details');
+
+    }
+</script>
+

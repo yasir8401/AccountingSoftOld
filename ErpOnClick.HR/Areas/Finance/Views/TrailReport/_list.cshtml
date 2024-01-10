@@ -1,0 +1,115 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<TrailBalanceReportModel> listReportTrailBalance = Model.listReportTrailBalance;
+    var count = 0;
+    var totalcount = listReportTrailBalance.Count;
+
+}
+<link href="~/css/Report.css" rel="stylesheet" />
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed ">
+        <thead class="text-sm ">
+            <tr class="col-lg-12 text-center">
+                <th colspan="5" class="heading-border-right"> @SharedLocalizer.GetLocalizedHtmlString("ACCOUNT") </th>
+                <th colspan="3" class="heading-border-right"> @SharedLocalizer.GetLocalizedHtmlString("OPENING BALANCE") </th>
+                <th colspan="3" class="heading-border-right"> @SharedLocalizer.GetLocalizedHtmlString("TRANSACTIONS") </th>
+                <th colspan="3"> @SharedLocalizer.GetLocalizedHtmlString("BALANCE")</th>
+
+            </tr>
+            <tr class="col-lg-12 text-center">
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Code") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Account Title") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Type") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Head") </th>
+                <th class="border-right"> @SharedLocalizer.GetLocalizedHtmlString("Sub Head") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Opening DR.")</th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Opening CR.") </th>
+                <th class="border-right"> @SharedLocalizer.GetLocalizedHtmlString("Balance") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Debit DR.")</th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Credit CR.") </th>
+                <th class="border-right"> @SharedLocalizer.GetLocalizedHtmlString("Balance") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Total Debit DR.")</th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Total Credit CR.") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Balance") </th>
+
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th> Code</th>
+                <th> Account Title </th>
+                <th> Type </th>
+                <th> Head</th>
+                <th class="border-right"> Sub Head</th>
+                <th> Opening DR. </th>
+                <th> Opening CR. </th>
+                <th class="border-right">Balance</th>
+                <th> Debit DR. </th>
+                <th> Credit CR. </th>
+                <th class="border-right">Balance</th>
+                <th> Total Debit DR. </th>
+                <th> Total Credit CR. </th>
+                <th> Total</th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in listReportTrailBalance)
+            {
+                <tr class="text-center">
+                    <td> @item.Code </td>
+                    <td> @item.Account </td>
+                    <td> @item.Type </td>
+                    <td> @item.Head </td>
+                    <td class="border-right"> @item.SubHead </td>
+                    <td> @(item.ODebit!=null && item.ODebit!=0 ? String.Format("{0:.00}",item.ODebit) : "-") </td>
+                    <td> @(item.OCredit != null && item.OCredit!=0 ? String.Format("{0:.00}",item.OCredit) : "-") </td>
+                    <td class="border-right"> @(item.OTotal != null && item.OTotal!=0 ? String.Format("{0:.00}",item.OTotal) : "-") </td>
+                    <td> @(item.ADebit != null && item.ADebit!=0 ? String.Format("{0:.00}",item.ADebit) : "-") </td>
+                    <td> @(item.ACredit != null && item.ACredit!=0 ? String.Format("{0:.00}",item.ACredit) : "-") </td>
+                    <td class="border-right"> @(item.ATotal != null && item.ATotal!=0 ? String.Format("{0:.00}",item.ATotal) : "-") </td>
+                    <td> @(item.CDebit != null && item.CDebit!=0 ? String.Format("{0:.00}",item.CDebit) : "-") </td>
+                    <td> @(item.CCredit != null && item.CCredit!=0 ? String.Format("{0:.00}",item.CCredit) : "-") </td>
+                    <td> @(item.CTotal != null && item.CTotal!=0 ? String.Format("{0:.00}",item.CTotal) : "-") </td>
+                </tr>
+            }
+
+        </tbody>
+        <tfoot>
+            <tr style="background-color:#fff6ea" class="text-center order-last">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="border-right">Total</td>
+                <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.ODebit)))</td>
+                <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.OCredit)))</td>
+                <td class="border-right">@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.OTotal)))</td>
+                <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.ADebit)))</td>
+                <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.ACredit)))</td>
+                <td class="border-right">@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.ATotal)))</td>
+                <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.CDebit)))</td>
+                <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.CCredit)))</td>
+                <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.CTotal)))</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+        $('#Accli').addClass("menu-open");
+        $('#Reportsli').addClass("menu-open");
+        $('#Statementsli').removeClass("menu-open");
+        $('#AccRli').removeClass("menu-open");
+        $('#AccPli').removeClass("menu-open");
+        $('#Setupli').removeClass("menu-open");
+
+        _initDatatable('#dtList');
+    });
+</script>

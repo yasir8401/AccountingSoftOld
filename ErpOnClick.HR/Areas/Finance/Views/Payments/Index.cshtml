@@ -1,0 +1,126 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{ List<Vendors> VendorsDetails = Model.vendorsList; }
+
+
+
+@section TabName{
+    Lookup Setup
+}
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Payments")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a id="printList" href="" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Print")</a>
+
+            <a href="~/Finance/Payments/edit" type="button" class="btn  btn-sm btn-primary">
+                <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add New")
+            </a>
+        </div>
+        <!-- /. tools -->
+    </div>
+
+
+    <div class="card-footer pb-0 pt-2 text-sm">
+        <form id="frmSearch">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Payments Date From")</label>
+                        <input class="form-control " type="date" name="PaymentsDateFrom" id="PaymentsDateFrom" />
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Payments Date To")</label>
+                        <input class="form-control " type="date" name="PaymentsDateTo" id="PaymentsDateTo" />
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Vendor")</label>
+                        <select name="VendorId" id="VendorId" class="form-control input-sm text-sm ">
+                            <option value="">All</option>
+                            @foreach (var item in VendorsDetails)
+                            {
+                                <option value="@item.VendorId"> @item.VendorNameEn</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div style="display:none">
+                    <button type="submit" class="btn btn-default btn-block">Refresh</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+@section scripts{
+
+
+    <script>
+        $(function () {
+            $('#AccPli').addClass("menu-open");
+            $('#AccRli').removeClass("menu-open");
+            $('#Accli').removeClass("menu-open");
+            $('#Setupli').removeClass("menu-open");
+
+            var date = new Date();
+            var dd = String(date.getDate()).padStart(2, '0');
+            var mm = String(date.getMonth() + 1).padStart(2, '0')
+            var yyyy = date.getFullYear();
+            var premonth = parseInt(mm) - 1;
+            var start = yyyy + '-' + mm + '-' + '01';
+            today = yyyy + '-' + mm + '-' + dd;
+            $('#PaymentsDateFrom').val(start);
+            $('#PaymentsDateTo').val(today);
+            $('#frmSearch button').click();
+
+        });
+
+        $('#frmSearch').find('input, select').change(() => {
+            $('#frmSearch button').click();
+
+        });
+
+        $('#frmSearch').submit(function (e) {
+            e.preventDefault();
+            BindGrid();
+        });
+
+
+        function BindGrid() {
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() + 'Finance/Payments/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        }
+
+        $('#printList').click(function (e) {
+            var receiptsdatefrom = $('#PaymentsDateFrom').val();
+            var receiptsdateto = $('#PaymentsDateTo').val();
+            var VendorId = $('#VendorId').val();
+            window.open(getApplicationName() + "Finance/Payments/PrintList?PaymentsDateFrom=" + receiptsdatefrom + "&PaymentsDateTo=" + receiptsdateto + "&VendorId=" + VendorId, "_blank");
+        });
+
+
+    </script>
+}
+

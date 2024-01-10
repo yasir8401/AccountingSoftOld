@@ -1,0 +1,75 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.ViewModel
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<Leaves> leaveList = Model.leaveList;
+
+}
+<link href="~/css/Report.css" rel="stylesheet" />
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed ">
+        <thead class="text-sm">
+            <tr class="col-lg-12">
+                <th width="10px"> @SharedLocalizer.GetLocalizedHtmlString("Id")</th>
+                <th align="left"> @SharedLocalizer.GetLocalizedHtmlString("Employee")</th>
+
+                <th> @SharedLocalizer.GetLocalizedHtmlString("From")</th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("To")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Type")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Status")</th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr>
+                <th width="10px"> Id</th>
+                <th align="left"> Employee</th>
+
+                <th> From</th>
+                <th> To</th>
+                <th>Type</th>
+                <th>Status</th>
+            </tr>
+        </tfoot>
+        <tbody>
+
+            @foreach (var item in leaveList)
+            {
+                <tr class=" text-center">
+                    <td>@item.LeaveId</td>
+                    <td align="left"> @(item.Emp !=null ? item.Emp.FirstNameEn + " " + item.Emp.FatherNameEn + " " + item.Emp.GrandNameEn + " " + item.Emp.FamilyNameEn :"")</td>
+                    <td>@(item.DateFrom != null ? Convert.ToDateTime(item.DateFrom).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@(item.DateTo != null ? Convert.ToDateTime(item.DateTo).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@(item.LeaveType !=null ? item.LeaveType.LookupNameEn :"")</td>
+                    <td align="right">
+                        @if (item.LeaveStatusNavigation != null && item.LeaveStatusNavigation.LookupNameEn == "Rejected")
+                        {
+                            <label class="btnwidth badge badge-danger">Rejected</label>
+
+                        }
+                        else if (item.LeaveStatusNavigation != null && item.LeaveStatusNavigation.LookupNameEn == "Approved")
+                        {
+                            <label class="btnwidth badge badge-success">Approved</label>
+                        }
+                        else if (item.LeaveStatusNavigation != null && item.LeaveStatusNavigation.LookupNameEn == "Pending")
+                        {
+                            <label class="btnwidth badge badge-warning">Pending</label>
+                        }
+                        else
+                        {
+
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+        _initDatatable('#dtList');
+    });
+</script>

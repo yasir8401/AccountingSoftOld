@@ -1,0 +1,155 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+
+
+@{
+
+    List<EmpAttendance> empAttendanceList = Model.empAttendanceList;
+
+}
+<style>
+    thead th {
+        text-align: center !important;
+        font-size: 12px !important;
+        vertical-align: bottom;
+        white-space: nowrap;
+        background-color: #efefef;
+        color: #45547d;
+        padding: 10px 0px;
+    }
+
+    tbody td {
+        padding: 0px;
+    }
+
+        tbody td .form-control {
+            padding: 1px;
+            border: 0px !important;
+            margin: 0px;
+            font-size: 13px;
+            text-align: center;
+            background-color: transparent;
+        }
+</style>
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed" style="display:none;width:100%">
+        <thead class="text-sm">
+            <tr>
+                <th width="20px">@SharedLocalizer.GetLocalizedHtmlString("Id") </th>
+                <th hidden></th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Employee") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Time In") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Time Out") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Is-Present") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Paid-Leave") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Unpaid-Leave") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Is-Short-Leave") </th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th>Id </th>
+                <th hidden></th>
+                <th>Employee </th>
+                <th>Time In </th>
+                <th>Time Out </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Is-Present") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Paid-Leave") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Unpaid-Leave") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Is-Short-Leave") </th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in empAttendanceList)
+            {
+
+                <tr class="text-center">
+                    <td><input type="text" id="EmpAttendanceId" value="@(item !=null ? item.EmpAttendanceId : 0)" readonly name="EmpAttendanceId" class="form-control" /> </td>
+                    <td hidden><input type="text" value="@(item.CreatedDate!=null ?Convert.ToDateTime(item.CreatedDate).ToString("dd-MMM-yyyy") : "")" name="CreatedDate" id="CreatedDate" class="form-control DatePicker" /></td>
+                    <td><input type="text" hidden id="EmpId" value="@(item !=null ? item.EmpId : 0)" readonly name="EmpId" class="form-control" />     @(item.Emp!=null ? item.Emp.FirstNameEn + " " + item.Emp.FatherNameEn + " " + item.Emp.GrandNameEn + " " + item.Emp.FamilyNameEn:"")</td>
+                    <td>  <input type="time" id="TimeIn" name="TimeIn" value="@(item != null && item.TimeIn !=null ? Convert.ToDateTime(item.TimeIn).ToString("HH:mm") : "")" class="form-control"> </td>
+                    <td>  <input type="time" id="TimeOut" name="TimeOut" value="@(item != null && item.TimeOut !=null ? Convert.ToDateTime(item.TimeOut).ToString("HH:mm") : "")" class="form-control"> </td>
+                    <td>
+                        <input id="IsPresent" type="radio" name="IsPaidLeave-@item.EmpId" @(item.IsPresent != null && item.IsPresent == true ? "checked" : (item.IsPresent == false && item.IsPaidLeave == false && item.IsUnpaidLeave == false && item.IsShortLeave == false ? "checked" : "" )) value="IsPresent" />
+                        
+                    </td>
+                    <td>
+                        <input id="IsPaidLeave" type="radio" name="IsPaidLeave-@item.EmpId" @(item.IsPaidLeave != null && item.IsPaidLeave == true ? "checked" : "") value="IsPaidLeave" />
+                       
+                    </td>
+                    <td>
+                        <input id="IsUnpaidLeave" type="radio" name="IsPaidLeave-@item.EmpId" @(item.IsUnpaidLeave != null && item.IsUnpaidLeave == true ? "checked" : "") value="IsUnpaidLeave" />
+                        
+                    </td>
+                    <td>
+                        <input id="IsShortLeave" type="radio" name="IsPaidLeave-@item.EmpId" @(item.IsShortLeave != null && item.IsShortLeave == true ? "checked" : "") value="IsShortLeave" />
+                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+<script>
+    $(function () {
+        _initDatatable('#dtList');
+        initDatePicker();
+        $('#dtList').show();
+        
+        
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName + "HumanResource/emp/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName + 'HumanResource/emp';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+    function changeVal(el, empId) {
+
+        var id = el.id;
+        var val = $("#" + id).val();
+        
+        if (val == "True") {
+            
+            $("#IsPaidLeave-" + empId).prop('disabled', 'disabled');
+            $("#IsUnpaidLeave-" + empId).prop('disabled', 'disabled');
+            $("#IsShortLeave-" + empId).prop('disabled', 'disabled');
+        }
+        else {
+            
+            $("#IsPaidLeave-" + empId).prop('disabled', false);
+            $("#IsUnpaidLeave-" + empId).prop('disabled', false);
+            $("#IsShortLeave-" + empId).prop('disabled', false);
+        }
+
+    };
+</script>

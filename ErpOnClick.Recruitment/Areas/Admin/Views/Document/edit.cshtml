@@ -1,0 +1,298 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+
+    IList<Lookups> ownerTypeList = Model.ownerTypeList;
+    IList<Lookups> documentTypeList = Model.documentTypeList;
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+
+
+
+    Documents documentDetails = Model.documentDetails;
+    bool isEdit = (documentDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="DocId" name="DocId" class="form-control" value="@(documentDetails != null ? documentDetails.DocId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                Details
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> Save
+                </button>
+                <a href="~/admin/document" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> Return
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="DocNameEn" name="DocNameEn" class="form-control" value="@(documentDetails!=null?documentDetails.DocNameEn: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Name Arabic</label>
+                        <input type="text" id="DocNameAr" name="DocNameAr" class="form-control" value="@(documentDetails!=null?documentDetails.DocNameAr: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Title </label>
+                        <input type="text" id="TitleEnInDoc" name="TitleEnInDoc" class="form-control" value="@(documentDetails!=null?documentDetails.TitleEnInDoc: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Title Arabic</label>
+                        <input type="text" id="TitleArInDoc" name="TitleArInDoc" class="form-control" value="@(documentDetails!=null?documentDetails.TitleArInDoc: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Issued Date</label>
+                        <input type="text" id="DocIssuedDate" name="DocIssuedDate" class="form-control DatePicker" value="@(documentDetails != null && documentDetails.DocIssuedDate !=null ? Convert.ToDateTime(documentDetails.DocIssuedDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Issued Date Hijri</label>
+                        <input type="text" id="DocIssuedDateH" name="DocIssuedDateH" class="form-control DatePicker" value="@(documentDetails != null && documentDetails.DocIssuedDateH !=null ? Convert.ToDateTime(documentDetails.DocIssuedDateH).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="text" id="DocEndDate" name="DocEndDate" class="form-control DatePicker" value="@(documentDetails != null && documentDetails.DocEndDate !=null ? Convert.ToDateTime(documentDetails.DocEndDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>End Date Hijri</label>
+                        <input type="text" id="DocEndDateH" name="DocEndDateH" class="form-control DatePicker" value="@(documentDetails != null && documentDetails.DocEndDateH !=null ? Convert.ToDateTime(documentDetails.DocEndDateH).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>File</label>
+                        @if (documentDetails != null && documentDetails.DocFile != null)
+                        {
+                            <a href="~/Files/@documentDetails.DocFile" download="">DownloadDPF</a>
+                            <input type="file" hidden id="DocFile" name="DocFile" class="form-control">
+                        }
+                        else
+                        {
+                            <input type="file" id="FileToUpload" name="FileToUpload" class="form-control">
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                More Details
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(documentDetails != null && documentDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Branch</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(documentDetails != null && documentDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label> Owner Type</label>
+                        <select id="DocOwnerType" name="DocOwnerType" class="form-control">
+
+                            @foreach (var item in ownerTypeList)
+                            {
+                                <option value="@item.Code" @(documentDetails != null && documentDetails.DocOwnerType == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label> Doc Type</label>
+                        <select id="DocType" name="DocType" class="form-control">
+
+                            @foreach (var item in documentTypeList)
+                            {
+                                <option value="@item.Code" @(documentDetails != null && documentDetails.DocType == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="card card-outline card-outline col-lg-8">
+        <div class="card-header">
+            <h3 class="card-title">
+                Description
+            </h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body pad">
+            <div class="mb-3">
+                <textarea id="DocDesc" rows="8" name="DocDesc"
+                          style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(documentDetails != null? documentDetails.DocDesc : "")</textarea>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+
+            $('#DocDesc').summernote(
+                {
+                    height: 200,
+
+                }
+            );
+        });
+
+        var applicationName = getApplicationName();
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+   
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+
+                    $.ajax({
+                        url: applicationName+"admin/document/" + actionType,
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName+'admin/document';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#CompanyId').change(function () {
+          
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName+"Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+                    debugger;
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+                        debugger;
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+    </script>
+
+}

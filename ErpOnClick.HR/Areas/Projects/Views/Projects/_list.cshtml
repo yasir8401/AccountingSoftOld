@@ -1,0 +1,117 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<Projects> ProjectList = Model.ProjectList;
+
+}
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+
+                <th width="10px">  @SharedLocalizer.GetLocalizedHtmlString("Id")  </th>
+                <th>
+                    @SharedLocalizer.GetLocalizedHtmlString("Title")
+                </th>
+
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Type")  </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Manager")  </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Plan (Date From)") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Plan (Date To)") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Start date")  </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("End Date")  </th>
+
+                <th width="30px"></th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+
+
+                <th width="10px"> Id </th>
+                <th>
+                    @SharedLocalizer.GetLocalizedHtmlString("Title")
+                </th>
+
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Type")  </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Manager")  </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Plan (Date From)") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Plan (Date To)") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Start date")  </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("End Date")  </th>
+
+                <th width="30px"></th>
+                <th width="30px"></th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in ProjectList)
+            {
+
+                <tr class="text-center">
+
+                    <td> @item.ProjectId </td>
+                    <td align="left"> @item.ProjectTitle </td>
+
+                    <td align="left"> @(item.ProjectType !=null ? item.ProjectType.LookupNameEn :"")</td>
+                    <td align="left">  @(item.ProjectManagerEmp !=null ? item.ProjectManagerEmp.FirstNameEn + " " + item.ProjectManagerEmp.FatherNameEn + " " + item.ProjectManagerEmp.GrandNameEn + " " + item.ProjectManagerEmp.FamilyNameEn :"") </td>
+                    <td>@(item.PlanDateFrom != null ? Convert.ToDateTime(item.PlanDateFrom).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@(item.PlanDateTo != null ? Convert.ToDateTime(item.PlanDateTo).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@(item.ProjectStartDate != null ? Convert.ToDateTime(item.ProjectStartDate).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@(item.ProjectEndDate != null ? Convert.ToDateTime(item.ProjectEndDate).ToString("dd-MMM-yyyy") : "")</td>
+
+
+                    <td class="text-center padding-5">
+                        <a href="~/Projects/HR/edit/@item.ProjectId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td class="text-center padding-5">
+                        <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.ProjectId')"><i class="fa fa-times text-danger"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: getApplicationName() + "Projects/HR/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = getApplicationName() + 'Projects/HR';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

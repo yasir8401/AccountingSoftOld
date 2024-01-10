@@ -1,0 +1,408 @@
+﻿
+
+
+<div id="main" role="main">
+
+    <!-- #MAIN CONTENT -->
+    <div>
+        <div class="outer-block">
+
+            <div class="items colBG">
+                <h4>Receivables</h4>
+                <div class="clearfix margin-5"></div>
+                <div style="height:350px">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="chartAging" width="399" height="350" class="chartjs-render-monitor" style="display: block; width: 399px; height: 350px;"></canvas>
+                </div>
+            </div>
+
+            <div class="items colSM">
+                <a href="~/Admin/Customers"><h4>Customers</h4></a>
+                <div class="pull-left " style="width:50%">
+
+                    <div class="margin-top-25">&nbsp;</div>
+                    <h1 class="text-center " style="line-height:30px" title="Total Customers">
+                        55
+                        <small><br>50 Active | 5 Non-Active</small>
+                    </h1>
+                </div>
+                <div class="pull-right " style="width:50%">
+
+                    <div style="height:140px">
+                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <canvas id="chartCustomers" width="200" height="140" class="chartjs-render-monitor" style="display: block; width: 200px; height: 140px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="items colBG">
+                <h4>General Entries</h4>
+                <div class="clearfix margin-5"></div>
+                <div style="height:350px">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="chartGeneralEntries" style="display: block; width: 399px; height: 350px;" width="399" height="350" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+
+            <div class="items colSM">
+
+                <a href="~/Admin/Vendors"><h4>Vendors</h4></a>
+                <div class="pull-left " style="width:50%">
+
+                    <div class="margin-top-25">&nbsp;</div>
+                    <h1 class="text-center " style="line-height:30px" title="Total Vendors">
+                        1
+                        <small><br>1 Active | 0 Non-Active</small>
+                    </h1>
+                </div>
+                <div class="pull-right " style="width:50%">
+
+                    <div style="height:140px">
+                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <canvas id="chartVendors" width="200" height="140" class="chartjs-render-monitor" style="display: block; width: 200px; height: 140px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="items colBG">
+                <h4>Sales By Services</h4>
+                <div class="clearfix margin-5"></div>
+                <div style="height:340px">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="chartServices" width="399" height="340" class="chartjs-render-monitor" style="display: block; width: 399px; height: 340px;"></canvas>
+                </div>
+            </div>
+
+            <div class="items colSM">
+
+                <a href="~/demo_erp/reports/rpttimesheet"><h4>Timesheets <small>Oct-2020</small></h4></a>
+                <div class="pull-left " style="width:50%">
+
+                    <div class="margin-top-25">&nbsp;</div>
+                    <h1 class="text-center " style="line-height:30px" title="Submitted Timesheets">
+                        0
+                        <small title="Pending Timesheets"><br>2 Pending</small>
+                    </h1>
+                </div>
+                <div class="pull-right " style="width:50%">
+
+                    <div style="height:140px">
+                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <canvas id="chartTimesheet" width="200" height="140" class="chartjs-render-monitor" style="display: block; width: 200px; height: 140px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+        <style type="text/css">
+
+            /* Chart.js */
+            @@keyframes chartjs-render-animation {
+                from {
+                    opacity: .99
+                }
+
+                to {
+                    opacity: 1
+                }
+            }
+
+            .chartjs-render-monitor {
+                animation: chartjs-render-animation 1ms
+            }
+
+            .chartjs-size-monitor, .chartjs-size-monitor-expand, .chartjs-size-monitor-shrink {
+                position: absolute;
+                direction: ltr;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                overflow: hidden;
+                pointer-events: none;
+                visibility: hidden;
+                z-index: -1
+            }
+
+                .chartjs-size-monitor-expand > div {
+                    position: absolute;
+                    width: 1000000px;
+                    height: 1000000px;
+                    left: 0;
+                    top: 0
+                }
+
+                .chartjs-size-monitor-shrink > div {
+                    position: absolute;
+                    width: 200%;
+                    height: 200%;
+                    left: 0;
+                    top: 0
+                }
+        </style>
+
+
+
+
+
+        <style>
+
+            body {
+                background-color: #e5e5e5 !important;
+            }
+
+            .colSM {
+                height: 200px;
+            }
+
+            .colBG {
+                height: 415px;
+            }
+
+            @@media only screen and (min-device-width: 768px) {
+                .outer-block {
+                    -moz-column-count: 3;
+                    -webkit-column-count: 3;
+                    column-count: 3;
+                    -moz-column-gap: 1em;
+                    -webkit-column-gap: 1em;
+                    column-gap: 1em;
+                }
+            }
+
+            .items {
+                display: inline-block;
+                margin: 0 0 1em;
+                width: 100%;
+                background-color: #FFF;
+                padding: 10px 10px;
+            }
+
+                .items h4 {
+                    font-size: 1.3em;
+                    font-weight: 600;
+                    color: #ff7b00;
+                    border-bottom: 2px solid whitesmoke;
+                    padding-bottom: 10px;
+                }
+
+                .items h1 {
+                    font-size: 5em;
+                    font-weight: 500;
+                    color: #9a9a9a;
+                }
+
+                .items .align-text-bottom {
+                }
+
+            .pull-left {
+                float: left !important;
+            }
+
+            .pull-right {
+                float: right !important;
+            }
+
+            .margin-top-25 {
+                margin-top: 25px !important
+            }
+
+            h1 small {
+                font-size: 18px;
+                font-weight: 300;
+                letter-spacing: -1px;
+            }
+        </style>
+
+
+
+    </div>
+    <!-- end row -->
+    <!-- END #MAIN CONTENT -->
+
+</div>
+
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () {
+            initChartGeneralEntries();
+            initChartServices();
+            initChartVendors();
+            initChartCustomers();
+            initChartAging();
+            initChartTimesheet();
+        })
+
+
+        function initChartGeneralEntries() {
+            var ctx = document.getElementById('chartGeneralEntries').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'Octuber', 'November', 'December' ],
+                    datasets: [{
+                        label: 'GeneralEntries',
+                        backgroundColor: '#f58220',
+                        borderColor: '#e77616',
+                        data: [0, 10, 5, 2, 20, 30, 45, 50, 55, 45, 65, 50, 75, 90]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+
+        function initChartServices() {
+            var ctx = document.getElementById('chartServices').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'pie',
+
+                // The data for our dataset
+                data: {
+                    labels: ['Accounting', 'Advisory', 'Audit', 'AUP', 'Consultancy'],
+                    datasets: [{
+                        label: 'Sales',
+                        backgroundColor: ['#ff7b00', '#ff9000', '#ffa500', '#ffba00', '#FFCE54'],
+                        //backgroundColor: ['#5D9CEC','#48CFAD','#A0D468','#FFCE54','#ffe500'],
+                        borderColor: 'white',
+                        data: [20, 15, 15, 20, 35]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+
+        function initChartVendors() {
+            var ctx = document.getElementById('chartVendors').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: ['Active', 'Non-Active'],
+                    datasets: [{
+                        label: 'Status',
+                        backgroundColor: ['#8CC152', '#FC6E51'],
+                        borderColor: 'white',
+                        data: [1, 0]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+
+
+        function initChartCustomers() {
+            var ctx = document.getElementById('chartCustomers').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: ['Active', 'Non-Active'],
+                    datasets: [{
+                        label: 'Status',
+                        backgroundColor: ['#8CC152', '#FC6E51'],
+                        borderColor: 'white',
+                        data: [50, 5]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+
+        function initChartTimesheet() {
+            var ctx = document.getElementById('chartTimesheet').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: ['Submitted', 'Pending'],
+                    datasets: [{
+                        label: 'Pending',
+                        backgroundColor: ['#8CC152', '#FC6E51'],
+                        borderColor: 'white',
+                        data: [0, 2]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+
+
+        function initChartAging() {
+            var ctx = document.getElementById('chartAging').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'bar',
+
+                // The data for our dataset
+                data: {
+                    labels: ['0 Days', '15 Days', '30 Days', '45 Days', '60 Days', '90 Days', '120 Days'],
+                    datasets: [{
+                        label: 'Due',
+                        backgroundColor: ['#ff6500', '#ff7b00', '#ff9000', '#ffa500', '#ffa500', '#ffa500', '#ffa500', '#ffa500'],
+                        data: [1500, 2000, 13000, 25000, 35000, 7000, 20000, 10000]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+    </script>
+}

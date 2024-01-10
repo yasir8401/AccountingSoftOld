@@ -1,0 +1,236 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    Items ItemDetail = Model.IdDetail;
+    List<ItemCategories> ItemCategories = Model.ItemCategories;
+    List<Branch> BranchDetails = Model.branchList;
+    bool isEdit = (ItemDetail != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="ItemId" name="ItemId" class="form-control" value="@(ItemDetail != null ? ItemDetail.ItemId : 0)" />
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(ItemDetail != null ? ItemDetail.CompanyId : 0)" />
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(ItemDetail != null ? ItemDetail.BranchId : 0)" />
+
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Item")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/Inventory/Items" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+    </div>
+
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Item Info")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Item Name") </label>
+                        <input type="text" id="ItemNameEn" name="ItemNameEn" class="form-control" required value="@(ItemDetail!=null?ItemDetail.ItemNameEn: "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Item Name (Arabic)")</label>
+                        <input type="text" id="ItemNameAr" name="ItemNameAr" class="form-control" value="@(ItemDetail!=null?ItemDetail.ItemNameAr: "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Item Code")</label>
+                        <input type="number" id="ItemCode" name="ItemCode" class="form-control" value="@(ItemDetail!=null?ItemDetail.ItemCode: "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Item Category")</label>
+                        <select id="ItemCategoryId" name="ItemCategoryId" class="form-control" required>
+                            <option></option>
+                            @if (ItemCategories != null)
+                            {
+                                @foreach (var item in ItemCategories)
+                                {
+                                    <option value="@item.ItemCategoryId" @(ItemDetail != null && item.ItemCategoryId == ItemDetail.ItemCategoryId ? "selected" : "")> @item.ItemCategoryNameEn</option>
+
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8" style="display:none">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in Model.CompanyDetail)
+                            {
+                                <option value="@item.CompanyId" @(ItemDetail != null && ItemDetail.CompanyId == item.CompanyId ? "selected" : "")> @item.CoNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            @if (isEdit)
+                            {
+                                @foreach (var item in BranchDetails)
+                                {
+                                    <option value="@item.BranchId" @(ItemDetail != null && ItemDetail.BranchId == item.BranchId ? "selected" : "")> @item.BranchNameEn</option>
+
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Other Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Sku")</label>
+                        <input type="text" id="Sku" name="Sku" class="form-control" value="@(ItemDetail!=null?ItemDetail.Sku: "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Barcode")</label>
+                        <input type="text" id="Barcode" name="Barcode" class="form-control" value="@(ItemDetail!=null?ItemDetail.Barcode: "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Tags")</label>
+                        <input type="text" id="Tags" name="Tags" class="form-control" value="@(ItemDetail!=null?ItemDetail.Tags: "")">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+            $('#Inventoryli').addClass("menu-open");
+            $('#ACReceivablesli').removeClass("menu-open");
+            $('#ACPayablesli').removeClass("menu-open");
+            $('#Accountingli').removeClass("menu-open");
+            $('#Setupli').removeClass("menu-open");
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() + "Inventory/Items/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'Inventory/Items';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#CompanyId').change(function () {
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName() + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+    </script>
+
+}

@@ -1,0 +1,66 @@
+﻿@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
+        <li class="nav-item has-treeview menu-open">
+            <a href="~/ESS/ESSDashboard" class="nav-link ">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Dashboard")
+                </p>
+            </a>
+        </li>
+
+
+        <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-home"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Home")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/ESS/Profile" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Employee Profile")</p></a></li>
+                <li class="nav-item"><a href="~/ESS/EmpAttendances" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Attendance")</p></a></li>
+                <li class="nav-item"><a href="~/ESS/EmpPaySlip" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Pay Slip")</p></a></li>
+                @*<li class="nav-item"><a href="~/ESS/EmpLeaves" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Leaves Details")</p></a></li>*@
+            </ul>
+        </li>
+
+        <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-home"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("General Requests")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/ESS/TimeCorrectionRequest" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Time In/Out Correction Request")</p></a></li>
+                <li class="nav-item"><a href="~/ESS/EmpLeaves" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Leave Request")</p></a></li>
+                <li class="nav-item"><a href="~/ESS/ExpClaimsRequest" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Expense Claim Request")</p></a></li>
+                <li class="nav-item"><a href="~/ESS/OverTimeRequest" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Overtime Request")</p></a></li>
+                <li class="nav-item"><a href="~/ESS/WeekendOvertimeRequest" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Weekend Overtime Request")</p></a></li>
+            </ul>
+        </li>
+
+    </ul>
+</nav>
+
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
+
+        <li class="nav-item has-treeview ">
+            <a href="~/home/logout" class="nav-link">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Logout")
+
+                </p>
+            </a>
+        </li>
+    </ul>
+</nav>

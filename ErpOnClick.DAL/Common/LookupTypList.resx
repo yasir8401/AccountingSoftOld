@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Academic_Rank_070" xml:space="preserve">
+    <value>070</value>
+  </data>
+  <data name="ActiveStatus_015" xml:space="preserve">
+    <value>015</value>
+  </data>
+  <data name="AdmissionDocumentType_030" xml:space="preserve">
+    <value>030</value>
+  </data>
+  <data name="AdmissionFormStatus_031" xml:space="preserve">
+    <value>031</value>
+  </data>
+  <data name="ALLOWANCE_TYPE_026" xml:space="preserve">
+    <value>026</value>
+  </data>
+  <data name="ApplicationSourceType_006" xml:space="preserve">
+    <value>006</value>
+  </data>
+  <data name="ApplicationStatus_007" xml:space="preserve">
+    <value>007</value>
+  </data>
+  <data name="Assessment_Assignment_073" xml:space="preserve">
+    <value>073</value>
+  </data>
+  <data name="AssetType_036" xml:space="preserve">
+    <value>036</value>
+  </data>
+  <data name="AttendanceTypeNavigation_041" xml:space="preserve">
+    <value>041</value>
+  </data>
+  <data name="AverageMethod_035" xml:space="preserve">
+    <value>035</value>
+  </data>
+  <data name="Banks_016" xml:space="preserve">
+    <value>016</value>
+  </data>
+  <data name="BloodGroup_019" xml:space="preserve">
+    <value>019</value>
+  </data>
+  <data name="Board_022" xml:space="preserve">
+    <value>022</value>
+  </data>
+  <data name="CalculateIn_020" xml:space="preserve">
+    <value>020</value>
+  </data>
+  <data name="City_005" xml:space="preserve">
+    <value>005</value>
+  </data>
+  <data name="College_Type_068" xml:space="preserve">
+    <value>068</value>
+  </data>
+  <data name="CONTRACT_STATUS_027" xml:space="preserve">
+    <value>027</value>
+  </data>
+  <data name="Contract_Type_069" xml:space="preserve">
+    <value>069</value>
+  </data>
+  <data name="Country_004" xml:space="preserve">
+    <value>004</value>
+  </data>
+  <data name="CourseEnrollStatus_040" xml:space="preserve">
+    <value>040</value>
+  </data>
+  <data name="CourseType_024" xml:space="preserve">
+    <value>024</value>
+  </data>
+  <data name="CurrentQualification_050" xml:space="preserve">
+    <value>050</value>
+  </data>
+  <data name="DegreeType_066" xml:space="preserve">
+    <value>066</value>
+  </data>
+  <data name="Degree_008" xml:space="preserve">
+    <value>008</value>
+  </data>
+  <data name="Departments_001" xml:space="preserve">
+    <value>001</value>
+  </data>
+  <data name="DepreciationMethod_034" xml:space="preserve">
+    <value>034</value>
+  </data>
+  <data name="DocumentTypes_010" xml:space="preserve">
+    <value>010</value>
+  </data>
+  <data name="ExamType_057" xml:space="preserve">
+    <value>057</value>
+  </data>
+  <data name="Exception_Type_053" xml:space="preserve">
+    <value>053</value>
+  </data>
+  <data name="Functional_Status_071" xml:space="preserve">
+    <value>071</value>
+  </data>
+  <data name="Functional_Types_072" xml:space="preserve">
+    <value>072</value>
+  </data>
+  <data name="Gende_014" xml:space="preserve">
+    <value>014</value>
+  </data>
+  <data name="GPA_Type_074" xml:space="preserve">
+    <value>074</value>
+  </data>
+  <data name="GradeStatus_051" xml:space="preserve">
+    <value>051</value>
+  </data>
+  <data name="HousingPaymentType_029" xml:space="preserve">
+    <value>029</value>
+  </data>
+  <data name="ID_Type_056" xml:space="preserve">
+    <value>056</value>
+  </data>
+  <data name="Languages_021" xml:space="preserve">
+    <value>021</value>
+  </data>
+  <data name="LeaveType_032" xml:space="preserve">
+    <value>032</value>
+  </data>
+  <data name="Loan_Status_37" xml:space="preserve">
+    <value>037</value>
+  </data>
+  <data name="Loan_Type_033" xml:space="preserve">
+    <value>033</value>
+  </data>
+  <data name="MaritalStatus_011" xml:space="preserve">
+    <value>011</value>
+  </data>
+  <data name="MaterialType_055" xml:space="preserve">
+    <value>055</value>
+  </data>
+  <data name="MedicalClass_018" xml:space="preserve">
+    <value>018</value>
+  </data>
+  <data name="MedicalCompany_017" xml:space="preserve">
+    <value>017</value>
+  </data>
+  <data name="Nationality_012" xml:space="preserve">
+    <value>012</value>
+  </data>
+  <data name="OwnerType_009" xml:space="preserve">
+    <value>009</value>
+  </data>
+  <data name="PAYMENT_MODE_049" xml:space="preserve">
+    <value>049</value>
+  </data>
+  <data name="Pending_Grade_Type_052" xml:space="preserve">
+    <value>052</value>
+  </data>
+  <data name="POSITION_TYPE_025" xml:space="preserve">
+    <value>025</value>
+  </data>
+  <data name="ProjectStatus_044" xml:space="preserve">
+    <value>044</value>
+  </data>
+  <data name="ProjectType_043" xml:space="preserve">
+    <value>043</value>
+  </data>
+  <data name="RecruitmentJobStatus_002" xml:space="preserve">
+    <value>002</value>
+  </data>
+  <data name="RecruitmentJobTypes_003" xml:space="preserve">
+    <value>003</value>
+  </data>
+  <data name="Relationship_039" xml:space="preserve">
+    <value>039</value>
+  </data>
+  <data name="Religion_013" xml:space="preserve">
+    <value>013</value>
+  </data>
+  <data name="RequestType_042" xml:space="preserve">
+    <value>042</value>
+  </data>
+  <data name="RoomsType_023" xml:space="preserve">
+    <value>023</value>
+  </data>
+  <data name="Special_Needs_067" xml:space="preserve">
+    <value>067</value>
+  </data>
+  <data name="State_028" xml:space="preserve">
+    <value>028</value>
+  </data>
+  <data name="STD_FEE_TYPE_048" xml:space="preserve">
+    <value>048</value>
+  </data>
+  <data name="Std_Letter_Type_047" xml:space="preserve">
+    <value>047</value>
+  </data>
+  <data name="Student_Status_046" xml:space="preserve">
+    <value>046</value>
+  </data>
+  <data name="Study_Type_075" xml:space="preserve">
+    <value>075</value>
+  </data>
+  <data name="Submission_Assignment_054" xml:space="preserve">
+    <value>054</value>
+  </data>
+  <data name="TaskType_045" xml:space="preserve">
+    <value>045</value>
+  </data>
+</root>

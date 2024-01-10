@@ -1,0 +1,128 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.DAL.Utilities
+
+@inject LocService SharedLocalizer
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env;
+
+
+
+@{
+    var filePath = NativePaths.GetFilePath(_env);
+    List<Emp> empList = Model.EmpList;
+    List<JobOffers> JobOffersList = Model.JobOffersList;
+}
+
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                @*<th width="20px">@SharedLocalizer.GetLocalizedHtmlString("DP")</th>*@
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Candidate Name")</th>
+                <th width="100px">@SharedLocalizer.GetLocalizedHtmlString("Job Title")</th>
+                <th width="100px">@SharedLocalizer.GetLocalizedHtmlString("Expected Joining Date")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Total Salary")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Manager Name")</th>
+                <th width="30px"></th>
+                <th width="30px"></th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                @*<th>DP</th>*@
+                <th>Candidate Name</th>
+                <th width="100px">Job Title</th>
+                <th width="100px">Expected Joining Date</th>
+                <th>Total Salary</th>
+                <th>Manager Name</th>
+                <th></th>
+                <th></th>
+                <th></th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in JobOffersList)
+            {
+
+            <tr class="text-center">
+                <td>@item.JobTitle</td>
+                <td align="left">@(item.FirstNameEn + " " + item.FatherNameEn)</td>
+                <td align="left">@Convert.ToDateTime(item.ExpectingJoiningDate).ToString("dd-MMM-yyyy")</td>
+                <td align="left">@(item.TotalSalary)</td>
+                <td align="left">@(item.ReportingManager)</td>
+
+                <td class="text-center padding-5">
+                    <a href="" onclick="printProposal(@item.JobOfferId)" class="btn btn-default btn-block  btn-xs "><i class="fa fa-print"></i></a>
+                </td>
+                <td class="text-center padding-5">
+                    <a href="~/HumanResource/JobOffers/edit/@item.JobOfferId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                </td>
+                <td class="text-center padding-5">
+                    <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.JobOfferId')"><i class="fa fa-times text-danger"></i></a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+   
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName + "HumanResource/JobOffers/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName + 'HumanResource/JobOffers';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    };
+
+    function printProposal(id) {
+        $.ajax({
+            url: applicationName + "HumanResource/JobOffers/PrintProposal",
+            async: false,
+            type: "POST",
+            data: { JobOfferId: id },
+            success: function (data) {
+                window.open("http://109.73.162.9:5050/JobOffers/SAMPLE_OFFER.docx");
+                //console.log(data);
+                //var blob = new Blob([data], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" });
+                //debugger;
+                //var fileURL = URL.createObjectURL(blob);
+                window.open(fileURL);
+            }
+        });
+    };
+
+</script>

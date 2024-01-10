@@ -1,0 +1,66 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models
+@{
+    Layout = "_LayoutReport";
+    List<CustomerReportModel> listReportCustomer = Model.listReportCustomer;
+    Company CompanyDetail = Model.CompanyDetail;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        Customer Report
+                    </h2>
+                    <br>
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            <tr class="Grid_HeaderStyle">
+                                <th align="left"> Date</th>
+                                <th align="left"> Account</th>
+                                <th align="right"> Debit </th>
+                                <th align="right"> Credit </th>
+                                <th align="right"> Balance</th>
+
+                            </tr>
+                        </thead>
+                        @{
+                                <tbody>
+
+                                    @foreach (var item in listReportCustomer)
+                                    {
+
+                                        <tr class="ItemColor text-center">
+                                            <td align="left" width="100px"> @(Convert.ToDateTime(item.CreatedDate).ToString("dd-MMM-yyyy")) </td>
+                                            <td align="left"> @item.Account </td>
+                                            <td align="right"> @(String.Format("{0:.00}",item.Debit)) </td>
+                                            <td align="right"> @(String.Format("{0:.00}",item.Credit))</td>
+                                            <td align="right"> @(String.Format("{0:.00}",item.Balance))</td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+                                <tfoot>
+                                    <tr class="Grid_HeaderStyle">
+                                        <td align="right" colspan="2">Total</td>
+
+                                        <td align="right">@(String.Format("{0:.00}", listReportCustomer.Sum(x => x.Debit)))</td>
+                                        <td align="right">@(String.Format("{0:.00}", listReportCustomer.Sum(x => x.Credit)))</td>
+                                        <td align="right"></td>
+                                    </tr>
+                                </tfoot>
+                        }
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

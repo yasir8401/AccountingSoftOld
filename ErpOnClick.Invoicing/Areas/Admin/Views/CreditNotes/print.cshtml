@@ -1,0 +1,207 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Layout = "_LayoutReport";
+    CreditNotes CreditNotesMDetails = Model.creditNotesMDetail;
+    Company CompanyDetail = Model.CompanyDetail;
+    List<CreditNotesLines> CreditNotesDList = Model.creditNotesDList;
+    //List<ErpOnClick.DAL.Models.Items> ItemsList = Model.ItemsList;
+    //List<Branch> BranchDetails = Model.branchList;
+    List<Customers> CustomersDetails = Model.customersList;
+    //List<TaxRates> TaxList = Model.TaxList;
+    decimal billamount = 0;
+    decimal totalvat = 0;
+    decimal total = 0;
+}
+
+<div>
+    <br />
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        CREDIT NOTE
+                    </h2>
+                    <h4 class="text-center" style="margin:5px 0px 0px 0px; font-weight:500"> @*VAT RC: @CompanyDetail.VatNo*@</h4><br>
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="50%">Credit Note To / <span style="letter-spacing:normal !important;font-size: 13px;font-family: tahoma;">فاتورة إلى</span> </td>
+                                <td colspan="2">Credit Note / <span style="letter-spacing:normal !important;font-size: 13px;font-family: tahoma;">الفاتورة</span></td>
+                                <td colspan="2">Due / <span style="letter-spacing:normal !important;font-size: 13px;font-family: tahoma;"> المستحق</span></td>
+                            </tr>
+                            <tr class="ItemColor text-center">
+                                <td rowspan="2" class="text-left">
+                                    Customer Id: @CreditNotesMDetails.CustomerId
+                                    <h3 style="margin:0px; text-transform:uppercase">@CreditNotesMDetails.Customer.CustomerNameEn</h3>
+                                    <br>
+
+                                </td>
+                                <th nowrap="">Date / <span style="letter-spacing:normal !important;font-family: tahoma;">تاريخ</span></th>
+                                
+                                <th nowrap="">CN # / <span style="letter-spacing:normal !important;font-family: tahoma;">رقم</span></th>
+
+                                <th nowrap="">Amt. / <span style="letter-spacing:normal !important;font-family: tahoma;">إجمالي </span></th>
+
+                                <th nowrap="">Date / <span style="letter-spacing:normal !important;font-family: tahoma;">تاريخ</span></th>
+
+                            </tr>
+                            <tr class="ItemColor">
+
+                                <td nowrap="">
+                                    @Convert.ToDateTime(CreditNotesMDetails.CreditNoteDate).ToString("dd-MMM-yyyy")
+                                </td>
+                                <td class="text-center">
+                                    @CreditNotesMDetails.CreditNoteNo
+
+                                </td>
+
+                                <td class="text-center" nowrap="">
+                                    @CreditNotesMDetails.Total @CreditNotesMDetails.Currency
+                                </td>
+                                <td nowrap="">
+                                    @Convert.ToDateTime(CreditNotesMDetails.DueDate).ToString("dd-MMM-yyyy")
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            <tr class="Grid_HeaderStyle Grid_HeaderStyle_Arabic">
+                                <th width="30px">رقم</th>
+                                <th>الوصف</th>
+
+                                <th width="60px">مبلغ الفاتورة</th>
+                                <th width="40px">ضريبة</th>
+                                <th width="40px">قيمة الضريبة</th>
+                                <th width="40px">إجمالي</th>
+                            </tr>
+                            <tr class="Grid_HeaderStyle">
+                                <th>Sr#</th>
+                                <th>Description</th>
+
+
+                                <th nowrap="">Bill Amt.</th>
+                                <th>VAT (%)</th>
+                                <th>VAT Amt.</th>
+                                <th nowrap="">Total (SAR)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in CreditNotesDList)
+                            {
+                        <tr class="ItemColor text-center">
+                            <td class="text-center">1</td>
+                            <td class="text-left" width="200px">@item.Description</td>
+
+                            <td>@item.ItemPrice</td>
+                            @{ 
+                                if(item.ItemPrice != 0)
+                                {
+                                    billamount += Convert.ToDecimal(item.ItemPrice);
+                                }
+                                else
+                                {
+                                    billamount += 0;
+                                }
+                            }
+                            <td class="text-center">@CreditNotesMDetails.TaxRate.TaxPercent</td>
+                            <td>
+                                @{ 
+                                    var per= (item.LineAmount * CreditNotesMDetails.TaxRate.TaxPercent) / 100;
+                                }
+                                @per
+                            </td>
+
+                            @{ 
+                                totalvat += Convert.ToDecimal(per);
+                            }
+
+                            <td>@{ 
+                                var sum = item.LineAmount + per;
+                            }
+                            
+                                @sum</td>
+                            @{ 
+                                total += Convert.ToDecimal(sum);
+                            }
+                        </tr>
+                             }
+                                    </tbody>
+                        <thead>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <th colspan="2" class="text-left"></th>
+
+                                <th>@billamount</th>
+                                <th></th>
+                                <th>@totalvat</th>
+                                <th>@total</th>
+                            </tr>
+                            <tr class="">
+                                <td colspan="7" style="text-align:left">
+                                    <small style="text-transform:capitalize">
+                                        <b>Amount in words: </b>
+                                        one
+                                        Only
+                                        <br>
+                                        (All amount in Saudi Riyal)
+                                    </small>
+                                </td>
+
+                            </tr>
+                        </thead>
+                    </table>
+
+
+
+
+
+
+                    <br>
+                    <h4 style="margin:10px 0px 5px 0px">Further Description:</h4>
+                    <div id="FurtherDescription" style="font-size:13px">
+                        @CreditNotesMDetails.Note
+                    </div>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                    <table width="100%" style="font-size:15px">
+                        <tbody>
+                            <tr>
+                                <td style="text-align:left; line-height:1; vertical-align:top" width="50%">
+                                    <h4 style="margin:0px 0px 5px 0px">Bank Detail</h4>
+                                    @CompanyDetail.BankDetailEn
+                                    @*IBAN # : SA 2880000454608018501404<br>Al Rajhi Bank, Branch # 45400, Riyadh, KSA<br>Account Name: Turki Abdul Mohsen Alluhaid &amp; Saleh Abdullah Al Yahya Chartered Accountants.<br>*@
+                                </td>
+
+                                <td style="text-align:right;font-family: tahoma;line-height: 1; vertical-align:top;" id="tdPrint">
+                                    <div dir="rtl">
+                                        <h4 style="margin:0px 0px 5px 0px">تفاصيل البنك</h4>
+                                        @CompanyDetail.BankDetailAr
+                                        @*شركة تركي عبدالمحسن اللحيد وصالح عبدالله اليحيى محاسبون ومراجعون قانونيون<br>يمكن التحويل مباشرة بالريال السعودي على حسابنا رقم:<br> SA 28 8000 0454 6080 1850 1404  لدى بنك الراجحي فرع رقم 45400 الرياض، المملكة العربية السعودية<br>*@
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+
+                </td>
+
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+

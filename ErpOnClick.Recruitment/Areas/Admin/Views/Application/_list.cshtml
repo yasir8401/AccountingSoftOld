@@ -1,0 +1,106 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    List<Applications> applicationList = Model.applicationList;
+
+}
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th width="30px">Id</th>
+                <th>Applicant Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Degree</th>
+                <th>Availability</th>
+                <th>CV</th>
+                <th width="30px"></th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th width="30px">Applicant Id</th>
+                <th>Applicant Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Degree</th>
+                <th>Availability</th>
+                <th>CV</th>
+                <td></td>
+                <td></td>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in applicationList)
+            {
+
+            <tr class="text-center">
+                <td width="30px">@item.ApplicantId</td>
+                <td class="text-left">@item.ApplicantName</td>
+                <td>@item.Email</td>
+                <td>@item.Phone</td>
+                <td>@item.DegreeId</td>
+
+                <td>@(item.Availability != null ? Convert.ToDateTime(item.Availability).ToString("dd-MMM-yyyy") : "")</td>
+                <td>
+
+                    @if (!String.IsNullOrWhiteSpace(item.CvAttachment))
+                    {
+                        <a href="~/Files/@item.CvAttachment" download="">Download CV</a>
+                    }
+
+                </td>
+
+                <td class="text-center padding-5">
+                    <a href="~/admin/application/edit/@item.ApplicationId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                </td>
+                <td class="text-center padding-5">
+                    <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.ApplicationId')"><i class="fa fa-times text-danger"></i></a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName+"admin/application/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName+'admin/application';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

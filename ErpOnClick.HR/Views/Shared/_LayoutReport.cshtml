@@ -1,0 +1,209 @@
+﻿<!doctype html>
+@using ErpOnClick.DAL.Models
+
+@{
+    Company CompanyDetail = Model.CompanyDetail;
+
+}
+<html>
+<head>
+    <title>Report</title>
+    <meta name="GENERATOR" content="Microsoft Visual Studio .NET 7.1">
+    <meta name="CODE_LANGUAGE" content="Visual Basic .NET 7.1">
+    <meta name="vs_defaultClientScript" content="JavaScript">
+    <meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5">
+
+
+    <link href="@Url.Content("~/")adminlte/plugins/summernote/summernote-bs4.css" rel="stylesheet" />
+    <link href="@Url.Content("~/")adminlte/plugins/summernote/summernote.css" rel="stylesheet" />
+    <link href="@Url.Content("~/")adminlte/plugins/fontawesome/css/all.css" rel="stylesheet" />
+    <link href="@Url.Content("~/")css/Report.css" rel="stylesheet" />
+    <link href="@Url.Content("~/")adminlte/plugins/fontawesome/css/all.css" rel="stylesheet" />
+
+    <link href="@Url.Content("~/")adminlte/plugins/fontawesome/css/fontawesome.css" rel="stylesheet" />
+    <style type="text/css" media="print">
+
+        @@page {
+            size: letter;
+            margin: 5mm 5mm 10mm 5mm; /* this affects the margin in the printer settings */
+        }
+
+        #divParams {
+            display: none;
+        }
+    </style>
+
+    <style>
+        #divParams {
+            width: 200px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #47739f;
+            padding: 15px 25px 15px 15px;
+            border-radius: 5px;
+            border: 2px solid #47739f;
+            color: white;
+            font-family: monospace;
+            font-size: 15px;
+        }
+
+            #divParams input {
+                width: 100%;
+                margin-top: 5px;
+                margin-bottom: 10px;
+                border: 0px solid silver;
+                padding: 5px 5px 5px 5px;
+            }
+    </style>
+
+    @*@Styles.Render("~/Content/jeddah.css?v=" + System.DateTime.Now.Second.ToString())*@
+
+</head>
+<body id="body">
+
+
+    <table id="Outline" style="height: 100%; z-index: 101; left: 8px; top: 8px; border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="10" width="100%" align="center">
+        <tbody>
+            <tr valign="top">
+                <td width="100%" valign="top">
+
+
+
+                    <div class="divHeader" style="position:initial !important">
+                        <div class="actionBar">
+                            <input class="btnPrint" onclick="CallPrint()" type="button" value="Print">
+                            <input class="btnPrint" onclick="window.close();" type="button" value="Close" style="float:right">
+                            <div style="clear: both;"></div>
+                        </div>
+
+                        <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+                            <tbody>
+                                <tr valign="top">
+                                    <td valign="top" width="100%" style="text-align:center">
+                                        <br>
+                                        <table width="100%">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="text-align:left; line-height:1" width="45%">
+                                                        @(CompanyDetail != null && CompanyDetail.CoNameEn != null ? CompanyDetail.CoNameEn : "")
+
+                                                        <small>
+                                                            <br>
+                                                            <b>Adress:</b> @(CompanyDetail != null && CompanyDetail.CoAddressEn != null ? CompanyDetail.CoAddressEn : "")
+                                                            <br>
+                                                            <b>Email:</b> @(CompanyDetail != null && CompanyDetail.CoEmail != null ? CompanyDetail.CoEmail : "")
+                                                            <br>
+                                                            <b>Phone: </b> @(CompanyDetail != null && CompanyDetail.CoPhone != null ? CompanyDetail.CoPhone : "")
+                                                            <br>
+                                                            <b>CR No: </b> @(CompanyDetail != null && CompanyDetail.CrNo != null ? CompanyDetail.CrNo : "")
+                                                        </small>
+                                                    </td>
+                                                    <td style="text-align:center; " width="10%">
+                                                        <img style="-webkit-user-select: none" src="@Url.Content("~/")adminlte/dist/img/Erponclick.png" width="100%" />
+                                                        @*<img style="-webkit-user-select: none;position: absolute;width: 199px;margin-left: -101px;" src="/demo_erp/assets/img/logo.png" width="100%">*@
+                                                        <div class="clearfix"></div>
+                                                    </td>
+                                                    <td style="text-align:right;font-family: tahoma;line-height: 1;" id="tdPrint" width="45%">
+
+
+                                                        <div dir="rtl">
+                                                            <span style="letter-spacing:1px">
+                                                                @(CompanyDetail != null && CompanyDetail.CoNameAr != null ? CompanyDetail.CoNameAr : "")
+                                                            </span>
+                                                            <small>
+                                                                <br>
+                                                                <b>العنوان:</b>
+                                                                @(CompanyDetail != null && CompanyDetail.CoAddressAr != null ? CompanyDetail.CoAddressAr : "")
+                                                                <br>
+                                                                <b>البريد الإلكتروني:</b> @(CompanyDetail != null && CompanyDetail.CoEmail != null ? CompanyDetail.CoEmail : "")
+                                                                <br>
+                                                                <b>هاتف: </b><span dir="ltr"> @(CompanyDetail != null && CompanyDetail.CoPhone != null ? CompanyDetail.CoPhone : "") </span>
+                                                                <br>
+                                                                <b>رقم تسجيل الشركة: </b> @(CompanyDetail != null && CompanyDetail.CrNo != null ? CompanyDetail.CrNo : "")
+                                                            </small>
+                                                        </div>
+                                                        <div style="display:none" width="200px">
+
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <hr style="border: 2px solid #0a1e60; margin-bottom:0px;">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+                        @*<table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+                                <tbody>
+                                    <tr valign="top">
+                                        <td valign="top" width="100%" colspan="4" style="text-align:center">
+                                            <br>
+                                            <table width="100%">
+                                                <tbody>
+                                                    <tr>
+                                                        <td style="text-align:left; " width="200px">
+
+                                                            <img style="-webkit-user-select: none" src="/adminlte/dist/img/Erponclick.png" width="100%" />
+                                                            <div class="clearfix"></div>
+
+                                                        </td>
+
+                                                        <td colspan="2" style="text-align:right" id="tdPrint">
+                                                            <div class="ReportTitle" style="font-size: 25px;  ">
+                                                                @RenderSection("ReportTitle", false)
+                                                            </div>
+                                                            <span style="text-align: center; font-size: 12px; text-align: center; ">
+                                                                Print Date:
+
+                                                                @DateTime.Now.ToString("dd-MMM-yyyy hh:mm tt")
+                                                            </span>
+
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                            <hr style="border: 2px solid #0a1e60; margin-bottom:0px;">
+
+
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>*@
+
+
+                    </div>
+
+                    <div class="divData" style="margin-top:0% !important">
+                        @RenderBody()
+                    </div>
+
+
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script src="@Url.Content("~/")adminlte/plugins/jquery/jquery.min.js"></script>
+    @*<script src="@Url.Content("~")Scripts/jquery-1.10.2.min.js"></script>*@
+    <script type="text/javascript">
+
+        function CallPrint() {
+            window.print();
+
+        }
+
+    </script>
+    @RenderSection("script", false)
+
+
+</body>
+</html>

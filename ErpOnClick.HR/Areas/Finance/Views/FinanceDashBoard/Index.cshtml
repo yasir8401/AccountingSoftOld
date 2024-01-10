@@ -1,0 +1,37 @@
+﻿
+
+
+
+<div class="card card-default card-outline" style="background-color:initial !important; border:none !important; box-shadow:none !important">
+
+
+
+
+
+    <div class="card-body pl-0 pr-0">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(function () {
+            BindGrid();
+        });
+
+        function BindGrid() {
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() +'Finance/FinanceDashBoard/Chart',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+    </script>
+}

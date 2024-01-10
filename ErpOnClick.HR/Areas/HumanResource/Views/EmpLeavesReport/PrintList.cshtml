@@ -1,0 +1,79 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.ViewModel
+@{
+    Layout = "_LayoutReport";
+    List<Leaves> leaveList = Model.leaveList;
+    Company CompanyDetail = Model.CompanyDetail;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        Employee Leaves Report
+                    </h2>
+                    <br>
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            <tr class="Grid_HeaderStyle">
+
+                                <th width="10px"> Id</th>
+                                <th align="left"> Employee</th>
+
+                                <th> From</th>
+                                <th> To</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        @{
+                                <tbody>
+
+                                    @foreach (var item in leaveList)
+                                    {
+
+                                    <tr class="ItemColor text-center">
+                                        <td>@item.LeaveId</td>
+                                        <td align="left"> @(item.Emp !=null ? item.Emp.FirstNameEn + " " + item.Emp.FatherNameEn + " " + item.Emp.GrandNameEn + " " + item.Emp.FamilyNameEn :"")</td>
+                                        <td>@(item.DateFrom != null ? Convert.ToDateTime(item.DateFrom).ToString("dd-MMM-yyyy") : "")</td>
+                                        <td>@(item.DateTo != null ? Convert.ToDateTime(item.DateTo).ToString("dd-MMM-yyyy") : "")</td>
+                                        <td>@(item.LeaveType !=null ? item.LeaveType.LookupNameEn :"")</td>
+                                        <td align="right">
+                                            @if (item.LeaveStatusNavigation != null && item.LeaveStatusNavigation.LookupNameEn == "Rejected")
+                                            {
+                                                <label class="btnwidth badge badge-danger">Rejected</label>
+
+                                            }
+                                            else if (item.LeaveStatusNavigation != null && item.LeaveStatusNavigation.LookupNameEn == "Approved")
+                                            {
+                                                <label class="btnwidth badge badge-success">Approved</label>
+                                            }
+                                            else if (item.LeaveStatusNavigation != null && item.LeaveStatusNavigation.LookupNameEn == "Pending")
+                                            {
+                                                <label class="btnwidth badge badge-warning">Pending</label>
+                                            }
+                                            else
+                                            {
+
+                                            }
+                                        </td>
+                                    </tr>
+                                    }
+
+                                </tbody>
+                                
+                        }
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

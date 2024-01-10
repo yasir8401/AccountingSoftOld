@@ -1,0 +1,290 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models.Finance
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.DAL.Utilities
+
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+
+@inject LocService SharedLocalizer
+
+@{
+    ChangesInEquityViewModel changesInEquityViewModel = Model.changesInEquityViewModel;
+
+    var filePath = NativePaths.GetFilePath(_env);
+    var img = "Erponclick.png";
+
+
+}
+<link href="~/css/Report.css?v=inv_@DateTime.Now.ToString("mm")" rel="stylesheet" />
+<div class="table-responsive pb-2 ">
+    <table id="pltable" class="table table-hover table-condensed ">
+        <thead class="text-sm ">
+            <tr class="text-center">
+                <th colspan="11">
+                    <img style="-webkit-user-select: none" src="@filePath@img" width="20%" />
+                    <h4>
+                        STATEMENT OF CHANGES IN EQUITY
+                    </h4>
+                </th>
+            </tr>
+            <tr class="col-lg-12 text-center">
+                <th width="60%" class="b-l text-center-vertical"> @SharedLocalizer.GetLocalizedHtmlString("Particulars") </th>
+                <th width="8%" class="b-l text-center-vertical" colspan="2"> @SharedLocalizer.GetLocalizedHtmlString("Issued, subscribed and paid up share capital") </th>
+                <th width="8%" class="b-l text-center-vertical" colspan="2"> @SharedLocalizer.GetLocalizedHtmlString("Share Premium") </th>
+                <th width="8%" class="b-l text-center-vertical" colspan="2"> @SharedLocalizer.GetLocalizedHtmlString("Reserve") </th>
+                <th width="8%" class="b-l text-center-vertical" colspan="2"> @SharedLocalizer.GetLocalizedHtmlString("Unappropriated profit / (loss)") </th>
+                <th width="8%" class="b-lr text-center-vertical" colspan="2"> @SharedLocalizer.GetLocalizedHtmlString("Total Equity") </th>
+            </tr>
+            <tr class="col-lg-12 text-center">
+                <th width="60%" class="b-l"></th>
+                <th class="b-l" width="4%">@SharedLocalizer.GetLocalizedHtmlString("2021") </th>
+                <th class="b-l" width="4%">@SharedLocalizer.GetLocalizedHtmlString("2020") </th>
+                <th class="b-l" width="4%">@SharedLocalizer.GetLocalizedHtmlString("2021") </th>
+                <th class="b-l" width="4%">@SharedLocalizer.GetLocalizedHtmlString("2020") </th>
+                <th class="b-l" width="4%">@SharedLocalizer.GetLocalizedHtmlString("2021") </th>
+                <th class="b-l" width="4%">@SharedLocalizer.GetLocalizedHtmlString("2020") </th>
+                <th class="b-l" width="4%">@SharedLocalizer.GetLocalizedHtmlString("2021") </th>
+                <th class="b-l" width="4%">@SharedLocalizer.GetLocalizedHtmlString("2020") </th>
+                <th class="b-l" width="4%">@SharedLocalizer.GetLocalizedHtmlString("2021") </th>
+                <th class="b-lr" width="4%">@SharedLocalizer.GetLocalizedHtmlString("2020") </th>
+            </tr>
+            <tr class="col-lg-12 text-center">
+                <th width="60%" class="b-l"></th>
+                <th width="40%" class="b-lr" colspan="10">@SharedLocalizer.GetLocalizedHtmlString("--Rupees--") </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"> Balance as at 1 June </td>
+                <td class="text-center"> @changesInEquityViewModel.R_2021 </td>
+                <td class="text-center"> @changesInEquityViewModel.R_2020 </td>
+                <td class="text-center"> @changesInEquityViewModel.SP_2021 </td>
+                <td class="text-center"> @changesInEquityViewModel.SP_2020 </td>
+                <td class="text-center"> @changesInEquityViewModel.R_2021 </td>
+                <td class="text-center"> @changesInEquityViewModel.R_2020 </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> @(changesInEquityViewModel.R_2021 + changesInEquityViewModel.SP_2021 + changesInEquityViewModel.R_2021) </td>
+                <td class="text-center"> @(changesInEquityViewModel.R_2020 + changesInEquityViewModel.SP_2020 + changesInEquityViewModel.R_2020) </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"> Profit / (loss) Before Taxation for the Period </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> @changesInEquityViewModel.PLAT_2021 </td>
+                <td class="text-center"> @changesInEquityViewModel.PLAT_2020 </td>
+                <td class="text-center"> @changesInEquityViewModel.PLAT_2021 </td>
+                <td class="text-center"> @changesInEquityViewModel.PLAT_2020 </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"> Other Comprehensive Income for the Period </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> - </td>
+                <td class="text-center"> @changesInEquityViewModel.OCI_2021 </td>
+                <td class="text-center"> @changesInEquityViewModel.OCI_2020 </td>
+                <td class="text-center"> @changesInEquityViewModel.OCI_2021 </td>
+                <td class="text-center"> @changesInEquityViewModel.OCI_2020 </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"> Balance as at 30 June </td>
+                <td class="text-center b-t b-b b-lr"> - </td>
+                <td class="text-center b-t b-b b-lr"> - </td>
+                <td class="text-center b-t b-b b-lr"> - </td>
+                <td class="text-center b-t b-b b-lr"> - </td>
+                <td class="text-center b-t b-b b-lr"> - </td>
+                <td class="text-center b-t b-b b-lr"> - </td>
+                <td class="text-center b-t b-b b-lr"> @(changesInEquityViewModel.PLAT_2021  + changesInEquityViewModel.OCI_2021) </td>
+                <td class="text-center b-t b-b b-lr"> @(changesInEquityViewModel.PLAT_2020  + changesInEquityViewModel.OCI_2020) </td>
+                <td class="text-center b-t b-b b-lr"> @(changesInEquityViewModel.PLAT_2021  + changesInEquityViewModel.OCI_2021) </td>
+                <td class="text-center b-t b-b b-lr"> @(changesInEquityViewModel.PLAT_2020  + changesInEquityViewModel.OCI_2020) </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr class="signatrure-table">
+                <td colspan="5" class="signatrure-section"><span>Chief Executive Officer</span></td>
+                <td></td>
+                <td colspan="5" class="signatrure-section"><span>Director</span></td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <br />
+    <br />
+</div>
+
+<style>
+    button.dt-button, div.dt-button, a.dt-button {
+        font-weight: 900;
+        letter-spacing: 2px;
+        border-radius: 5px !important;
+        border-color: silver !important;
+        background-color: #f8f9fa !important;
+        border-color: #ddd !important;
+        color: #444 !important;
+        padding: .25rem .5rem !important;
+        font-size: .875rem !important;
+        line-height: 1.5 !important;
+        border-radius: .2rem !important;
+        position: relative;
+    }
+
+    div.dt-buttons {
+        float: right !important;
+    }
+
+    button.dt-button:before {
+        font-family: "Font Awesome 5 Free";
+        top: 0;
+        left: -5px;
+        padding-right: 10px;
+        content: "\f56e";
+    }
+</style>
+
+
+<script>
+    $(function () {
+        $('#Accli').addClass("menu-open");
+        $('#Statementsli').addClass("menu-open");
+        $('#Reportsli').removeClass("menu-open");
+        $('#AccRli').removeClass("menu-open");
+        $('#AccPli').removeClass("menu-open");
+        $('#Setupli').removeClass("menu-open");
+
+        // DataTable
+        var table = $('#pltable').DataTable({
+            //"order": [[0, "desc"]],
+            dom: 'Bfrtip',
+            ordering: false,
+            paging: false,
+            info: false,
+            searching: false,
+            buttons: [
+                'excel'
+            ]
+        });
+    });
+</script>

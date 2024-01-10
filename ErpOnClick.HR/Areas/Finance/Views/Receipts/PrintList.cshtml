@@ -1,0 +1,101 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Layout = "_LayoutReport";
+    List<Receipts> ReceiptsMDetails = Model.receiptsList;
+    Company CompanyDetail = Model.CompanyDetail;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        RECEIPTS
+                    </h2>
+                    <br>
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="33%"><i class="fa fa-filter"></i>Receipt Date From </td>
+                                <td width="33%"><i class="fa fa-filter"></i>Customer </td>
+                                <td width="33%"><i class="fa fa-filter"></i>Receipt Date To </td>
+
+                            </tr>
+
+                            <tr class="ItemColor text-center">
+
+                                <td width="33%" nowrap="">
+                                    @Model.ReceiptsDateFrom
+                                </td>
+                                <td width="33%">
+                                    @Model.CustomerId
+                                </td>
+                                <td width="33%">
+                                    @Model.ReceiptsDateTo
+
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            @*<tr class="Grid_HeaderStyle Grid_HeaderStyle_Arabic">
+                                    <th style="width:20px">الوصف</th>
+
+                                    <th width="60px">مبلغ الفاتورة</th>
+                                    <th width="40px">ضريبة</th>
+                                    <th width="40px">قيمة الضريبة</th>
+                                    <th width="40px">إجمالي</th>
+                                </tr>*@
+                            <tr class="Grid_HeaderStyle">
+                                <th style="width:20px">Id</th>
+                                <th>Date</th>
+                                <th>Receipt #</th>
+                                <th>Customer</th>
+                                <th>Amount</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ReceiptsMDetails.Count() > 0)
+                            {
+                                @foreach (var item in ReceiptsMDetails)
+                                {
+                                    <tr class="ItemColor text-center">
+                                        <td class="text-center">@(item.ReceiptId != 0 ? item.ReceiptId :  0)</td>
+                                        <td class="text-center">@(item.ReceiptDate != null ? Convert.ToDateTime(item.ReceiptDate).ToString("dd-MMM-yyyy") : "-")</td>
+                                        <td class="text-center">@(item.ReceiptNo != null ? item.ReceiptNo : "-")</td>
+                                        <td class="text-center">@(item.Customer != null && item.Customer.CustomerNameEn != null ? item.Customer.CustomerNameEn : "-")</td>
+                                        <td class="text-right">@(item.Amount != 0 ? item.Amount : 0)</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr class="ItemColor text-center">
+                                    <td colspan="5" class="text-center">Sorry! No Data Found</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

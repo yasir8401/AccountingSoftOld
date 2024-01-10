@@ -1,0 +1,223 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Rooms RoomsDetail = Model.IdDetail;
+    List<Buildings> BuildingDetail = Model.BuildingDetail;
+    List<Company> CompanyDetails = Model.companyList;
+    List<Branch> BranchDetails = Model.BranchIdDetail;
+    List<Lookups> Roomslist = Model.Roomslist;
+    bool isEdit = (RoomsDetail != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="RoomId" name="RoomId" class="form-control" value="@(RoomsDetail != null ? RoomsDetail.RoomId : 0)" />
+
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                Room's Info
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> Save
+                </button>
+                <a href="~/admin/Rooms" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> Return
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                 Room Info
+            </h2>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="RoomNameEn" name="RoomNameEn" class="form-control" required value="@(RoomsDetail!=null?RoomsDetail.RoomNameEn: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Name (Arabic)</label>
+                        <input type="text" id="RoomNameAr" name="RoomNameAr" dir="rtl" class="form-control" value="@(RoomsDetail!=null?RoomsDetail.RoomNameAr: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Code</label>
+                        <input type="text" id="RoomCode" name="RoomCode" class="form-control" value="@(RoomsDetail!=null?RoomsDetail.RoomCode: "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Capacity</label>
+                        <input type="number" id="RoomCapacity" name="RoomCapacity" class="form-control" value="@(RoomsDetail!=null?RoomsDetail.RoomCapacity: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Floor Number</label>
+                        <input type="number" id="FloorNumber" name="FloorNumber" class="form-control" value="@(RoomsDetail!=null?RoomsDetail.FloorNumber: 0)">
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                More Details
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="RoomTypeId" name="RoomTypeId" class="form-control" >
+                            <option></option>
+                            @foreach (var item in Roomslist)
+                            {
+                                <option value="@item.Code" @(RoomsDetail != null && RoomsDetail.RoomTypeId == item.Code ? "selected" : "")> @item.LookupNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Building</label>
+                        <select id="BuildingId" name="BuildingId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in BuildingDetail)
+                            {
+                                <option value="@item.BuildingId" @(RoomsDetail != null && RoomsDetail.BuildingId == item.BuildingId ? "selected" : "")> @item.BuildingNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in CompanyDetails)
+                            {
+                                <option value="@item.CompanyId" @(RoomsDetail != null && RoomsDetail.CompanyId == item.CompanyId ? "selected" : "")> @item.CoNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Branch</label>
+                        <select id="BranchId" name="BranchId" class="form-control" required>
+                            <option></option>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in BranchDetails)
+                                {
+                                    <option value="@item.BranchId" @(RoomsDetail != null && RoomsDetail.BranchId == item.BranchId ? "selected" : "")> @item.BranchNameEn</option>
+
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+
+        });
+        $('#CompanyId').change(function () {
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName() +"Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            debugger;
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() +"Admin/Rooms/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() +'admin/Rooms';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

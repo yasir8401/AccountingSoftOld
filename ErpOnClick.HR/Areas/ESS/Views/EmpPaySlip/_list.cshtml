@@ -1,0 +1,96 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.ErpMain.Areas.ESS.Models;
+@inject LocService SharedLocalizer
+
+
+
+@{
+
+    var PaySlipDate = Model.PaySlipDate;
+    List<PayrunPayslip> PaySlipDetails = Model.PaySlipDetails;
+
+}
+
+
+<style>
+    thead th {
+        text-align: center !important;
+        font-size: 12px !important;
+        vertical-align: bottom;
+        white-space: nowrap;
+        background-color: #efefef;
+        color: #45547d;
+        padding: 10px 0px;
+    }
+
+    tbody td {
+        padding: 0px;
+    }
+
+        tbody td .form-control {
+            padding: 1px;
+            border: 0px !important;
+            margin: 0px;
+            font-size: 13px;
+            text-align: center;
+            background-color: transparent;
+        }
+</style>
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed" style="display:none;width:100%">
+        <thead class="text-sm">
+            <tr>
+                <th width="150px">@SharedLocalizer.GetLocalizedHtmlString("Allowance Type") </th>
+                <th hidden></th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Allowance Discription") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Earning") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Deduction") </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in PaySlipDetails.OrderBy(x => x.EmpPayrunId))
+            {
+
+                <tr class="text-center">
+                    @*<td><input type="text" id="EmpAttendanceId" value="@(item !=null ? item.EmpAttendanceId : 0)" readonly name="EmpAttendanceId" class="form-control" /> </td>*@
+                    <td><input disabled type="text" value="@(item.AllowanceTypeId!=null ? item.AllowanceTypeId : null)" name="AllowanceTypeId" id="AllowanceTypeId" class="form-control" /></td>
+                    <td hidden><input type="text" value="@(item.CreatedDate!=null ?Convert.ToDateTime(item.CreatedDate).ToString("dd-MMM-yyyy") : "")" name="CreatedDate" id="CreatedDate" class="form-control DatePicker" /></td>
+                    <td>  <input disabled type="text" value="@(item.Description!=null ? item.Description : null)" name="Description" id="Description" class="form-control" /></td>
+                    <td>  <input disabled type="number" value="@(item.Earning!=null ? Math.Round((decimal)item.Earning, 2) : null)" name="Earning" id="Earning" class="form-control" /></td>
+                    <td>  <input disabled type="number" value="@(item.Deduction!=null ? Math.Round((decimal)item.Deduction, 2) : null)" name="Deduction" id="Deduction" class="form-control" /></td>
+                </tr>
+            }
+        </tbody>
+        <tfoot style="display: table-row-group; background-color: #efefef;">
+            <tr class="text-center">
+                <th colspan="2" style="text-align:center">Total:  </th>
+                <th>@Math.Round((decimal)PaySlipDetails.Sum(x => x.Earning), 2) </th>
+                <th>@Math.Round((decimal)PaySlipDetails.Sum(x => x.Deduction), 2)</th>
+            </tr>
+        </tfoot>
+        <tfoot style="display: table-row-group; background-color: #efefef;">
+            <tr class="text-center">
+                <th colspan="2" style="text-align:center">Total Salary:  </th>
+                <th colspan="2" style="text-align:center">@Math.Round((decimal)(PaySlipDetails.Sum(x => x.Earning) - PaySlipDetails.Sum(x => x.Deduction)), 2) </th>
+                
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+
+<script>
+    $(function () {
+        _initDatatableWithFooter('#dtList');
+        //initDatePicker();
+
+        $('#dtList').show();
+
+
+    });
+    var applicationName = getApplicationName();
+
+</script>

@@ -1,0 +1,280 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Lookups> AllowanceTypeList = Model.AllowanceTypeList;
+    IList<Lookups> PaymentTypeList = Model.PaymentTypeList;
+
+    HousingAllowances HousingAllowanceDetails = Model.HousingAllowanceDetails;
+    bool isEdit = (HousingAllowanceDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="HousingAllowanceId" name="HousingAllowanceId" class="form-control" value="@(HousingAllowanceDetails != null ? HousingAllowanceDetails.HousingAllowanceId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(HousingAllowanceDetails != null ? HousingAllowanceDetails.CompanyId : 0)">
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(HousingAllowanceDetails != null ? HousingAllowanceDetails.BranchId : 0)">
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/HumanResource/HousingAllowances" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
+                        <input type="text" id="HousingAllowanceNameEn" name="HousingAllowanceNameEn" class="form-control" value="@(HousingAllowanceDetails!=null?HousingAllowanceDetails.HousingAllowanceNameEn: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Name Arabic")</label>
+                        <input type="text" id="HousingAllowanceNameAr" name="HousingAllowanceNameAr" class="form-control" value="@(HousingAllowanceDetails!=null?HousingAllowanceDetails.HousingAllowanceNameAr: null)">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Code")</label>
+                        <input type="text" id="HousingAllowanceCode" name="HousingAllowanceCode" class="form-control" value="@(HousingAllowanceDetails!=null?HousingAllowanceDetails.HousingAllowanceCode: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Allowance Type")</label>
+                        <select id="AllowanceTypeIds" name="AllowanceTypeIds" class="form-control select2" multiple required>
+
+                            @foreach (var item in AllowanceTypeList)
+                            {
+                                bool isSelected = (HousingAllowanceDetails != null && !string.IsNullOrEmpty(HousingAllowanceDetails.AllowanceTypeIds) && HousingAllowanceDetails.AllowanceTypeIds.Contains(item.Code));
+                                <option value="@item.Code" @(isSelected ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("More Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Payment Type")</label>
+                        <select id="HousingPaymentTypeId" name="HousingPaymentTypeId" class="form-control" required>
+                            <option selected></option>
+                            @foreach (var item in PaymentTypeList)
+                            {
+                                <option value="@item.Code" @(HousingAllowanceDetails != null && HousingAllowanceDetails.HousingPaymentTypeId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Allowance Rate")</label>
+                        <input type="number" id="AllowanceRate" name="AllowanceRate" class="form-control" value="@(HousingAllowanceDetails!=null?HousingAllowanceDetails.AllowanceRate: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("IsFixed Amount")</label>
+                        <select id="IsFixedAmount" name="IsFixedAmount" class="form-control" required>
+                            @*<option></option>*@
+                            <option value="True" @(HousingAllowanceDetails != null && HousingAllowanceDetails.IsFixedAmount == true ? "selected" : "")>Fixed</option>
+                            <option value="False" @(HousingAllowanceDetails != null && HousingAllowanceDetails.IsFixedAmount == false ? "selected" : "")>Not Fixed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Fixed Amount")</label>
+                        <input type="number" id="FixedAmount" name="FixedAmount" class="form-control" value="@(HousingAllowanceDetails!=null?HousingAllowanceDetails.FixedAmount: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Distribute With Salary")</label>
+                        <select id="DistributeWithSalary" name="DistributeWithSalary" class="form-control" required>
+                            @*<option></option>*@
+                            <option value="True" @(HousingAllowanceDetails != null && HousingAllowanceDetails.DistributeWithSalary == true ? "selected" : "")>Yes</option>
+                            <option value="False" @(HousingAllowanceDetails != null && HousingAllowanceDetails.DistributeWithSalary == false ? "selected" : "")>No</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8" style="display:none">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control" >
+                            <option selected></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(HousingAllowanceDetails != null && HousingAllowanceDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control" >
+                            <option selected></option>
+                            @foreach (var item in branchList)
+                            {
+                                <option value="@item.BranchId" @(HousingAllowanceDetails != null && HousingAllowanceDetails.BranchId == item.BranchId ? "selected" : "")>
+                                    @item.BranchNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+
+
+        });
+        var applicationName = getApplicationName();
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var allowance = {
+                        HousingAllowanceId: parseInt($('#HousingAllowanceId').val()),
+                        HousingAllowanceNameEn: $('#HousingAllowanceNameEn').val(),
+                        HousingAllowanceNameAr: $('#HousingAllowanceNameAr').val(),
+                        HousingAllowanceCode: $('#HousingAllowanceCode').val(),
+                        HousingPaymentTypeId: $('#HousingPaymentTypeId').val(),
+                        AllowanceRate: parseFloat($('#AllowanceRate').val()),
+                        IsFixedAmount: ($('#IsFixedAmount').val() == "True" ? true : false),
+                        FixedAmount: parseFloat($('#FixedAmount').val()),
+                        DistributeWithSalary: ($('#DistributeWithSalary').val() == "True" ? true : false),
+                        AllowanceTypeIds: $('#AllowanceTypeIds').val().toString(),
+                        CompanyId: parseInt($('#CompanyId').val()),
+                        BranchId: parseInt($('#BranchId').val())
+
+                    }
+
+
+                    $.ajax({
+                        url: applicationName + "HumanResource/HousingAllowances/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: allowance,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'HumanResource/HousingAllowances';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

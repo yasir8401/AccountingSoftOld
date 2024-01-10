@@ -1,0 +1,173 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+    DateTime? date = Model.performanceBaseSalaryDate;
+
+}
+
+@section TabName{
+    Vacant jobs Setup
+}
+
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-3">
+                <h2 class="card-title">
+                    @SharedLocalizer.GetLocalizedHtmlString("Emp Performance Base Salary")
+                </h2>
+            </div>
+
+            <div class="col-md-3">
+                <input type="month" placeholder="Performance Date" value="@(date.Value.Year+"-"+date.Value.ToString("MM"))"  name="AttendanceDate" id="AttendanceDate" class="form-control" />
+            </div>
+            <div class="col-md-4">
+                <button class="btn  btn-sm btn-primary" onclick="searchByDate()">@SharedLocalizer.GetLocalizedHtmlString("Search")</button>
+                <button class="btn  btn-sm btn-primary" onclick="getEmployees()">@SharedLocalizer.GetLocalizedHtmlString("Get Employees")</button>
+            </div>
+
+
+            <!-- tools box -->
+            <div class="col-md-2">
+                <button onclick="saveAttendace()" style="margin-left: 94px;" type="button" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+            </div>
+
+        </div>
+
+        <!-- /. tools -->
+    </div>
+
+
+
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            BindGrid();
+        });
+        var applicationName = getApplicationName();
+
+        function getEmployees() {
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var attendaceDate = $('#AttendanceDate').val();
+
+                    $.ajax({
+                        url: applicationName + "HumanResource/PerformanceBaseSalary/GetEmployees",
+                        async: false,
+                        type: "POST",
+                        data: { date: attendaceDate },
+                        success: function (data) {
+                            window.location = applicationName + 'HumanResource/PerformanceBaseSalary?performanceBaseSalaryDate=' + attendaceDate;
+                        }
+                    });
+                }
+            });
+
+        };
+        function searchByDate() {
+            var date = $('#AttendanceDate').val();
+
+            if (date == "") {
+                showMsg('Enter !', '!Date First');
+            }
+            else {
+                BindGrid(date);
+            }
+
+
+        }
+
+        function BindGrid(date) {
+            date = (date == null ? $('#AttendanceDate').val() : date);
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'HumanResource/PerformanceBaseSalary/_list',
+                data: { date: date },
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+
+        function saveAttendace() {
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+
+                    var empAttendancesList = new Array();
+
+                    $("#dtList tbody TR").each(function () {
+
+                        var row = $(this);
+                        var EmpPerformanceBaseSalary = {};
+
+                        if (row.find("#AllowanceTypeId").val() != "") {
+                         
+                            EmpPerformanceBaseSalary.Id = parseInt(row.find("#Id").val());
+                            EmpPerformanceBaseSalary.EmpId = parseInt(row.find("#EmpId").val());
+                            EmpPerformanceBaseSalary.SalaryMonth = parseInt(row.find("#SalaryMonth").val());
+                            EmpPerformanceBaseSalary.SalaryYear = parseInt(row.find("#SalaryYear").val());
+                            EmpPerformanceBaseSalary.Date = ($("#Date").val() == "" ? null : $("#Date").val());
+                            EmpPerformanceBaseSalary.ReferenceBasedCommission = parseInt(row.find("#ReferenceBasedCommission").val());
+                            EmpPerformanceBaseSalary.DemoCommission = parseInt(row.find("#DemoCommission").val());
+                            EmpPerformanceBaseSalary.SaleCommision = parseInt(row.find("#SaleCommision").val());
+                            EmpPerformanceBaseSalary._500Commission = parseInt(row.find("#_500Commission").val());
+                            EmpPerformanceBaseSalary.ZeroPaid = parseInt(row.find("#ZeroPaid").val());
+                            EmpPerformanceBaseSalary.GiftAmount = parseInt(row.find("#GiftAmount").val());
+                            EmpPerformanceBaseSalary.RecurringAmount = parseInt(row.find("#RecurringAmount").val());
+                            EmpPerformanceBaseSalary.MonthlyBonus = parseInt(row.find("#MonthlyBonus").val());
+                            EmpPerformanceBaseSalary.OvertimeHours = parseInt(row.find("#OvertimeHours").val());
+                            EmpPerformanceBaseSalary.OvertimeTotalMoney = parseInt(row.find("#OvertimeTotalMoney").val());
+                            EmpPerformanceBaseSalary.EarnedSalary = parseInt(row.find("#EarnedSalary").val());
+
+                            empAttendancesList.push(EmpPerformanceBaseSalary);
+
+                        }
+                     
+
+                    });
+                    var attendaceDate = $('#AttendanceDate').val();
+                    $.ajax({
+                        url: applicationName + "HumanResource/PerformanceBaseSalary/save",
+                        data: { postedData: empAttendancesList },
+                        async: false,
+                        type: 'POST',
+
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'HumanResource/PerformanceBaseSalary?attendanceDate=' + attendaceDate;
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
+    </script>
+}

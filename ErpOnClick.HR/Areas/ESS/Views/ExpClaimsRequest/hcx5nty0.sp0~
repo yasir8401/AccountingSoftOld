@@ -1,0 +1,120 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<ExpClaims> ExpClaimsList = Model.ExpClaimsList;
+}
+
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Id") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Employee") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Amount") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Attachment") </th>
+                <th> @SharedLocalizer.GetLocalizedHtmlString("Reason") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Approval Status")</th>
+                <th width="30px"></th>
+
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+
+                <th> Id </th>
+                <th> Employee </th>
+                <th> Amount </th>
+                <th> Attachment </th>
+                <th> Reason </th>
+                <th>Status</th>
+                <th></th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in ExpClaimsList)
+            {
+
+            <tr class="text-center">
+                <td> @item.RecId </td>
+                <td> @item.Emp.FirstNameEn </td>
+                <td> @item.Amount </td>
+                <td>
+                    @if (!String.IsNullOrWhiteSpace(item.Attachment))
+                    {
+                        <a href="~/Files/@item.Attachment" download="">DownloadDPF</a>
+                    }
+
+                </td>
+                <td> @item.Reason </td>
+                <td align="center">
+                    @if (item.RequestStatusNavigation != null && item.RequestStatusNavigation.LookupNameEn == "Rejected")
+                    {
+                        <label class="btnwidth p-1 badge badge-danger mb-0">Rejected</label>
+
+                    }
+                    else if (item.RequestStatusNavigation != null && item.RequestStatusNavigation.LookupNameEn == "Approved")
+                    {
+                        <label class="btnwidth p-1 badge badge-success mb-0">Approved</label>
+                    }
+                    else if (item.RequestStatusNavigation != null && item.RequestStatusNavigation.LookupNameEn == "Pending")
+                    {
+                        <label class="btnwidth p-1 badge badge-warning mb-0">Pending</label>
+                    }
+                    else
+                    {
+
+                    }
+                </td>
+
+                <td class="text-center padding-5">
+                    <a href="~/ESS/ExpClaimsRequest/edit/@item.RecId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                </td>
+
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName + "ESS/ExpClaimsRequest/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName + 'HumanResource/ExpClaims';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

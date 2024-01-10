@@ -1,0 +1,116 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<EmpAddresses> EmpAddressesList = Model.EmpAddressesList;
+    var empId = Model.empId;
+
+
+}
+<style>
+    th {
+        font-weight: 500;
+    }
+</style>
+
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Id")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Building No")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Street Name")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("City Name")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Additional")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Appartment")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Phone No")</th>
+
+
+
+                <th width="30px"></th>
+                
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+
+                <th>Id</th>
+                <th>BuildingNo</th>
+                <th>StreetName</th>
+                <th>CityName</th>
+                <th>AdditionalNo</th>
+                <th>AppartmentNo</th>
+                <th>PhoneNo</th>
+
+                <th></th>
+               
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in EmpAddressesList)
+            {
+
+                <tr class="text-center">
+
+                    <th>@item.EmpAddressId</th>
+                    <th>@item.BuildingNo</th>
+                    <th>@item.StreetName</th>
+                    <th>@item.CityName</th>
+                    <th>@item.AdditionalNo</th>
+                    <th>@item.AppartmentNo</th>
+                    <th>@item.PhoneNo</th>
+
+
+                    <td class="text-center padding-5">
+                        <a href="~/ESS/EmpAddresses/view/emp/@item.EmpId/@item.EmpAddressId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-search"></i></a>
+                    </td>
+                    @*<td class="text-center padding-5" style="display:none;">
+                        <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.EmpAddressId')"><i class="fa fa-times text-danger"></i></a>
+                    </td>*@
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName+ "ESS/EmpAddresses/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName + 'HumanResource/empaddresses/emp/@empId';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

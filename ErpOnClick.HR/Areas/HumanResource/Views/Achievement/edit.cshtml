@@ -1,0 +1,117 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+@{
+    Achievement AchievementDetails = Model.AchievementDetails;
+    bool isEdit = (AchievementDetails != null);
+}
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="AchievementId" name="AchievementId" class="form-control" value="@(AchievementDetails != null ? AchievementDetails.AchievementId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-12">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/HumanResource/Achievement" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Year")</label>
+                        <select name="Year" id="Year" class="form-control" required>
+                            <option></option>
+                            @for (int i = DateTime.Now.Year; i > 1970; i--)
+                            {
+                                <option value="@i" @(AchievementDetails != null && AchievementDetails.Year == i.ToString() ? "selected" : "")>@i</option>
+                            }
+                        </select>                   </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Award Name")</label>
+                        <input type="text" id="AwardName" name="AwardName" class="form-control" value="@(AchievementDetails!=null?AchievementDetails.AwardName: null)">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Donor")</label>
+                        <input type="text" id="Donor" name="Donor" class="form-control" value="@(AchievementDetails!=null?AchievementDetails.Donor: null)" required>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+
+
+        });
+        var applicationName = getApplicationName();
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: applicationName + "HumanResource/Achievement/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'HumanResource/Achievement';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

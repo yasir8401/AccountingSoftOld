@@ -1,0 +1,38 @@
+﻿@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-project-diagram"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Projects") 
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/Projects/projectdetail" class="nav-link "><p>  @SharedLocalizer.GetLocalizedHtmlString("Detail Project Listing")  </p></a></li>
+                <li class="nav-item"><a href="~/Projects/projects" class="nav-link "><p>  @SharedLocalizer.GetLocalizedHtmlString("Project Listing")  </p></a></li>
+                <li class="nav-item"><a href="~/Projects/tasks" class="nav-link "><p>  @SharedLocalizer.GetLocalizedHtmlString("Tasks")  </p></a></li>
+                <li class="nav-item"><a href="~/Projects/teammembers" class="nav-link "><p>  @SharedLocalizer.GetLocalizedHtmlString("Team Members")  </p></a></li>
+
+            </ul>
+
+        </li>
+        <li class="nav-item has-treeview ">
+     
+                <a href="~/home/Index" class="nav-link">
+                    <i class="nav-icon fas fa-sign-out-alt"></i>
+                    <p>
+                        @SharedLocalizer.GetLocalizedHtmlString("Return")
+
+                    </p>
+                </a>
+            
+
+        </li>
+    </ul>
+</nav>

@@ -1,0 +1,87 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Areas.ESS.Models;
+@{
+    Layout = "_LayoutReport";
+    var PaySlipDate = Model.PaySlipDate;
+    List<PayrunPayslip> PaySlipDetails = Model.PaySlipDetails;
+    Emp employee = Model.employee;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        Employee Attendance
+                    </h2>
+                    <br>
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="100%"><i class="fa fa-filter"></i><b>Employee Name:</b> @(employee != null ? employee.FirstNameEn + " " + employee.FatherNameEn : "") </td>
+                            </tr>
+
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="100%"><i class="fa fa-filter"></i><b>Pay Slip Month:</b> @(PaySlipDate != null ? Convert.ToDateTime(PaySlipDate).ToString("MMM-yyyy")  : "") </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            <tr class="Grid_HeaderStyle">
+                                <th>Allowance Description</th>
+                                <th>Earning</th>
+                                <th>Deduction</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (PaySlipDetails.Count() > 0)
+                            {
+                                @foreach (var item in PaySlipDetails)
+                                {
+                                    <tr class="ItemColor text-center">
+                                        <td class="text-center">@item.Description</td>
+                                        <td class="text-center">@Math.Round((decimal)item.Earning, 2)</td>
+                                        <td class="text-center">@Math.Round((decimal)item.Deduction, 2)</td>
+                                    </tr>
+                                } }
+                            else
+                            {
+                                <tr class="ItemColor text-center">
+                                    <td colspan="5" class="text-center">Sorry! No Data Found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfooter>
+                            <tr class="Grid_HeaderStyle">
+                                <th>Total:</th>
+                                <th>@Math.Round((decimal)PaySlipDetails.Sum(item => item.Earning), 2)</th>
+                                <th>@Math.Round((decimal)PaySlipDetails.Sum(item => item.Deduction), 2)</th>
+                            </tr>
+                            <tr class="Grid_HeaderStyle">
+                                <th>Total Salary:</th>
+                                <th colspan="2" class="text-center">@Math.Round((decimal)(PaySlipDetails.Sum(x => x.Earning) - PaySlipDetails.Sum(x => x.Deduction)), 2)</th>
+                                
+                            </tr>
+                        </tfooter>
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

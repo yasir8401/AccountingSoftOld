@@ -1,0 +1,91 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+
+
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Emp> empList = Model.empList;
+
+
+    PayrunM PayRunMDetails = Model.PayRunMDetails;
+
+    bool isEdit = (PayRunMDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="PayrunId" name="PayrunId" class="form-control" value="@(PayRunMDetails != null ? PayRunMDetails.PayrunId : 0)" @(isEdit ? "readonly" : "") min="4" maxlength="4">
+
+    <div class="card card-default card-outline col-lg-12" style="text-align:center">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("PAYRUN HISTORY")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <a href="~/HumanResource/PayRunM" type="button" class="btn  btn-sm btn-default ">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <br />
+            <br />
+
+            @{
+                DateTime? dateM = (PayRunMDetails != null ? new DateTime(PayRunMDetails.YearId, PayRunMDetails.MonthId, 1) : DateTime.Now); ;
+
+                <input type="month" class="form-control col-md-3" value="@(dateM.Value.Year+"-"+dateM.Value.ToString("MM"))" id="DatePayRun" />
+            }
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+                <div id="divList" class="table-responsive"></div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+</form>
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+            BindGrid();
+        });
+        var applicationName = getApplicationName();
+
+        function BindGrid() {
+            var date = $('#DatePayRun').val();
+            var PayrunId = $('#PayrunId').val();
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'HumanResource/PayRunM/_listPayRunD',
+                data: { date: date, id: PayrunId },
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+        $('#DatePayRun').change(function () {
+            BindGrid();
+        });
+
+
+
+    </script>
+
+}

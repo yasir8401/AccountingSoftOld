@@ -1,0 +1,72 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Invoicing.Models
+@using ErpOnClick.Invoicing.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<VendorReportModel> listReportVendorLedger = Model.listReportVendorLedger;
+
+}
+<link href="~/css/Report.css" rel="stylesheet" />
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed ">
+        <thead class="text-sm ">
+            <tr class="col-lg-12">
+                <th align="center" width="100px">@SharedLocalizer.GetLocalizedHtmlString("Date") </th>
+                <th align="left"> @SharedLocalizer.GetLocalizedHtmlString("Vendor")</th>
+                <th align="left"> @SharedLocalizer.GetLocalizedHtmlString("Account")</th>
+                <th align="right">@SharedLocalizer.GetLocalizedHtmlString("Debit")  </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Credit") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Balance")</th>
+
+                <th width="40px"> </th>
+
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr>
+                <th align="center" width="100px"> Date</th>
+                <th align="left"> Vendor</th>
+                <th align="left"> Account</th>
+                <th align="right"> Debit </th>
+                <th align="right"> Credit </th>
+                <th align="right"> Balance</th>
+
+                <td width="40px"></td>
+            </tr>
+        </tfoot>
+        <tbody>
+
+            @foreach (var item in listReportVendorLedger)
+            {
+                <tr class="text-center">
+                    <td align="center" width="100px"> @(Convert.ToDateTime(item.CreatedDate).ToString("dd-MMM-yyyy")) </td>
+                    <td align="left"> @item.Vendor </td>
+                    <td align="left"> @item.Account </td>
+                    <td align="right"> @(String.Format("{0:.00}",item.Debit)) </td>
+                    <td align="right"> @(String.Format("{0:.00}",item.Credit))</td>
+                    <td align="right"> @(String.Format("{0:.00}",item.Balance))</td>
+                    <td width="40px">
+                        <a href="~/fn/VendorReport/Index?VendorId=@item.VendorId&FromDate=@item.FromDate&ToDate=@item.ToDate" class="btn btn-default btn-block  btn-xs "><i class="fa fa-search"></i></a>
+                    </td>
+                </tr>
+            }
+            <tr style="background-color:#fff6ea" class="text-center">
+                <td align="right" colspan="3">Total</td>
+                <td align="right">@(String.Format("{0:.00}", listReportVendorLedger.Sum(x => x.Debit)))</td>
+                <td align="right">@(String.Format("{0:.00}", listReportVendorLedger.Sum(x => x.Credit)))</td>
+                <td align="right"></td>
+                <td align="right"></td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+        _initDatatable('#dtList');
+
+    });
+</script>

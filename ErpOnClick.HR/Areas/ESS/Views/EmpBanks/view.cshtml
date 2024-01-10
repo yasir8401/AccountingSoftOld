@@ -1,0 +1,259 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Emp> empList = Model.empList;
+
+    IList<Lookups> banksList = Model.banksList;
+
+    var empId = Model.empId;
+
+    Emp empDetails = Model.empDetails;
+    EmpBanks EmpBanksDetails = Model.EmpBanksDetails;
+    bool isEdit = (EmpBanksDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="EmpBankId" name="EmpBankId" class="form-control" value="@(EmpBanksDetails != null ? EmpBanksDetails.EmpBankId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(EmpBanksDetails != null ? EmpBanksDetails.CompanyId : 0)">
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(EmpBanksDetails != null ? EmpBanksDetails.BranchId : 0)">
+
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header p-0 border-bottom-0">
+            <div class="card" style="background-color: #496b6a">
+            </div>
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="navigation('@empId')" href="javascript:void(0)"><i class="fa fa-info"></i> @SharedLocalizer.GetLocalizedHtmlString("General Info")</a>
+                </li>
+
+                @Html.Partial("/Areas/ESS/Views/Profile/_tabsPartial.cshtml", empDetails)
+
+            </ul>
+        </div>
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+               
+                <a href="~/ESS/empbanks/emp/@empId" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Employee")</label>
+                        <select id="EmpId" name="EmpId" class="form-control" disabled>
+
+                            @foreach (var item in empList)
+                            {
+                                <option value="@item.EmpId" @(EmpBanksDetails != null && EmpBanksDetails.EmpId == item.EmpId ? "selected" : "")>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn + " " + item.GrandNameEn + " " + item.FamilyNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Title")</label>
+                        <input disabled type="text" id="BankAccountTitle" name="BankAccountTitle" class="form-control" value="@(EmpBanksDetails!=null?EmpBanksDetails.BankAccountTitle: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Account No")</label>
+                        <input disabled type="text" id="BankAccountNo" name="BankAccountNo" class="form-control" value="@(EmpBanksDetails!=null?EmpBanksDetails.BankAccountNo: null)">
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Iban") </label>
+                        @*<input type="text" id="BankIban" name="BankIban" class="form-control" value="@(EmpBanksDetails!=null?EmpBanksDetails.BankIban: null)">*@
+                        <input disabled type="text" id="BankIban" name="BankIban" class="form-control" value="@(EmpBanksDetails!=null?EmpBanksDetails.BankIban: null)" />
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Bank")</label>
+                        <select id="BankId" name="BankId" class="form-control" disabled>
+
+                            @foreach (var item in banksList)
+                            {
+                                <option value="@item.Code" @(EmpBanksDetails != null && EmpBanksDetails.BankId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card card-outline card-outline col-lg-12">
+        <div class="card-header">
+            <h3 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Note")
+            </h3>
+
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body pad">
+            <div class="mb-3">
+                <textarea id="Note" rows="3" name="Note" disabled
+                          style="width: 100%; height: 100px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(EmpBanksDetails != null? EmpBanksDetails.Note : "")</textarea>
+            </div>
+
+        </div>
+    </div>
+    <div class="card card-outline card-outline col-lg-12" style="display:none">
+        <div class="card-header">
+            <h3 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h3>
+
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body pad">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(EmpBanksDetails != null && EmpBanksDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option></option>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(EmpBanksDetails != null && EmpBanksDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</form>
+
+
+
+
+
+@section scripts{
+    <script>
+
+        $(function () {
+            //$("#tabBanks-tab").addClass("nav-link active");
+            $("#tabBanks-tab").css("background-color", "#496b6a");
+            $("#tabBanks-tab").css("color", "white");
+            var applicationName = getApplicationName();
+            $("#BankIban").inputmask({ "mask": "(AA) 9999999999999999999999" });
+
+            $('#CompanyId').change(function () {
+
+                var id = $('#CompanyId').val();
+
+                $.ajax({
+                    url: applicationName +"Ajax/BranchCascading",
+                    async: false,
+                    type: "POST",
+                    data: { id: id },
+                    success: function (data) {
+
+                        var item = '';
+
+                        $.each(data.result, function (i, product) {
+
+                            item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                        });
+
+                        $("#BranchId").html(item);
+
+                    }
+                });
+
+            });
+
+
+        });
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: applicationName + "ESS/empbanks/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName +'ESS/empbanks/emp/@empId';
+
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+        function navigation() {
+            window.location = applicationName +'ESS/Profile/Index'
+        };
+    </script>
+
+}

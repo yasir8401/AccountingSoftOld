@@ -1,0 +1,96 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Recruitment.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<Lookups> deptList = Model.deptList;
+}
+
+
+@section TabName{
+    Vacant jobs Setup
+}
+
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Applications")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a href="~/admin/application/edit" type="button" class="btn  btn-sm btn-primary">
+                <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add New")
+            </a>
+        </div>
+        <!-- /. tools -->
+    </div>
+
+    <div class="card-footer pb-0 pt-2 text-sm">
+        <form id="frmSearch">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group ">
+                        <label>Department</label>
+                        <select id="JobDepartmentId" name="JobDepartmentId" class="form-control input-sm text-sm">
+                            <option value="">All</option>
+                            @foreach (var item in deptList)
+                            {
+                                <option value="@item.Code">
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div style="display:none">
+                    <button type="submit" class="btn btn-default btn-block">Refresh</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+            $('#frmSearch button').click();
+        });
+
+        $('#frmSearch').find('input, select').change(() => {
+            $('#frmSearch button').click();
+        });
+
+        $('#frmSearch').submit(function (e) {
+            e.preventDefault();
+            BindGrid();
+        })
+
+
+        function BindGrid() {
+
+
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'admin/application/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+    </script>
+}

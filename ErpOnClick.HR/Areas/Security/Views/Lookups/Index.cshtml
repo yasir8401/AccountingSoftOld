@@ -1,0 +1,98 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    List<LookupTypes> LookupTypeList = Model.LookupTypeList;
+}
+
+@section TabName{
+    Lookup Setup
+}
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            Lookups
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a href="~/Security/Lookups/edit" type="button" class="btn  btn-sm btn-primary">
+                <i class="fas fa-plus"></i> Add New
+            </a>
+        </div>
+        <!-- /. tools -->
+    </div>
+    <div class="card-footer pb-0 pt-2 text-sm">
+        <form id="frmSearch">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group ">
+                        <label>Lookup Type</label>
+                        <select id="LookupTypeId" name="LookupTypeId" class="form-control input-sm text-sm">
+                            @*<option></option>*@
+                            @foreach (var item in LookupTypeList)
+                            {
+                                <option value="@item.LookupTypeId">
+                                    @item.LookupTypeId - @item.LookupTypeNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div style="display:none">
+                    <button type="submit" class="btn btn-default btn-block">Refresh</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+
+            $('#frmSearch').find('input,select').each(function (i, item) {
+                var id = $(this).attr('id');
+                var val = localStorage.getItem('FILTER_PTESTSCH_' + id);
+                if (val != null) {
+                    $(this).val(val);
+                }
+            });
+
+            $('#frmSearch button').click();
+        });
+
+        $('#frmSearch').find('input, select').change(() => {
+            $('#frmSearch button').click();
+        });
+
+        $('#frmSearch').submit(function (e) {
+            e.preventDefault();
+            BindGrid();
+        })
+
+        function BindGrid() {
+
+            $('#frmSearch').find('input,select').each(function (i, item) {
+                var id = $(this).attr('id');
+                var val = $(this).val();
+                localStorage.setItem('FILTER_PTESTSCH_' + id, val);
+            });
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() +'Security/Lookups/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+    </script>
+}

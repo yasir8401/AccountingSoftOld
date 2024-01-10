@@ -1,0 +1,53 @@
+﻿
+@model ErpOnClick.DAL.Models.Divisions
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+
+
+
+
+<li class="nav-item">
+    <a class="nav-link" id="tabDepartment-tab" data-toggle="pill" onclick="goItem('@Model.DivisionId')" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Departments")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabSections-tab" data-toggle="pill" onclick="goItemTwo('@Model.DivisionId')" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Sections")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabSubSections-tab" data-toggle="pill" onclick="goItemThree('@Model.DivisionId')" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Sub Sections")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabUnits-tab" data-toggle="pill" onclick="goItemFour('@Model.DivisionId')" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Units")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabTeams-tab" data-toggle="pill" onclick="goItemFive('@Model.DivisionId')" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Teams")</a>
+</li>
+
+
+
+<script>
+    var applicationName = getApplicationName();
+
+    function goItem() {
+
+        window.location = applicationName + 'HumanResource/Departments/Divisions/@Model.DivisionId'
+    };
+    function goItemTwo() {
+
+        window.location = applicationName + 'HumanResource/Sections/Divisions/@Model.DivisionId'
+    };
+    function goItemThree() {
+
+        window.location = applicationName + 'HumanResource/SubSections/Divisions/@Model.DivisionId'
+    };
+    function goItemFour() {
+
+        window.location = applicationName + 'HumanResource/Units/Divisions/@Model.DivisionId'
+    };
+    function goItemFive() {
+
+        window.location = applicationName + 'HumanResource/Teams/Divisions/@Model.DivisionId'
+    };
+
+
+</script>

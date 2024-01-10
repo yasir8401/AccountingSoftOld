@@ -1,0 +1,92 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Authorization.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<RolePrivileges> RolePrivilegeList = Model.RolePrivilegesList;
+    var RoleId = Model.RoleId;
+}
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th width="10px">@SharedLocalizer.GetLocalizedHtmlString("Id") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("From Date") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Role") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Privilege") </th>
+                <th width="30px"></th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th>Id </th>
+                <th>From-Date </th>
+                <th>Role </th>
+                <th>Privilege </th>
+                <th></th>
+                <th></th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in RolePrivilegeList)
+            {
+
+                <tr class="text-center">
+                    <td>@item.RolePrivilegeId </td>
+                    <td>@(item.FromDate != null ? Convert.ToDateTime(item.FromDate).ToString("dd-MMM-yyyy") : "")</td>
+                    <td class="text-left">@item.Role.RoleNameEn </td>
+                    <td class="text-left">@item.Privilege.PrivilegeNameEn </td>
+
+                    <td class="text-center padding-5">
+                        <a href="~/admin/RolePrivileges/edit/Role/@item.RoleId/@item.RolePrivilegeId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td class="text-center padding-5">
+                        <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.RolePrivilegeId')"><i class="fa fa-times text-danger"></i></a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: getApplicationName()+"admin/RolePrivileges/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = getApplicationName() + 'admin/RolePrivileges/Role/@RoleId';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,157 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models.Finance
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.DAL.Utilities
+
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+
+@inject LocService SharedLocalizer
+
+@{
+    OtherComprehensiveIncomeViewModel otherComprehensiveIncomeViewModel = Model.otherComprehensiveIncomeViewModel;
+
+    var filePath = NativePaths.GetFilePath(_env);
+    var img = "Erponclick.png";
+
+
+}
+<link href="~/css/Report.css?v=inv_@DateTime.Now.ToString("mm")" rel="stylesheet" />
+<div class="table-responsive pb-2 ">
+    <table id="pltable" class="table table-hover table-condensed ">
+        <thead class="text-sm ">
+            <tr class="text-center">
+                <th colspan="4">
+                    <img style="-webkit-user-select: none" src="@filePath@img" width="20%" />
+                    <h4>
+                        STATEMENT OF OTHER COMPREHENSIVE INCOME
+                    </h4>
+                </th>
+            </tr>
+            <tr class="col-lg-12 text-center">
+                <th width="40%"> @SharedLocalizer.GetLocalizedHtmlString("") </th>
+                <th width="10%"> @SharedLocalizer.GetLocalizedHtmlString("Notes") </th>
+                <th width="25%"> @SharedLocalizer.GetLocalizedHtmlString("2021") <br /> @SharedLocalizer.GetLocalizedHtmlString("--Rupees-- ")</th>
+                <th width="25%"> @SharedLocalizer.GetLocalizedHtmlString("2020") <br /> @SharedLocalizer.GetLocalizedHtmlString("--Rupees-- ")</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"> Profit / (loss) After Taxation </td>
+                <td></td>
+                <td class="text-center"> @otherComprehensiveIncomeViewModel.PLAT_2021</td>
+                <td class="text-center"> @otherComprehensiveIncomeViewModel.PLAT_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"> Other Comprehensive Income for the Period </td>
+                <td></td>
+                <td class="text-center"> @otherComprehensiveIncomeViewModel.OCI_2021</td>
+                <td class="text-center"> @otherComprehensiveIncomeViewModel.OCI_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr>
+                <td class="text-left"> Total Comprehensive Income for the Period </td>
+                <td></td>
+                <td class="text-center b-b b-t b-lr"> @otherComprehensiveIncomeViewModel.TCI_2021</td>
+                <td class="text-center b-b b-t b-lr"> @otherComprehensiveIncomeViewModel.TCI_2020</td>
+            </tr>
+            <tr>
+                <td class="text-left"></td>
+                <td> </td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            <tr class="signatrure-table">
+                <td style="display: none;"></td>
+                <td colspan="2" class="signatrure-section"><span>Chief Executive Officer</span></td>
+                <td colspan="2" class="signatrure-section"><span>Director</span></td>
+                <td style="display: none;"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <br />
+    <br />
+</div>
+
+<style>
+    button.dt-button, div.dt-button, a.dt-button {
+        font-weight: 900;
+        letter-spacing: 2px;
+        border-radius: 5px !important;
+        border-color: silver !important;
+        background-color: #f8f9fa !important;
+        border-color: #ddd !important;
+        color: #444 !important;
+        padding: .25rem .5rem !important;
+        font-size: .875rem !important;
+        line-height: 1.5 !important;
+        border-radius: .2rem !important;
+        position: relative;
+    }
+
+    div.dt-buttons {
+        float: right !important;
+    }
+
+    button.dt-button:before {
+        font-family: "Font Awesome 5 Free";
+        top: 0;
+        left: -5px;
+        padding-right: 10px;
+        content: "\f56e";
+    }
+</style>
+
+
+<script>
+    $(function () {
+        $('#Accli').addClass("menu-open");
+        $('#Statementsli').addClass("menu-open");
+        $('#Reportsli').removeClass("menu-open");
+        $('#AccRli').removeClass("menu-open");
+        $('#AccPli').removeClass("menu-open");
+        $('#Setupli').removeClass("menu-open");
+
+        // DataTable
+        var table = $('#pltable').DataTable({
+            //"order": [[0, "desc"]],
+            dom: 'Bfrtip',
+            ordering: false,
+            paging: false,
+            info: false,
+            searching: false,
+            buttons: [
+                'excel'
+            ]
+        });
+    });
+</script>

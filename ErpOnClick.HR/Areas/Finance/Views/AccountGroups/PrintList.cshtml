@@ -1,0 +1,101 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Layout = "_LayoutReport";
+    List<AccountGroups> AccountGroupsIdList = Model.AccountGroupsIdList;
+    Company CompanyDetail = Model.CompanyDetail;
+    List<AccountGroups> AccountsGroups = Model.AccountsGroups;
+
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        ACCOUNT GROUP
+                    </h2>
+                    <br>
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="100%"><i class="fa fa-filter"></i>Parent Category </td>
+
+                            </tr>
+
+                            <tr class="ItemColor text-center">
+
+                                <td width="100%" nowrap="">
+                                    @Model.AccountGroup
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            @*<tr class="Grid_HeaderStyle Grid_HeaderStyle_Arabic">
+                                    <th style="width:20px">الوصف</th>
+
+                                    <th width="40px">ضريبة</th>
+                                    <th width="40px">قيمة الضريبة</th>
+                                    <th width="40px">إجمالي</th>
+                                    <th width="40px">إجمالي</th>
+                                </tr>*@
+                            <tr class="Grid_HeaderStyle">
+                                <th style="width:20px">Group Id</th>
+
+                                <th>Group Name EN</th>
+                                <th>Group Name AR</th>
+                                <th>Group Code</th>
+                                <th>Parent Category</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (AccountGroupsIdList.Count() > 0)
+                            {
+                                foreach (var item in AccountGroupsIdList)
+                                {
+                                    <tr class="ItemColor text-center">
+                                        <td class="text-center">@(item.AccountGroupId != 0 ? item.AccountGroupId : 0)</td>
+                                        <td class="text-center">@(item.AccountGroupNameEn != null ? item.AccountGroupNameEn : "-")</td>
+                                        <td class="text-center">@(item.AccountGroupNameAr != null ? item.AccountGroupNameAr: "-")</td>
+                                        <td class="text-center">@(item.AccountGroupCode != null ? item.AccountGroupCode : "-")</td>
+                                        <td class="text-center">
+                                            @foreach (var list in AccountsGroups)
+                                            {
+                                                if (item.ParentAccountGroupId == list.AccountGroupId)
+                                                {
+                                                    @list.AccountGroupNameEn}
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr class="ItemColor text-center">
+                                    <td colspan="5" class="text-center">Sorry! No Data Found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

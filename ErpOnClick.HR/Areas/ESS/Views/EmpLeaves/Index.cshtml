@@ -1,0 +1,135 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<Leaves> LeaveList = Model.LeaveList;
+    double totalLeaves = Model.TotalLeaves;
+
+    LeavesProfile leavesProfile = Model.LeavesProfile;
+}
+
+
+<form id="frmEdit" role="form">
+
+    <div class="card card-default card-outline">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Leave Balance")
+            </h2>
+
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Total Annual Leaves")</label>
+                        <input type="number" id="TotalAnnualLeaves" name="TotalAnnualLeaves" class="form-control" readonly value="@totalLeaves">
+                    </div>
+                </div>
+                <div class="col-sm-4 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Annual Leaves Availed")</label>
+                        <input type="number" id="AnnualLeavesAvaialed" name="AnnualLeavesAvaialed" class="form-control" readonly value="@( LeaveList.Where(x => x.LeaveTypeId == "032002" && x.LeaveStatus == "007002").Sum(x => x.PaidDays))">
+                    </div>
+                </div>
+                <div class="col-sm-4 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Remaining Annual Leaves")</label>
+                        <input type="number" id="RemainingAnnualLeave" name="RemainingAnnualLeave" class="form-control" readonly value="@( totalLeaves - LeaveList.Where(x => x.LeaveTypeId == "032002" && x.LeaveStatus == "007002").Sum(x => x.PaidDays))">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Total Sick Leaves")</label>
+                        <input type="number" id="TotalSickLeaves" name="TotalSickLeaves" class="form-control" readonly value="@(leavesProfile != null && leavesProfile.TotalSickLeaves != null ? leavesProfile.TotalSickLeaves : 0)">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Sick Leaves Availed")</label>
+                        <input type="number" id="SickLeavesAvaialed" name="SickLeavesAvaialed" class="form-control" readonly value="@( LeaveList.Where(x => x.LeaveTypeId == "032001" && x.LeaveStatus == "007002").Sum(x => x.PaidDays))">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Remaining Sick Leaves")</label>
+                        <input type="number" id="RemainingSickLeave" name="RemainingSickLeave" class="form-control" readonly value="@( leavesProfile.TotalSickLeaves - LeaveList.Where(x => x.LeaveTypeId == "032001" && x.LeaveStatus == "007002").Sum(x => x.PaidDays))">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Total Emergency Leaves")</label>
+                        <input type="number" id="TotalEmergencyLeaves" name="TotalEmergencyLeaves" class="form-control" readonly value="@(leavesProfile != null && leavesProfile.TotalEmergencyLeaves != null ? leavesProfile.TotalEmergencyLeaves : 0)">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Emergency Leaves Availed")</label>
+                        <input type="number" id="EmergencyLeavesAvaialed" name="EmergencyLeavesAvaialed" class="form-control" readonly value="@( LeaveList.Where(x => x.LeaveTypeId == "032004" && x.LeaveStatus == "007002").Sum(x => x.PaidDays))">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Remaining Emergency Leaves")</label>
+                        <input type="number" id="RemainingEmergencyLeave" name="RemainingEmergencyLeave" class="form-control" readonly value="@( leavesProfile.TotalEmergencyLeaves - LeaveList.Where(x => x.LeaveTypeId == "032004" && x.LeaveStatus == "007002").Sum(x => x.PaidDays))">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Leave Details")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a href="~/ESS/EmpLeaves/view" type="button" class="btn  btn-sm btn-primary">
+                <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add New Leave Request")
+            </a>
+        </div>
+        <!-- /. tools -->
+    </div>
+
+
+
+
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            BindGrid();
+        });
+        var applicationName = getApplicationName();
+
+        function BindGrid() {
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'ESS/EmpLeaves/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+    </script>
+}

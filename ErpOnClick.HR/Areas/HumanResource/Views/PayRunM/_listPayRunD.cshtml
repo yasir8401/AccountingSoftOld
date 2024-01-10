@@ -1,0 +1,333 @@
+﻿@using ErpOnClick.ErpMain.ViewModel.HumanResource;
+@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    IList<PayRunViewModel> payRunViewModel = Model.payRunViewModel;
+}
+@Html.Partial("/Views/Shared/HrLayout/_generalModalPartial.cshtml")
+@if (payRunViewModel != null && payRunViewModel.Count != 0)
+{
+    <div class="table-responsive pb-2 ">
+        <table id="dtList" class="table table-hover table-condensed">
+            <thead class="text-sm">
+                <tr>
+                    <th>Sr.No</th>
+                    <th>Emp Id</th>
+                    <th>Name</th>
+                    <th>CNIC</th>
+                    <th>NTN</th>
+                    <th>DOB</th>
+                    <th>Joining Date</th>
+                    <th>Leaving Date</th>
+                    <th>Joiner/Leaver</th>
+                    <th>office Location</th>
+                    <th>Department</th>
+                    <th>Shift</th>
+                    <th>Designation</th>
+                    <th>Emp Type</th>
+                    <th>Wage Group</th>
+                    <th>Benf Name</th>
+                    <th>Customer Ref</th>
+                    <th>Bank No</th>
+                    <th>Bank Code</th>
+                    <th>Bank Name</th>
+                    <th>Bank Branch</th>
+                    <th>Bank Currency</th>
+                    <th>Tardies</th>
+                    <th>Short Leaves</th>
+                    <th>Absents</th>
+                    <th>Paid Leave</th>
+                    <th>Unpaid Leave</th>
+                    <th>Presents</th>
+                    <th>Total Days</th>
+                    <th>Deducted Days</th>
+                    <th>Salary Month</th>
+                    <th>SalaryMonth </th>
+                    <th>SalaryYear </th>
+                    <th>SalaryDate </th>
+                    <th>BasicSalary </th>
+                    <th>HousingAllowance </th>
+                    <th>TransportAllowance </th>
+                    <th>FoodAllowance </th>
+                    <th>OtherAllowance </th>
+                    <th>LeavePayAllowance </th>
+                    <th>IndemnityAllowance </th>
+                    <th>MedicalAllowance </th>
+                    <th>IncrementAllowance </th>
+                    <th>EobiEmployerContribution </th>
+                    <th>PessiEmployerContribution </th>
+                    <th>GroupInsuranceEmployerContribution </th>
+                    <th>TotalBasicSalary </th>
+                    <th>ReferenceCommision </th>
+                    <th>DemoCommission </th>
+                    <th>SaleCommision </th>
+                    <th>_500Commision </th>
+                    <th>ZeroPaid </th>
+                    <th>GiftAmount </th>
+                    <th>RecurringCommision </th>
+                    <th>MonthlyBonus </th>
+                    <th>OverTime Amount</th>
+                    <th>EarnedSalary </th>
+                    <th>GrossSalary </th>
+                    <th>OtherDeductions </th>
+                    <th>AbscentFine </th>
+                    <th>UnpaidDays </th>
+                    <th>SalaryPerDayCalculation </th>
+                    <th>PerDay </th>
+                    <th>SalaryDedeuction </th>
+                    <th>Loan Deduction</th>
+                    <th>TotalDeduction </th>
+                    <th>Additions </th>
+                    <th>NetSalary </th>
+                    <th>ThresholdSalary </th>
+                    <th>NetSalaryPaBeforeTax </th>
+                    <th>PreviouslyEarnedSalaryCommulative </th>
+                    <th>TotalEstimatedSalaryFty </th>
+                    <th>ExemptSalaryFromPrviousEmplopyer </th>
+                    <th>TotalEstimatedExamptSalary </th>
+                    
+                    <th>NoOfMonthRemaining </th>
+                   
+                    <th>PreviousPayableSalary </th>
+                    <th>TotalPayableThisMonthAndPrevious </th>
+                    <th>SalaryCheck </th>
+                    <th>SalaryHeldThisMonth </th>
+                    <th>FinalPaymentForThisMonth </th>
+                </tr>
+            </thead>
+            <tfoot style="display:table-row-group">
+                <tr class="text-center">
+                    <th>Sr.No</th>
+                    <th>Emp Id</th>
+                    <th>Name</th>
+                    <th>CNIC</th>
+                    <th>NTN</th>
+                    <th>DOB</th>
+                    <th>Joining Date</th>
+                    <th>Leaving Date</th>
+                    <th>Joiner/Leaver</th>
+                    <th>office Location</th>
+                    <th>Department</th>
+                    <th>Shift</th>
+                    <th>Designation</th>
+                    <th>Emp Type</th>
+                    <th>Wage Group</th>
+                    <th>Benf Name</th>
+                    <th>Customer Ref</th>
+                    <th>Bank No</th>
+                    <th>Bank Code</th>
+                    <th>Bank Name</th>
+                    <th>Bank Branch</th>
+                    <th>Bank Currency</th>
+                    <th>Tardies</th>
+                    <th>Short Leaves</th>
+                    <th>Absents</th>
+                    <th>Paid Leave</th>
+                    <th>Unpaid Leave</th>
+                    <th>Presents</th>
+                    <th>Total Days</th>
+                    <th>Deducted Days</th>
+                    <th>Salary Month</th>
+                    <th>SalaryMonth </th>
+                    <th>SalaryYear </th>
+                    <th>SalaryDate </th>
+                    <th>BasicSalary </th>
+                    <th>HousingAllowance </th>
+                    <th>TransportAllowance </th>
+                    <th>FoodAllowance </th>
+                    <th>OtherAllowance </th>
+                    <th>LeavePayAllowance </th>
+                    <th>IndemnityAllowance </th>
+                    <th>MedicalAllowance </th>
+                    <th>IncrementAllowance </th>
+                    <th>EobiEmployerContribution </th>
+                    <th>PessiEmployerContribution </th>
+                    <th>GroupInsuranceEmployerContribution </th>
+                    <th>TotalBasicSalary </th>
+                    <th>ReferenceCommision </th>
+                    <th>DemoCommission </th>
+                    <th>SaleCommision </th>
+                    <th>_500Commision </th>
+                    <th>ZeroPaid </th>
+                    <th>GiftAmount </th>
+                    <th>RecurringCommision </th>
+                    <th>MonthlyBonus </th>
+                    <th>OverTime Amount</th>
+                    <th>EarnedSalary </th>
+                    <th>GrossSalary </th>
+                    <th>OtherDeductions </th>
+                    <th>AbscentFine </th>
+                    <th>UnpaidDays </th>
+                    <th>SalaryPerDayCalculation </th>
+                    <th>PerDay </th>
+                    <th>SalaryDedeuction </th>
+                    <th>Loan Deduction</th>
+                    <th>TotalDeduction </th>
+                    <th>Additions </th>
+                    <th>NetSalary </th>
+                    <th>ThresholdSalary </th>
+                    <th>NetSalaryPaBeforeTax </th>
+                    <th>PreviouslyEarnedSalaryCommulative </th>
+                    <th>TotalEstimatedSalaryFty </th>
+                    <th>ExemptSalaryFromPrviousEmplopyer </th>
+                    <th>TotalEstimatedExamptSalary </th>
+
+                    <th>NoOfMonthRemaining </th>
+
+                    <th>PreviousPayableSalary </th>
+                    <th>TotalPayableThisMonthAndPrevious </th>
+                    <th>SalaryCheck </th>
+                    <th>SalaryHeldThisMonth </th>
+                    <th>FinalPaymentForThisMonth </th>
+
+
+                </tr>
+            </tfoot>
+            <tbody>
+                @foreach (var item in payRunViewModel)
+                {
+
+                <tr class="text-center">
+                    <td> @item.empDetails.EmpId </td>
+                    <td> @item.empDetails.EmpCode </td>
+                    <td> @item.empDetails.EmpName </td>
+                    <td> @item.empDetails.EmpCNIC </td>
+                    <td> @item.empDetails.NTN </td>
+                    <td> @(item.empDetails.DOB !=null ? item.empDetails.DOB.Value.ToShortDateString():"" )</td>
+                    <td> @(item.empDetails.JoiningDate.ToString("dd-MMM-yyyy"))</td>
+                    <td> @item.empDetails.LeavingDate.ToString("dd-MMM-yyyy")</td>
+                    <td> @item.empDetails.JoinerLeaver </td>
+                    <td> @item.empDetails.OfficeLocation </td>
+                    <td> @item.empDetails.Department </td>
+                    <td> @item.empDetails.Shift</td>
+                    <td> @item.empDetails.Designation </td>
+                    <td> @item.empDetails.EmpType </td>
+                    <td> @item.empDetails.WageGroup </td>
+                    <td> @item.empDetails.BeneficiaryName </td>
+                    <td> @item.empDetails.CustomerRef </td>
+                    <td> @item.empDetails.BankAccountNo </td>
+                    <td> @item.empDetails.BankCode </td>
+                    <td> @item.empDetails.BankName </td>
+                    <td> @item.empDetails.BankBranch </td>
+                    <td> @item.empDetails.Currency </td>
+
+                    <td>@item.empDetails.Tardies</td>
+                    <td>@item.empDetails.ShortLeaves </td>
+                    <td>@item.empDetails.Absents </td>
+                    <td>@item.empDetails.PaidLeaves</td>
+                    <td>@item.empDetails.UnpaidLeaves </td>
+                    <td>@item.empDetails.Presents </td>
+                    <td>@item.empDetails.TotalDays</td>
+                    <td>@item.empDetails.DeductedDays </td>
+                    <td>@item.empDetails.SalaryMonth.ToString("MMM-yyyy") </td>
+
+
+                    <td>@item.payRund.SalaryMonth </td>
+                    <td>@item.payRund.SalaryYear </td>
+                    <td>@item.payRund.SalaryDate </td>
+                    <td>@item.payRund.BasicSalary </td>
+                    <td>@item.payRund.HousingAllowance </td>
+                    <td>@item.payRund.TransportAllowance </td>
+                    <td>@item.payRund.FoodAllowance </td>
+                    <td>@item.payRund.OtherAllowance </td>
+                    <td>@item.payRund.LeavePayAllowance </td>
+                    <td>@item.payRund.IndemnityAllowance </td>
+                    <td>@item.payRund.MedicalAllowance </td>
+                    <td>@item.payRund.IncrementAllowance </td>
+                    <td>@item.payRund.EobiEmployerContribution </td>
+                    <td>@item.payRund.PessiEmployerContribution </td>
+                    <td>@item.payRund.GroupInsuranceEmployerContribution </td>
+                    <td>@item.payRund.TotalBasicSalary </td>
+                    <td>@item.payRund.ReferenceCommision </td>
+                    <td>@item.payRund.DemoCommission </td>
+                    <td>@item.payRund.SaleCommision </td>
+                    <td>@item.payRund._500Commision </td>
+                    <td>@item.payRund.ZeroPaid </td>
+                    <td>@item.payRund.GiftAmount </td>
+                    <td>@item.payRund.RecurringCommision </td>
+                    <td>@item.payRund.MonthlyBonus </td>
+                    <td>@item.payRund.OvertimeAmount </td>
+
+                    <td>@item.payRund.EarnedSalary </td>
+                    <td>@item.payRund.GrossSalary </td>
+                    <td>@item.payRund.OtherDeductions </td>
+                    <td>@item.payRund.AbscentFine </td>
+                    <td>@item.payRund.UnpaidDays </td>
+                    <td>@item.payRund.SalaryPerDayCalculation </td>
+                    <td>@item.payRund.PerDay </td>
+                    <td>@item.payRund.SalaryDedeuction </td>
+                    <td>@item.payRund.LoanDeduction </td>
+                    <td>@item.payRund.TotalDeduction </td>
+                    <td>@item.payRund.Additions </td>
+                    <td>@item.payRund.NetSalary </td>
+                    <td>@item.payRund.ThresholdSalary </td>
+                    <td>@item.payRund.NetSalaryPaBeforeTax </td>
+                    <td>@item.payRund.PreviouslyEarnedSalaryCommulative </td>
+                    <td>@item.payRund.TotalEstimatedSalaryFty </td>
+                    <td>@item.payRund.ExemptSalaryFromPrviousEmplopyer </td>
+                    <td>@item.payRund.TotalEstimatedExamptSalary </td>
+
+
+                    <td>@item.payRund.NoOfMonthRemaining </td>
+
+                    <td>@item.payRund.PreviousPayableSalary </td>
+                    <td>@item.payRund.TotalPayableThisMonthAndPrevious </td>
+                    <td>@item.payRund.SalaryCheck </td>
+                    <td>@item.payRund.SalaryHeldThisMonth </td>
+                    <td>@item.payRund.FinalPaymentForThisMonth </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+else
+{
+   
+    <input type="button" style="text-align:center" id="calculatePayRoll" value="Calculate Payroll" class="btn btn-primary btn-lg" />
+
+}
+
+
+<script>
+    var applicationName = getApplicationName();
+
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    $('#calculatePayRoll').click(function () {
+
+        var date = $('#DatePayRun').val();
+        var PayrunId = $('#PayrunId').val();
+
+        $.ajax({
+            url: applicationName + "HumanResource/PayRunM/CalculatePayRoll",
+            async: false,
+            type: "POST",
+            data: { date: date, payRunMId: PayrunId },
+            success: function (data) {
+                if (data.result.isError != true) {
+                    showMsg('Saved !', 'Record has been saved !', 'success');
+                    setTimeout(function () {
+                        var id = data.result.scalerVal;
+                        window.location = applicationName + 'HumanResource/PayRunM/edit?id=' + id;
+                    }, 500);
+                }
+                else if (data.result.msg == 'AttendanceFill') {
+                
+                    showMsg('Save Failed !', "<a href='"+applicationName+"HumanResource/EmpAttendances/EmpAttendanceReport' type='button' class='btn  btn-sm btn-primary'><i class='fas fa-search fa-fw'></i> View Report </a>", 'error');
+                }
+                else {
+                    showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                }
+
+            }
+        });
+    });
+ 
+</script>

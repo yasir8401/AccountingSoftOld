@@ -1,0 +1,199 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Main.Resources
+@inject LocService SharedLocalizer
+
+@{
+    AppConfig AppConfigIdDetail = Model.AppConfigIdDetail;
+    List<Branch> Branch = Model.BranchList;
+    List<Company> Companies = Model.companyList;
+    bool isEdit = (AppConfigIdDetail != null);
+}
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="ConfigId" name="ConfigId" class="form-control" value="@(AppConfigIdDetail != null ? AppConfigIdDetail.ConfigId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("AppConfig Info")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/admin/AppConfig" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Config Name")</label>
+                        <input type="text" id="ConfigName" name="ConfigName" class="form-control" value="@(AppConfigIdDetail!=null?AppConfigIdDetail.ConfigName: null)" required>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Config Val")</label>
+                        <input type="text" id="ConfigVal" name="ConfigVal" class="form-control" value="@(AppConfigIdDetail!=null?AppConfigIdDetail.ConfigVal: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Config Type")</label>
+                        <input type="text" id="ConfigType" name="ConfigType" class="form-control" value="@(AppConfigIdDetail!=null?AppConfigIdDetail.ConfigType: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Is Active")</label>
+                            <select id="IsActive" name="IsActive" class="form-control">
+
+                                <option value="True" @(AppConfigIdDetail != null && AppConfigIdDetail.IsActive != null ? (Convert.ToBoolean(AppConfigIdDetail.IsActive) ? "selected" : "") : "")>Yes</option>
+                                <option value="False" @(AppConfigIdDetail != null && AppConfigIdDetail.IsActive != null ? (Convert.ToBoolean(AppConfigIdDetail.IsActive) ? "" : "selected") : "")>No</option>
+                            </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Description")</label>
+                        <textarea id="Description" name="Description" rows="5" class="form-control">@(AppConfigIdDetail!=null?AppConfigIdDetail.Description : "")</textarea>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in Companies)
+                            {
+                                <option value="@item.CompanyId" @(AppConfigIdDetail != null && AppConfigIdDetail.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control" required>
+                            <option></option>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in Branch)
+                                {
+                                    <option value="@item.BranchId" @(AppConfigIdDetail != null && AppConfigIdDetail.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+
+        });
+        $('#CompanyId').change(function () {
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName() + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() + "admin/AppConfig/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'admin/AppConfig';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

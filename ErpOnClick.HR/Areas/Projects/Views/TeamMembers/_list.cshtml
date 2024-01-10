@@ -1,0 +1,130 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+@{
+    List<TeamMembers> TeamMemberList = Model.TeamMemberList;
+
+}
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+
+                <th width="10px"> @SharedLocalizer.GetLocalizedHtmlString("Id")    </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Project")   </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Task")   </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Full Name")  </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Start Date")  </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("End Date")  </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Task Progress(%)") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Status") </th>
+
+
+
+                <th width="30px"></th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th width="10px"> @SharedLocalizer.GetLocalizedHtmlString("Id")    </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Project")   </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Task")   </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Full Name")  </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Start Date")  </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("End Date")  </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Task Progress(%)") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Status") </th>
+
+
+
+
+                <th></th>
+                <th></th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in TeamMemberList)
+            {
+
+                <tr class="text-center">
+
+                    <td align="left"> @item.TeamMemberId </td>
+                    <td align="left"> @(item.Project != null ? item.Project.ProjectTitle : "") </td>
+                    <td align="left"> @(item.Task != null ? item.Task.TaskTitle : "") </td>
+                    <td align="left">  @(item.Emp != null ? item.Emp.FirstNameEn + " " + item.Emp.FatherNameEn + " " + item.Emp.GrandNameEn + " " + item.Emp.FamilyNameEn : "") </td>
+                    <td>@(item.StartDate != null ? Convert.ToDateTime(item.StartDate).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@(item.EndDate != null ? Convert.ToDateTime(item.EndDate).ToString("dd-MMM-yyyy") : "")</td>
+                    <td align="left"> @item.ProgressPercent %</td>
+                    <td align="left">
+                        @{
+                            var status = (item.Status != null ? item.Status.LookupNameEn : "");
+
+                            if (status == "New")
+                            {
+                                <label class="badge badge-danger">New</label>
+                            }
+                            else if (status == "Pending")
+                            {
+                                <label class="badge badge-warning">Pending</label>
+                            }
+                            else
+                            {
+                                <label class="badge badge-success">Completed</label>
+                            }
+                        }
+                    </td>
+
+
+
+                    <td class="text-center padding-5">
+                        <a href="~/Projects/TeamMembers/edit/@item.TeamMemberId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td class="text-center padding-5">
+                        <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.TeamMemberId')"><i class="fa fa-times text-danger"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: getApplicationName() + "Projects/TeamMembers/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = getApplicationName() + 'Projects/TeamMembers';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

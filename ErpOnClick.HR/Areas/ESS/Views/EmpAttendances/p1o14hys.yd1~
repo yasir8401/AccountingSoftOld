@@ -1,0 +1,159 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.ErpMain.Areas.ESS.Models;
+@inject LocService SharedLocalizer
+
+
+
+@{
+
+    List<EmpAttendanceVM> empAttendanceList = Model.empAttendanceList;
+
+}
+
+
+<style>
+    thead th {
+        text-align: center !important;
+        font-size: 12px !important;
+        vertical-align: bottom;
+        white-space: nowrap;
+        background-color: #efefef;
+        color: #45547d;
+        padding: 10px 0px;
+    }
+
+    tbody td {
+        padding: 0px;
+    }
+
+        tbody td .form-control {
+            padding: 1px;
+            border: 0px !important;
+            margin: 0px;
+            font-size: 13px;
+            text-align: center;
+            background-color: transparent;
+        }
+</style>
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed" style="display:none;width:100%">
+        <thead class="text-sm">
+            <tr>
+                <th width="150px">@SharedLocalizer.GetLocalizedHtmlString("Date") </th>
+                <th hidden></th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Planned Time In") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Planned Time Out") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Actual Time In") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Actual Time Out") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Is-Present") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Paid-Leave") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Unpaid-Leave") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Is-Short-Leave") </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in empAttendanceList)
+            {
+
+                <tr class="text-center">
+                    @*<td><input type="text" id="EmpAttendanceId" value="@(item !=null ? item.EmpAttendanceId : 0)" readonly name="EmpAttendanceId" class="form-control" /> </td>*@
+                    <td><input disabled type="text" value="@(item.AttendanceDate!=null ?Convert.ToDateTime(item.AttendanceDate).ToString("dd-MMM-yyyy") : "")" name="AttendanceDate" id="AttendanceDate" class="form-control DatePicker" /></td>
+                    <td hidden><input type="text" value="@(item.CreatedDate!=null ?Convert.ToDateTime(item.CreatedDate).ToString("dd-MMM-yyyy") : "")" name="CreatedDate" id="CreatedDate" class="form-control DatePicker" /></td>
+                    <td>  <input disabled type="time" id="PlannedTimeIn" name="PlannedTimeIn" value="@(item != null && item.PlannedTimeIn !=null ? Convert.ToDateTime(item.PlannedTimeIn).ToString("HH:mm") : "")" class="form-control"> </td>
+                    <td>  <input disabled type="time" id="PlannedTimeOut" name="PlannedTimeOut" value="@(item != null && item.PlannedTimeOut !=null ? Convert.ToDateTime(item.PlannedTimeOut).ToString("HH:mm") : "")" class="form-control"> </td>
+                    <td>  <input disabled type="time" id="TimeIn" name="TimeIn" value="@(item != null && item.ActualTimeIn !=null ? Convert.ToDateTime(item.ActualTimeIn).ToString("HH:mm") : "")" class="form-control"> </td>
+                    <td>  <input disabled type="time" id="TimeOut" name="TimeOut" value="@(item != null && item.ActualTimeOut !=null ? Convert.ToDateTime(item.ActualTimeOut).ToString("HH:mm") : "")" class="form-control"> </td>
+                    <td>
+                        <input disabled id="IsPresent" type="radio" name="IsPaidLeave-@item.EmpId + @item.EmpAttendanceId" @(item.IsPresent != null && item.IsPresent == true ? "checked" : (item.IsPresent == false && item.IsPaidLeave == false && item.IsUnpaidLeave == false && item.IsShortLeave == false ? "checked" : "")) value="IsPresent" />
+
+                    </td>
+                    <td>
+                        <input disabled id="IsPaidLeave" type="radio" name="IsPaidLeave-@item.EmpId + @item.EmpAttendanceId" @(item.IsPaidLeave != null && item.IsPaidLeave == true ? "checked" : "") value="IsPaidLeave" />
+
+                    </td>
+                    <td>
+                        <input disabled id="IsUnpaidLeave" type="radio" name="IsPaidLeave-@item.EmpId + @item.EmpAttendanceId" @(item.IsUnpaidLeave != null && item.IsUnpaidLeave == true ? "checked" : "") value="IsUnpaidLeave" />
+
+                    </td>
+                    <td>
+                        <input disabled id="IsShortLeave" type="radio" name="IsPaidLeave-@item.EmpId + @item.EmpAttendanceId" @(item.IsShortLeave != null && item.IsShortLeave == true ? "checked" : "") value="IsShortLeave" />
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot style="display: table-row-group; background-color: #efefef;">
+            <tr class="text-center">
+                <th colspan="5" style="text-align:right">Total:  </th>
+                <th>@empAttendanceList.Where(x => x.IsPresent == true || (x.IsPaidLeave == false && x.IsUnpaidLeave == false && x.IsShortLeave == false)).Count(x) </th>
+                <th>@empAttendanceList.Where(x => x.IsPaidLeave == true).Sum(x => x.IsPaidLeave == true ? 1 : 0) </th>
+                <th>@empAttendanceList.Where(x => x.IsUnpaidLeave == true).Sum(x => x.IsUnpaidLeave == true ? 1 : 0) </th>
+                <th>@empAttendanceList.Where(x => x.IsShortLeave == true).Sum(x => x.IsShortLeave == true ? 1 : 0) </th>
+
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+
+
+<script>
+    $(function () {
+        _initDatatableWithFooter('#dtList');
+        //initDatePicker();
+
+        $('#dtList').show();
+
+
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName + "ESS/emp/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName + 'ESS/emp';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+    function changeVal(el, empId) {
+
+        var id = el.id;
+        var val = $("#" + id).val();
+
+        if (val == "True") {
+
+            $("#IsPaidLeave-" + empId).prop('disabled', 'disabled');
+            $("#IsUnpaidLeave-" + empId).prop('disabled', 'disabled');
+            $("#IsShortLeave-" + empId).prop('disabled', 'disabled');
+        }
+        else {
+
+            $("#IsPaidLeave-" + empId).prop('disabled', false);
+            $("#IsUnpaidLeave-" + empId).prop('disabled', false);
+            $("#IsShortLeave-" + empId).prop('disabled', false);
+        }
+
+    };
+</script>

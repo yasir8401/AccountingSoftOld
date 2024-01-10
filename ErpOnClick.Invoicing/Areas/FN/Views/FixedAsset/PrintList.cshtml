@@ -1,0 +1,113 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Layout = "_LayoutReport";
+    List<FixedAsset> FixedAsset = Model.FixedAssetIdList;
+    Company CompanyDetail = Model.CompanyDetail;
+
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        FIXED ASSET
+                    </h2>
+                    <br>
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td><i class="fa fa-filter"></i>Purchase Date From </td>
+                                <td><i class="fa fa-filter"></i>Purchase Date To </td>
+                                <td><i class="fa fa-filter"></i>Asset </td>
+                                <td><i class="fa fa-filter"></i>Warranty Date From </td>
+                                <td><i class="fa fa-filter"></i>Warranty Date To </td>
+                            </tr>
+
+                            <tr class="ItemColor text-center">
+
+                                <td nowrap="">
+                                    @Model.PurchaseDateFrom
+                                </td>
+                                <td>
+                                    @Model.PurchaseDateTo
+
+                                </td>
+                                <td>
+                                    @Model.AssetType
+
+                                </td>
+                                <td>
+                                    @Model.WarrantyDateFrom
+
+                                </td>
+                                <td>
+                                    @Model.WarrantyDateTo
+
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            @*<tr class="Grid_HeaderStyle Grid_HeaderStyle_Arabic">
+                    <th style="width:20px">الوصف</th>
+
+                    <th width="40px">ضريبة</th>
+                    <th width="40px">قيمة الضريبة</th>
+                    <th width="40px">ضريبة</th>
+                    <th width="40px">إجمالي</th>
+                    <th width="40px">إجمالي</th>
+                </tr>*@
+                            <tr class="Grid_HeaderStyle">
+                                <th style="width:20px">Fixed Asset Id</th>
+
+                                <th>Name</th>
+                                <th>Asset Type</th>
+                                <th>Purchase Date</th>
+                                <th>Warranty Date</th>
+                                <th>Purchase Price </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (FixedAsset.Count() > 0)
+                            {
+                @foreach (var item in FixedAsset)
+                {
+                <tr class="ItemColor text-center">
+                    <td class="text-center">@item.FixedAssetId</td>
+                    <td class="text-center">@item.FixedAssetEn</td>
+                    <td class="text-center">@item.AssetType.LookupNameEn</td>
+                    <td class="text-center">@Convert.ToDateTime(item.PurchaseDate).ToString("dd-MMM-yyyy")</td>
+
+                    <td class="text-center">@Convert.ToDateTime(item.WarrantyExpiry).ToString("dd-MMM-yyyy")</td>
+                    <td class="text-center">@item.PurchasePrice</td>
+                </tr>} }
+                            else
+                            {
+                <tr class="ItemColor text-center">
+                    <td colspan="6" class="text-center">Sorry! No Data Found.</td>
+                </tr>}
+                        </tbody>
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

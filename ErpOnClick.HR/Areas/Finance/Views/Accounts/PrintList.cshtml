@@ -1,0 +1,113 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Layout = "_LayoutReport";
+    List<Accounts> AccountIdList = Model.AccountIdList;
+    Company CompanyDetail = Model.CompanyDetail;
+
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        ACCOUNTS
+                    </h2>
+                    <br>
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="50%"><i class="fa fa-filter"></i>Type </td>
+                                <td width="50%"><i class="fa fa-filter"></i>Group </td>
+                            </tr>
+
+                            <tr class="ItemColor text-center">
+
+                                <td width="50%" nowrap="">
+                                    @Model.Type
+                                </td>
+                                <td width="50%" nowrap="">
+                                    @Model.Group
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            @*<tr class="Grid_HeaderStyle Grid_HeaderStyle_Arabic">
+                                    <th style="width:20px">الوصف</th>
+
+                                    <th width="40px">ضريبة</th>
+                                    <th width="40px">قيمة الضريبة</th>
+                                    <th width="40px">ضريبة</th>
+                                    <th width="40px">إجمالي</th>
+                                    <th width="40px">إجمالي</th>
+                                </tr>*@
+                            <tr class="Grid_HeaderStyle">
+                                <th style="width:20px">Account Id</th>
+
+                                <th>Name EN</th>
+                                <th>Name AR</th>
+                                <th>Code</th>
+                                <th>Type </th>
+                                <th>Group </th>
+                                <th>Is Transactionable </th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (AccountIdList.Count() > 0)
+                            {
+                                foreach (var item in AccountIdList)
+                                {
+                                    <tr class="ItemColor text-center">
+                                        <td class="text-center">@(item.AccountId != 0 ? item.AccountId : 0)</td>
+                                        <td class="text-center">@(item.AccountNameEn != null ? item.AccountNameEn :  "-")</td>
+                                        <td class="text-center">@(item.AccountNameAr != null ? item.AccountNameAr : "-")</td>
+                                        <td class="text-center">@(item.AccountCode != null ? item.AccountCode : "-")</td>
+                                        <td class="text-center">@(item.AccountType != null && item.AccountType.AccountTypeNameEn != null ? item.AccountType.AccountTypeNameEn : "-")</td>
+                                        <td class="text-center">@(item.AccountGroup != null && item.AccountGroup.AccountGroupNameEn != null ? item.AccountGroup.AccountGroupNameEn : "-")</td>
+                                        <td class="text-center">
+                                            @{
+                                                if (item.IsTransactionable == true)
+                                                {
+                                                    <i class="fa fa-check text-color-green"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class="fa fa-times text-color-red"></i>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr class="ItemColor text-center">
+                                    <td colspan="7" class="text-center">Sorry! No Data Found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

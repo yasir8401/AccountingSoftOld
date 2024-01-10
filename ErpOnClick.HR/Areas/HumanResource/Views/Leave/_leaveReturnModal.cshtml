@@ -1,0 +1,30 @@
+﻿@using ErpOnClick.DAL.Utilities
+
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment _HostEnvironment
+@{
+    var filePath = NativePaths.GetFilePath(_env);
+    var doc = "charts_of_accounts_xc.xlsx";
+    var wwwRootPath = _HostEnvironment.WebRootPath;
+
+}
+
+<div class="modal fade" id="leaveReturnModal" tabindex="-1" role="dialog" aria-labelledby="leaveReturnModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title pull-left" id="leaveReturnModalLabel">Return From Leaves</h5>
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="modal-body" id="leaveReturnModalBody">
+                
+
+            </div>
+        </div>
+    </div>
+</div>
+

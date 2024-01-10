@@ -1,0 +1,339 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.ErpMain.ViewModel
+@inject LocService SharedLocalizer
+@{
+    List<Notes> Notes = Model.Notes;
+    var lastnode = 0;
+    var childnode = 0;
+    var node = 0;
+}
+<div class="loading col-md-12 " style="text-align:center;"><img style="width: 600px" src="~/adminlte/dist/img/loadingpleasewait.gif" /></div>
+
+<div class="card card-default card-outline" id="div" style="display:none;">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Notes")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+
+            <!--<a href="javascript:void(0)" id="importdata" onclick="showEditModal()" type="button" class="btn btn-sm btn-primary">
+                <i class="fas fa-edit"></i> @SharedLocalizer.GetLocalizedHtmlString("Edit Note")
+            </a>-->
+            <a href="javascript:void(0)" id="importdata" onclick="showAddModal()" type="button" class="btn btn-sm btn-light">
+                <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add Note")
+            </a>
+        </div>
+        <!-- /. tools -->
+    </div>
+    <div class="card card-default pb-0 pt-2 mb-0">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        @foreach (var head in Notes.Where(c => c.ParentNote == null))
+                        {
+                            node = node + 1;
+                            <div class="col-md-11 float-left">
+                                <label class="font-weight-bolder">
+                                    @node .  @head.NoteTitle
+                                </label>
+                                <p class="pl-4">
+                                    @head.NoteDescription
+                                </p>
+                            </div>
+                            <div class="col-md-1 float-right text-right">
+                                <span class="text-right">
+                                    <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" onclick="edit('@head.NoteId')" class="btn btn-default btn-sm"><i class="fa fa-edit text-dark"></i></a>
+                                </span>
+                            </div>
+                            <div class="pl-2">
+                                @foreach (var child in Notes.Where(c => c.ParentNoteId == head.NoteId))
+                                {
+                                    childnode = childnode + 1;
+                                    <div class="col-md-11 float-left">
+                                        <label class="font-weight-bolder">
+                                            @node.@childnode .  @child.NoteTitle
+                                        </label>
+                                        <p class="pl-4">
+                                            @child.NoteDescription
+                                        </p>
+                                    </div>
+                                    <div class="col-md-1 float-right text-right">
+                                        <span class="text-right">
+                                            <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" onclick="edit('@child.NoteId')" class="btn btn-default btn-sm"><i class="fa fa-edit text-dark"></i></a>
+                                        </span>
+                                    </div>
+                                    <div class="pl-4">
+                                        @foreach (var lastchild in Notes.Where(c => c.ParentNoteId == child.NoteId))
+                                        {
+                                            lastnode = lastnode + 1;
+                                            <div class="col-md-11 float-left">
+                                                <label class="font-weight-bolder">
+                                                    @node.@childnode.@lastnode .  @lastchild.NoteTitle
+                                                </label>
+                                                <p class="pl-4">
+                                                    @lastchild.NoteDescription
+                                                </p>
+                                            </div>
+                                            <div class="col-md-1 float-right text-right">
+                                                <span class="text-right">
+                                                    <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" onclick="edit('@lastchild.NoteId')" class="btn btn-default btn-sm"><i class="fa fa-edit text-dark"></i></a>
+                                                </span>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Html.Partial("/areas/Finance/Views/Notes/_addNote.cshtml")
+@Html.Partial("/areas/Finance/Views/Notes/_editNote.cshtml")
+@section scripts{
+
+    <script>
+        $(function () {
+            $(".loading").fadeOut(1500, function () {
+                $("#div").fadeIn(500);
+            });
+
+            $('#Setupli').addClass("menu-open");
+            $('#Accli').removeClass("menu-open");
+            $('#Reportsli').removeClass("menu-open");
+            $('#Statementsli').removeClass("menu-open");
+            $('#AccPli').removeClass("menu-open");
+            $('#AccRli').removeClass("menu-open");
+        });
+
+
+        function showAddModal() {
+            getPN();
+            $('#_addNote').modal("show");
+        }
+        function showEditModal() {
+            getN();
+            $('#_editNote').modal("show");
+        }
+
+        function getPN() {
+            $.ajax({
+                url: getApplicationName() + "Finance/Notes/GetParentNotes",
+                type: "POST",
+                success: function (data) {
+                    console.log(data);
+                    if (data.result.length > 0) {
+                        var maxhead = 0;
+                        var toprow = "<option value='' selected disabled></option>";
+                        var rows = toprow + "";
+                        $.each(data.result, function (key, value) {
+
+                            if (value.parentNoteId == null) {
+                                rows += "<option value=" + value.noteId + ">" + value.noteTitle + "</option>";
+                                $.each(data.result, function (subkey, subvalue) {
+                                    if (subvalue.parentNoteId != null && subvalue.parentNoteId == value.noteId) {
+                                        rows += "<option value=" + subvalue.noteId + ">  " + subvalue.noteTitle + "</option>";
+                                        $.each(data.result, function (subsubkey, subsubvalue) {
+
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                        $('#NotesParents').html(rows);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        function getN() {
+            $.ajax({
+                url: getApplicationName() + "Finance/Notes/GetParentNotes",
+                type: "POST",
+                success: function (data) {
+                    debugger
+                    console.log(data);
+                    if (data.result.length > 0) {
+                        var maxhead = 0;
+                        var toprow = "<option value='' selected disabled></option>";
+                        var rows = toprow + "";
+                        $.each(data.result, function (key, value) {
+
+                            if (value.parentNoteId == null) {
+                                rows += "<option value=" + value.noteId + ">" + value.noteTitle + "</option>";
+                                $.each(data.result, function (subkey, subvalue) {
+                                    if (subvalue.parentNoteId != null && subvalue.parentNoteId == value.noteId) {
+                                        rows += "<option value=" + subvalue.noteId + ">  " + subvalue.noteTitle + "</option>";
+                                        $.each(data.result, function (subsubkey, subsubvalue) {
+                                            if (subsubvalue.parentNoteId != null && subsubvalue.parentNoteId == subvalue.noteId) {
+                                                rows += "<option value=" + subsubvalue.noteId + ">    " + subsubvalue.noteTitle + "</option>";
+
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                        $('#Note').html(rows);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    debugger
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        $('#Note').change(function (e) {
+            var noteid = $('#Note').val();
+            $.ajax({
+                url: getApplicationName() + "Finance/Notes/GetNoteDetails",
+                type: "POST",
+                data: {
+                    noteid: noteid
+                },
+                success: function (data) {
+                    if (data.result != null) {
+                        $('#NoteId').val(data.result.noteId);
+                        $('#NoteTitle').val(data.result.noteTitle);
+                        getNotes(data.result.parentNoteId);
+                        $('#NoteDescription').val(data.result.noteDescription);
+                        $('#DetailsDiv').css("display", "block");
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        });
+
+        function getNotes(id) {
+            $.ajax({
+                url: getApplicationName() + "Finance/Notes/GetParentNotes",
+                type: "POST",
+                success: function (data) {
+
+                    if (data.result.length > 0) {
+                        var maxhead = 0;
+                        var toprow = "<option value='' selected disabled></option>";
+                        var rows = toprow + "";
+                        $.each(data.result, function (key, value) {
+                            if (value.parentNoteId == null) {
+                                rows += "<option value=" + value.noteId + " " + (value.noteId == id ? " selected" : " ") + " >" + value.noteTitle + "</option>";
+                                $.each(data.result, function (subkey, subvalue) {
+                                    if (subvalue.parentNoteId != null && subvalue.parentNoteId == value.noteId) {
+                                        rows += "<option value=" + subvalue.noteId + " " + (subvalue.noteId == id ? " selected" : " ") + " >--" + subvalue.noteTitle + "</option>";
+                                        $.each(data.result, function (subsubkey, subsubvalue) {
+
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                        $('#DetailsDiv #ParentNoteId').html(rows);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        $('#formAddNote').submit(function (e) {
+            e.preventDefault();
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#formAddNote').serialize();
+                    $.ajax({
+                        url: getApplicationName() + "Finance/Notes/AddNote",
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+
+                            if (data.result.isError == false) {
+                                setTimeout(function () {
+                                    showMsg('Saved !', 'Record has been saved !', 'success');
+                                    $('#_addNote').modal("hide");
+                                    location.reload();
+                                }, 1000);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
+                }
+            });
+        });
+
+        $('#formEditNote').submit(function (e) {
+            e.preventDefault();
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#formEditNote').serialize();
+                    $.ajax({
+                        url: getApplicationName() + "Finance/Notes/EditNote",
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+
+                            if (data.result.isError == false) {
+                                setTimeout(function () {
+                                    showMsg('Updated !', 'Record has been Updated !', 'success');
+                                    $('#_editNote').modal("hide");
+                                    location.reload();
+                                }, 1000);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
+                }
+            });
+        });
+
+        function edit(noteid) {
+            var parent = 0;
+            $.ajax({
+                url: getApplicationName() + "Finance/Notes/GetNoteDetails",
+                async: false,
+                type: "POST",
+                data: { noteid: noteid },
+                success: function (data) {
+                    console.log(data);
+                    if (data.result != null) {
+
+                        parent = data.result.parentNoteId;
+                        $('#_editNote #NoteId').val(data.result.noteId);
+                        $('#_editNote #NoteTitle').val(data.result.noteTitle);
+                        $('#_editNote #NoteDescription').text(data.result.noteDescription);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+            getNotes(parent);
+            $('#_editNote').modal("show");
+        }
+    </script>
+}

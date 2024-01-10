@@ -1,0 +1,67 @@
+﻿@using ErpOnClick.ErpMain.Resources
+
+@inject LocService SharedLocalizer
+
+<div class="modal fade" id="_addNote" tabindex="-1" role="dialog" aria-labelledby="_addNoteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form id="formAddNote" role="form">
+
+                <div class="modal-header " style="background-color:#dbefef">
+                    <h2 class="card-title">
+                        @SharedLocalizer.GetLocalizedHtmlString("Notes Form")
+                    </h2>
+                    <!-- tools box -->
+                    <div class="card-tools">
+                        <button type="submit" id="formsubmit" class="btn  btn-sm btn-primary pull-right">
+                            <i class="fas fa-save fa-fw"></i>  @SharedLocalizer.GetLocalizedHtmlString("Save")
+                        </button>
+                        <button type="button" class="btn  btn-sm btn-default pull-right" data-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                        </button>
+                        <div class="clearfix"></div>
+
+                    </div>
+                </div>
+
+                <div class="modal-body" id="formAttachmentdiv">
+                    <div class="col-md-12">
+                        <div class="card card-default card-outline">
+
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Title")</label>
+                                            <input type="text" id="" name="NoteTitle" class="form-control" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Parent Note")</label>
+                                            <select id="NotesParents" name="ParentNoteId" class="form-control">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @*<div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>@SharedLocalizer.GetLocalizedHtmlString("Code")</label>
+                                                <input type="number" id="NoteCode" name="NoteCode" class="form-control" required>
+                                            </div>
+                                        </div>*@
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label>@SharedLocalizer.GetLocalizedHtmlString("Description")</label>
+                                            <textarea id="" name="NoteDescription" class="form-control " style="border:none" placeholder="Enter Description here..." required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

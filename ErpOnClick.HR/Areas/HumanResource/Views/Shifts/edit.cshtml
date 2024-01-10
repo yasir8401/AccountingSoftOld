@@ -1,0 +1,225 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+
+
+    Shifts ShiftsDetails = Model.ShiftsDetails;
+    bool isEdit = (ShiftsDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="ShiftId" name="ShiftId" class="form-control" value="@(ShiftsDetails != null ? ShiftsDetails.ShiftId : 0)" @(isEdit ? "readonly" : "") min="4" maxlength="4">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(ShiftsDetails != null ? ShiftsDetails.CompanyId : 0)" >
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(ShiftsDetails != null ? ShiftsDetails.BranchId : 0)" >
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Shift Request")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/HumanResource/Shifts" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Shift Name")</label>
+                        <input type="text" id="ShiftNameEn" required name="ShiftNameEn" class="form-control " value="@(ShiftsDetails != null && ShiftsDetails.ShiftNameEn !=null ?ShiftsDetails.ShiftNameEn : "")">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Shift Name (Arabic)")</label>
+                        <input type="text" id="ShiftNameAr" name="ShiftNameAr" class="form-control " value="@(ShiftsDetails != null && ShiftsDetails.ShiftNameAr !=null ?ShiftsDetails.ShiftNameAr : "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Location")</label>
+                        <input type="text" id="Location" name="Location" class="form-control " value="@(ShiftsDetails != null && ShiftsDetails.Location !=null ?ShiftsDetails.Location : "")">
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("From Time")</label>
+                        <input type="time" id="FromTime" required name="FromTime" value="@(ShiftsDetails != null && ShiftsDetails.FromTime !=null  ? Convert.ToDateTime(ShiftsDetails.FromTime).ToString("HH:mm") : "")" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("To Time")</label>
+                        <input type="time" id="ToTime" required name="ToTime" value="@(ShiftsDetails != null && ShiftsDetails.ToTime !=null  ? Convert.ToDateTime(ShiftsDetails.ToTime).ToString("HH:mm") : "")" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Late Deduction Start From")</label>
+                        <input type="time" id="LateDeductionStartFrom" name="LateDeductionStartFrom" value="@(ShiftsDetails != null && ShiftsDetails.LateDeductionStartFrom !=null  ? ShiftsDetails.LateDeductionStartFrom : TimeSpan.Zero)" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Mark Absent After")</label>
+                        <input type="time" id="MarkAbsentAfter" name="MarkAbsentAfter" value="@(ShiftsDetails != null && ShiftsDetails.MarkAbsentAfter !=null  ? ShiftsDetails.MarkAbsentAfter : TimeSpan.Zero)" class="form-control">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Deduction Per Minute")</label>
+                        <input type="number" id="DeductionPerMinute" step="any" name="DeductionPerMinute" class="form-control" value="@(ShiftsDetails!=null?ShiftsDetails.DeductionPerMinute: 0)">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card card-default card-outline col-lg-8" style="display:none">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option selected></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(ShiftsDetails != null && ShiftsDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option selected></option>
+                            @foreach (var item in branchList)
+                            {
+                                <option value="@item.BranchId" @(ShiftsDetails != null && ShiftsDetails.BranchId == item.BranchId ? "selected" : "")>
+                                    @item.BranchNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+
+
+        });
+        var applicationName = getApplicationName();
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+                    $.ajax({
+                        url: applicationName + "HumanResource/Shifts/" + actionType,
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'HumanResource/Shifts';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

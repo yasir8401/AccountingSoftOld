@@ -1,0 +1,68 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.ViewModel
+@{
+    Layout = "_LayoutReport";
+    List<EmpLeavesReportModel> listReportEmpLeaves = Model.listReportEmpLeaves;
+    Company CompanyDetail = Model.CompanyDetail;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        Leave Summary Report
+                    </h2>
+                    <br>
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            <tr class="Grid_HeaderStyle">
+                                <th align="left" width="20px"> Id</th>
+                                <th align="left" width="320px"> Employee</th>
+                                <th align="right"> Annual </th>
+                                <th align="right"> Sick </th>
+                                <th align="right"> Special </th>
+                                <th align="right"> Emergency </th>
+                                <th align="right"> Business </th>
+                                <th align="right"> Used </th>
+                                <th align="right"> Total </th>
+                                <th align="right"> Balance</th>
+
+                            </tr>
+                        </thead>
+                        @{
+                                <tbody>
+
+                                    @foreach (var item in listReportEmpLeaves)
+                                    {
+
+                                    <tr class="ItemColor text-center">
+                                        <td align="left" width="20px"> @item.EmployeeId </td>
+                                        <td align="left" width="320px"> @item.Employee </td>
+                                        <td align="right"> @item.Annual</td>
+                                        <td align="right"> @item.Sick</td>
+                                        <td align="right"> @item.Special</td>
+                                        <td align="right"> @item.Emergency</td>
+                                        <td align="right"> @item.Business</td>
+                                        <td align="right"> @item.Used </td>
+                                        <td align="right"> @item.Total</td>
+                                        <td align="right"> @item.Balance</td>
+                                    </tr>
+                                    }
+
+                                </tbody>
+                                
+                        }
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

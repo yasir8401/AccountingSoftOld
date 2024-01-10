@@ -1,0 +1,187 @@
+﻿@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
+        <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-users"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("HR")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/HumanResource/emp" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Employees")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/document" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Documents")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/Shifts" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Shifts")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/JobOffers" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Job Proposal")</p></a></li>
+            </ul>
+        </li>
+        <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-list-alt"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Payroll")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/HumanResource/EmpAttendances" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Attendance")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/OverTimeRequest" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("OverTime Details")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/Leave" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Leaves Details")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/Loans" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Employee Loans")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/PerformanceBaseSalary" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Additional Salary")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/SalaryPayablesPerMonth" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Employee Deductions")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/PayRunM" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Pay Run")</p></a></li>
+            </ul>
+        </li>
+        @*<li class="nav-item has-treeview menu-open">
+                <a href="#" class="nav-link ">
+                    <i class="nav-icon fas fa-list-alt"></i>
+                    <p>
+                        @SharedLocalizer.GetLocalizedHtmlString("Attendance")
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item"><a href="~/HumanResource/EmpAttendances" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Attendances")</p></a></li>
+                    <li class="nav-item"><a href="~/HumanResource/EmpAttendances/EmpAttendanceReport" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Attendances Report")</p></a></li>
+
+                </ul>
+            </li>*@
+        @*<li class="nav-item has-treeview menu-open">
+                <a href="#" class="nav-link ">
+                    <i class="nav-icon fas fa-file-invoice"></i>
+                    <p>
+                        @SharedLocalizer.GetLocalizedHtmlString("Pay Run")
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item"><a href="~/HumanResource/PerformanceBaseSalary" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Performance Based Salary")</p></a></li>
+                    <li class="nav-item"><a href="~/HumanResource/SalaryPayablesPerMonth" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Employees Deduction")</p></a></li>
+                    <li class="nav-item"><a href="~/HumanResource/PayRunM" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Pay Run")</p></a></li>
+                </ul>
+            </li>*@
+        <li class="nav-item has-treeview ">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-sitemap"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Hierarchy")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/HumanResource/Hierarchy" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("HumanResource Structure")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/positions" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Positions")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/grades" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Grades")</p></a></li>
+            </ul>
+
+        </li>
+        @*<li class="nav-item has-treeview ">
+                <a href="#" class="nav-link ">
+                    <i class="nav-icon fas fa-check-double"></i>
+                    <p>
+                        @SharedLocalizer.GetLocalizedHtmlString("Overtime")
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+
+                <ul class="nav nav-treeview">
+                    <li class="nav-item"><a href="~/HumanResource/OverTimeRequest" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("OverTime History")</p></a></li>
+                    <li class="nav-item"><a href="~/HumanResource/OverTimeRequest/edit" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("New Request")</p></a></li>
+                </ul>
+
+            </li>*@
+        @*<li class="nav-item has-treeview ">
+                <a href="#" class="nav-link ">
+                    <i class="nav-icon fas fa-tasks"></i>
+                    <p>
+                        @SharedLocalizer.GetLocalizedHtmlString("Leaves")
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item"><a href="~/HumanResource/Leave/Edit" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("New Request")</p></a></li>
+                    <li class="nav-item"><a href="~/HumanResource/Leave" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Request History")</p></a></li>
+
+                    <li class="nav-item"><a href="~/HumanResource/LeavesReturn" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Return from Leaves")</p></a></li>
+
+                </ul>
+
+            </li>*@
+
+        @*<li class="nav-item has-treeview ">
+                <a href="#" class="nav-link ">
+                    <i class="nav-icon fas fa-cash-register"></i>
+                    <p>
+                        @SharedLocalizer.GetLocalizedHtmlString("Loans")
+                        <i class="right fas fa-angle-left"></i>
+                    </p>
+                </a>
+                <ul class="nav nav-treeview">
+                    <li class="nav-item"><a href="~/HumanResource/Loans/Edit" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("New Request")</p></a></li>
+                    <li class="nav-item"><a href="~/HumanResource/Loans" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Request History")</p></a></li>
+                </ul>
+            </li>*@
+        <li class="nav-item has-treeview ">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-cog"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Setup")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+            <ul class="nav nav-treeview ">
+                <li class="nav-item"><a href="~/HumanResource/overtimesettings" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("OverTime Profile")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/nationalholidays" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("National Holidays")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/specialoccasions" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Special Occasions")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/AbsentProfiles" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Absent Profiles")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/gosisettings" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Gosi Setting")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/HousingAllowances" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Housing Allowances")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/AirTicketProfiles" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Air Ticket Profile")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/PayGroups" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("PayGroup")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/Requests" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("General Requests")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/ExpClaims" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Expense Claims")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/EmpExperience" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Experience")</p></a></li>
+
+                <li class="nav-item"><a href="~/HumanResource/Course" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Course's")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/Achievement" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Achievement's")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/LeavesProfile" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Leave Profile")</p></a></li>
+
+            </ul>
+
+        </li>
+
+
+        <li class="nav-item has-treeview ">
+            <a href="#" class="nav-link ">
+                <i class="nav-icon fas fa-chart-bar"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Reports")
+                    <i class="right fas fa-angle-left"></i>
+                </p>
+            </a>
+
+            <ul class="nav nav-treeview">
+                <li class="nav-item"><a href="~/HumanResource/EmpDetailLeavesReport" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Leaves Summary Report")</p></a></li>
+                <li class="nav-item"><a href="~/HumanResource/EmpAttendances/EmpAttendanceReport" class="nav-link "><p>@SharedLocalizer.GetLocalizedHtmlString("Attendances Report")</p></a></li>
+
+            </ul>
+
+        </li>
+        <li class="nav-item has-treeview ">
+
+            <a href="~/home/Index" class="nav-link">
+                <i class="nav-icon fas fa-sign-out-alt"></i>
+                <p>
+                    @SharedLocalizer.GetLocalizedHtmlString("Return")
+
+                </p>
+            </a>
+
+
+        </li>
+    </ul>
+</nav>

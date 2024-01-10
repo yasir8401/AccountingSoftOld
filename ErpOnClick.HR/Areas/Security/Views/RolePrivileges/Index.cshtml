@@ -1,0 +1,88 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+    var RoleId = Model.RoleId;
+    Roles RoleDetails = Model.RoleDetails;
+
+}
+
+@section TabName{
+    Vacant jobs Setup
+}
+
+
+<form id="frmList">
+    <input type="hidden" id="RoleId" name="RoleId" class="form-control" value="@RoleId" />
+
+    <div class="card card-default card-outline">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="navigation()" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Role")</a>
+                </li>
+
+
+                <li class="nav-item">
+                    <a class="nav-link" id="tabRolePrivileges-tab" data-toggle="pill" onclick="navigationTwo()" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("Role Privilage")</a>
+                </li>
+
+            </ul>
+        </div>
+
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Role Privileges")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <a href="~/Security/RolePrivileges/edit/Role/@RoleId" type="button" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add New")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+
+
+
+        <div class="card-body">
+            <div id="divList"></div>
+
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+        $(function () {
+            $("#tabRolePrivileges-tab").addClass("nav-link active");
+            BindGrid();
+        });
+
+
+        function BindGrid() {
+
+
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() +'Security/RolePrivileges/_list',
+                data: $('#frmList').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+         function navigation() {
+
+             window.location = getApplicationName() +  'Security/Role/edit/@RoleId'
+    };
+          function navigationTwo() {
+
+                     window.location = getApplicationName() +  'Security/Roleprivileges/Role/@RoleDetails.RoleId'
+            };
+    </script>
+}

@@ -1,0 +1,212 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    AccountGroups AccountGroupDetail = Model.IdDetail;
+    List<Branch> BranchDetails = Model.branchList;
+    List<AccountGroups> AccountGroupsList = Model.AccountGroupsList;
+    bool isEdit = (AccountGroupDetail != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="AccountGroupId" name="AccountGroupId" class="form-control" value="@(AccountGroupDetail != null ? AccountGroupDetail.AccountGroupId : 0)" />
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(AccountGroupDetail != null ? AccountGroupDetail.CompanyId : 0)" />
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(AccountGroupDetail != null ? AccountGroupDetail.BranchId : 0)" />
+
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Account Group")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/Finance/AccountGroups" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+    </div>
+
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Account Group Info")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Group Name")</label>
+                        <input type="text" id="AccountGroupNameEn" name="AccountGroupNameEn" class="form-control" required value="@(AccountGroupDetail != null ? AccountGroupDetail.AccountGroupNameEn : "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Group Name (Arabic)")</label>
+                        <input type="text" id="AccountGroupNameAr" name="AccountGroupNameAr" class="form-control" value="@(AccountGroupDetail != null ? AccountGroupDetail.AccountGroupNameAr : "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Group Code")</label>
+                        <input type="number" id="AccountGroupCode" name="AccountGroupCode" class="form-control" value="@(AccountGroupDetail != null ? AccountGroupDetail.AccountGroupCode : "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Parent Account Group")</label>
+                        <select id="ParentAccountGroupId" name="ParentAccountGroupId" class="form-control">
+                            <option></option>
+                            @foreach (var item in AccountGroupsList)
+                            {
+                                if (AccountGroupDetail != null && item.AccountGroupId != AccountGroupDetail.AccountGroupId)
+                                {
+                                    <option value="@item.AccountGroupId" @(AccountGroupDetail != null && AccountGroupDetail.ParentAccountGroupId == item.AccountGroupId ? "selected" : "")> @item.AccountGroupNameEn</option>
+                                }
+                                else if (AccountGroupDetail == null)
+                                {
+                                    <option value="@item.AccountGroupId"> @item.AccountGroupNameEn</option>
+
+                                }
+                            }
+                        </select>
+                        @*<input type="number" id="ParentCategoryId" name="ParentCategoryId" class="form-control" value="@(ItemCategoryDetail!=null?ItemCategoryDetail.ParentCategoryId: 0)">*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8" style="display:none">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control" >
+                            <option></option>
+                            @foreach (var item in Model.CompanyDetail)
+                            {
+                                <option value="@item.CompanyId" @(AccountGroupDetail != null && AccountGroupDetail.CompanyId == item.CompanyId ? "selected" : "")> @item.CoNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control" >
+                            @if (isEdit)
+                            {
+                                @foreach (var item in BranchDetails)
+                                {
+                                    <option value="@item.BranchId" @(AccountGroupDetail != null && AccountGroupDetail.BranchId == item.BranchId ? "selected" : "")> @item.BranchNameEn</option>
+
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+            $('#Accli').addClass("menu-open");
+            $('#Reportsli').removeClass("menu-open");
+            $('#Statementsli').removeClass("menu-open");
+            $('#AccPli').removeClass("menu-open");
+            $('#AccRli').removeClass("menu-open");
+            $('#Setupli').removeClass("menu-open");
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() + 'Finance/AccountGroups/' + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'Finance/AccountGroups';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#CompanyId').change(function () {
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName() + 'Ajax/BranchCascading',
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+    </script>
+
+}

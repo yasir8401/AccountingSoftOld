@@ -1,0 +1,94 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<LeavesReturn> LeavesReturnList = Model.LeavesReturnList;
+
+}
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Id") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Employee") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Joining Date") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Joining Date Actual")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Reason") </th>
+                <th width="30px"></th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th>Id </th>
+                <th>Employee </th>
+                <th>Joining Date </th>
+                <th>Reason </th>
+                <th></th>
+                <th></th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in LeavesReturnList)
+            {
+
+                <tr class="text-center">
+                    <td>@item.RecId </td>
+                    <td>@item.Emp.FirstNameEn </td>
+                    <td>@Convert.ToDateTime(item.JoiningDate).ToString("dd-MM-yyyy")</td>
+                    <td>@Convert.ToDateTime(item.JoiningDateActual).ToString("dd-MM-yyyy")</td>
+                    <td>@item.Reason</td>
+
+                    <td class="text-center padding-5">
+                        <a href="~/HumanResource/LeavesReturn/edit/@item.RecId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td class="text-center padding-5">
+                        <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.RecId')"><i class="fa fa-times text-danger"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName + "HumanResource/LeavesReturn/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName + 'HumanResource/LeavesReturn';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

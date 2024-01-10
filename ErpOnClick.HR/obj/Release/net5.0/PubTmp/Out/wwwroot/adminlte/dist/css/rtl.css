@@ -1,0 +1,42 @@
+﻿body{
+    direction:rtl;
+    text-align:initial !important;
+}
+
+.layout-fixed .main-sidebar{
+    right:0 !important;
+}
+
+@media (min-width: 768px) {
+    body:not(.sidebar-mini-md) .content-wrapper, body:not(.sidebar-mini-md) .main-footer, body:not(.sidebar-mini-md) .main-header {
+        transition: margin-right .3s ease-in-out !important;
+        margin-right: 250px !important;
+        margin-left: initial !important;
+    }
+}  
+
+.nav-sidebar > .nav-item.menu-open > .nav-link, .nav .nav-treeview {
+    text-align: right !important;
+}
+
+.nav {
+    padding-right: 0px !important;
+}
+
+.nav-sidebar .nav-link > .right, .nav-sidebar .nav-link > p > .right {
+    left: 1rem !important;
+    right: initial !important;
+}
+
+.pull-right {
+    float: left !important;
+}
+
+.pull-left {
+    float: right !important;
+}
+
+.card-title {
+    float: initial;
+    
+}

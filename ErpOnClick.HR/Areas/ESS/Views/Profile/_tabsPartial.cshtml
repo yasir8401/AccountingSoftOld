@@ -1,0 +1,100 @@
+﻿@model ErpOnClick.DAL.Models.Emp
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+
+
+
+
+
+<li class="nav-item">
+    <a class="nav-link" id="tabEducation-tab" data-toggle="pill" onclick="goItem('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-book"></i> @SharedLocalizer.GetLocalizedHtmlString("Education")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabAddress-tab" data-toggle="pill" onclick="goItemTwo('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-address-book"></i> @SharedLocalizer.GetLocalizedHtmlString("Address")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabBanks-tab" data-toggle="pill" onclick="goItemThree('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-building"></i> @SharedLocalizer.GetLocalizedHtmlString("Banks")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabDependents-tab" data-toggle="pill" onclick="goItemFour('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-users"></i> @SharedLocalizer.GetLocalizedHtmlString("Dependents")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabMedicals-tab" data-toggle="pill" onclick="goItemFive('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-clinic-medical"></i> @SharedLocalizer.GetLocalizedHtmlString("Medicals")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabVehicles-tab" data-toggle="pill" onclick="goItemSix('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-car"></i> @SharedLocalizer.GetLocalizedHtmlString("Vehicles")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabEmpContract-tab" data-toggle="pill" onclick="goItemSeven('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-file-contract"></i> @SharedLocalizer.GetLocalizedHtmlString("Contracts")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabEmpShifts-tab" data-toggle="pill" onclick="goItemEight('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-book"></i> @SharedLocalizer.GetLocalizedHtmlString("Shifts")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabEmpExperience-tab" data-toggle="pill" onclick="goItemNine('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-clipboard-list"></i> @SharedLocalizer.GetLocalizedHtmlString("Previous Experience")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabGosiSettings-tab" data-toggle="pill" onclick="goItemTen('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-cog"></i> @SharedLocalizer.GetLocalizedHtmlString("GOSI Settings")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabEmpLoans-tab" data-toggle="pill" onclick="goItemEleven('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-coins"></i> @SharedLocalizer.GetLocalizedHtmlString("Loans")</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" id="tabEmpAchievements-tab" data-toggle="pill" onclick="goItemTwelve('@Model.EmpId')" href="javascript:void(0)"><i class="fa fa-medal"></i> @SharedLocalizer.GetLocalizedHtmlString("Achievements")</a>
+</li>
+
+
+
+<script>
+    var applicationName = getApplicationName();
+
+    function goItem() {
+
+        window.location = applicationName + 'ESS/empeducation/emp/@Model.EmpId'
+    };
+    function goItemTwo() {
+
+        window.location = applicationName + 'ESS/empaddresses/emp/@Model.EmpId'
+    };
+    function goItemThree() {
+
+        window.location = applicationName + 'ESS/empbanks/emp/@Model.EmpId'
+    };
+    function goItemFour() {
+
+        window.location = applicationName + 'ESS/empdependents/emp/@Model.EmpId'
+    };
+    function goItemFive() {
+
+        window.location = applicationName + 'ESS/empmedicals/emp/@Model.EmpId'
+    };
+    function goItemSix() {
+
+        window.location = applicationName + 'ESS/empvehicles/emp/@Model.EmpId'
+    };
+    function goItemSeven() {
+
+        window.location = applicationName + 'ESS/EmpContracts/emp/@Model.EmpId'
+    };
+    function goItemEight() {
+
+        window.location = applicationName + 'ESS/EmpShifts/emp/@Model.EmpId'
+    };
+    function goItemNine() {
+
+        window.location = applicationName + 'ESS/EmpPreviousExp/emp/@Model.EmpId'
+    };
+    function goItemTen() {
+
+             window.location = applicationName + 'ESS/EmpGosiSettings/emp/@Model.EmpId'
+    };
+    function goItemEleven() {
+
+        window.location = applicationName + 'ESS/EmpLoans/emp/@Model.EmpId'
+    };
+        function goItemTwelve() {
+
+        window.location = applicationName + 'HumanResource/EmpAchievement/emp/@Model.EmpId'
+    };
+</script>

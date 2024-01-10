@@ -1,0 +1,245 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Buildings BuildingDetail = Model.BuildingIdDetail;
+    List<Branch> BranchDetails = Model.BranchIdDetail;
+    List<Company> CompanyDetail = Model.companyList;
+    
+    IList<Lookups> Countrylist = Model.Countrylist;
+    IList<Lookups> CityList = Model.CityList;
+    bool isEdit = (BuildingDetail != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="BuildingId" name="BuildingId" class="form-control" value="@(BuildingDetail != null ? BuildingDetail.BuildingId : 0)" />
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(BuildingDetail != null ? BuildingDetail.CompanyId : 0)" />
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(BuildingDetail != null ? BuildingDetail.BranchId : 0)" />
+
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                Building
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> Save
+                </button>
+                <a href="~/Security/Buildings" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> Return
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                Building Info
+            </h2>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label> Name </label>
+                        <input type="text" id="BuildingNameEn" name="BuildingNameEn" class="form-control" required value="@(BuildingDetail!=null?BuildingDetail.BuildingNameEn: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label> Name (Arabic)</label>
+                        <input type="text" id="BuildingNameAr" name="BuildingNameAr" dir="rtl" class="form-control" value="@(BuildingDetail!=null?BuildingDetail.BuildingNameAr: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label> Code</label>
+                        <input type="text" id="BuildingCode" name="BuildingCode" class="form-control" value="@(BuildingDetail!=null?BuildingDetail.BuildingCode: "")">
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                Details
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Latitude</label>
+                        <input type="text" id="Latitude" name="Latitude" class="form-control" value="@(BuildingDetail!=null?BuildingDetail.Latitude: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Longitude</label>
+                        <input type="text" id="Longitude" name="Longitude" class="form-control" value="@(BuildingDetail!=null?BuildingDetail.Longitude: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea id="Address" name="Address" rows="5" class="form-control">@(BuildingDetail != null? BuildingDetail.Address : "")</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                More Info
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select id="CountryId" name="CountryId" class="form-control">
+                            <option></option>
+                            @foreach (var item in Countrylist)
+                            {
+                                <option value="@item.Code" @(BuildingDetail != null && BuildingDetail.CountryId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>City</label>
+                        <select id="CityId" name="CityId" class="form-control">
+                            <option></option>
+                            @foreach (var item in CityList)
+                            {
+                                <option value="@item.Code" @(BuildingDetail != null && BuildingDetail.CityId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6" style="display:none">
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in CompanyDetail)
+                            {
+                                <option value="@item.CompanyId" @(BuildingDetail != null && BuildingDetail.CompanyId == item.CompanyId ? "selected" : "")> @item.CoNameEn</option>
+
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6" style="display:none">
+                    <div class="form-group">
+                        <label>Branch</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option></option>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in BranchDetails)
+                                {
+                                    <option value="@item.BranchId" @(BuildingDetail != null && BuildingDetail.BranchId == item.BranchId ? "selected" : "")> @item.BranchNameEn</option>
+
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+
+        });
+        $('#CompanyId').change(function () {
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName() +"Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            debugger;
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() +"Security/Buildings/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() +'Security/Buildings';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

@@ -1,0 +1,263 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    IList<Emp> empList = Model.empList;
+    IList<Lookups> collegeList = Model.collegeList;
+    IList<Lookups> contractList = Model.contractList;
+    IList<Lookups> academicrankList = Model.academicrankList;
+    IList<Lookups> functionalstatusList = Model.functionalstatusList;
+    IList<Lookups> functionaltypeList = Model.functionaltypeList;
+    EmpExperience EmpExperienceDetails = Model.EmpExperienceDetails;
+    bool isEdit = (EmpExperienceDetails != null);
+}
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="EmpExperienceId" name="EmpExperienceId" class="form-control" value="@(EmpExperienceDetails != null ? EmpExperienceDetails.EmpExperienceId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    
+
+    <div class="card card-default card-outline col-lg-12">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/HumanResource/EmpExperience" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-4" >
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Employee")</label>
+                        <select id="EmpId" name="EmpId" class="form-control">
+
+                            @foreach (var item in empList)
+                            {
+                                <option value="@item.EmpId" @(EmpExperienceDetails != null && EmpExperienceDetails.EmpId == item.EmpId ? "selected" : "")>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn + " " + item.GrandNameEn + " " + item.FamilyNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Job Title")</label>
+                        <input type="text" id="JobTitle" name="JobTitle" class="form-control" value="@(EmpExperienceDetails!=null?EmpExperienceDetails.JobTitle: null)">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Educational Institute")</label>
+                        <input type="text" id="EducationalInstitue" name="EducationalInstitue" class="form-control" value="@(EmpExperienceDetails!=null?EmpExperienceDetails.EducationalInstitue: null)">
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Location") </label>
+                        <input type="text" id="WorkLocation" name="WorkLocation" class="form-control" value="@(EmpExperienceDetails!=null?EmpExperienceDetails.WorkLocation: null)" />
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("College")</label>
+                        <select id="College" name="College" class="form-control">
+                            <option></option>
+                            @foreach (var item in collegeList)
+                            {
+                                <option value="@item.Code" @(EmpExperienceDetails != null && EmpExperienceDetails.College == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn - @item.LookupNameAr
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Acadmic Section")</label>
+                        <input type="text" id="AcademicSection" name="AcademicSection" class="form-control" value="@(EmpExperienceDetails!=null?EmpExperienceDetails.AcademicSection: null)" />
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-12">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Rank Details")
+            </h2>
+
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Job Rank")</label>
+                        <input type="text" id="JobRank" name="JobRank" class="form-control" value="@(EmpExperienceDetails!=null?EmpExperienceDetails.JobRank: null)" />
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Date Of Rank")</label>
+                        <input type="text" id="DateOfRank" name="DateOfRank" class="form-control DatePicker" value="@(EmpExperienceDetails != null && EmpExperienceDetails.DateOfRank !=null ? Convert.ToDateTime(EmpExperienceDetails.DateOfRank).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Date Of Beginning Work")</label>
+                        <input type="text" id="DateOfBeginningWork" name="DateOfBeginningWork" class="form-control DatePicker" value="@(EmpExperienceDetails != null && EmpExperienceDetails.DateOfBeginningWork !=null ? Convert.ToDateTime(EmpExperienceDetails.DateOfBeginningWork).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Date Of End Work")</label>
+                        <input type="text" id="DateOfEndWork" name="DateOfEndWork" class="form-control DatePicker" value="@(EmpExperienceDetails != null && EmpExperienceDetails.DateOfEndWork !=null ? Convert.ToDateTime(EmpExperienceDetails.DateOfEndWork).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("General Specialization")</label>
+                        <input type="text" id="GeneralSpecialization" name="GeneralSpecialization" class="form-control" value="@(EmpExperienceDetails!=null?EmpExperienceDetails.GeneralSpecialization: null)" />
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Subspecialty")</label>
+                        <input type="text" id="Subspecialty" name="Subspecialty" class="form-control" value="@(EmpExperienceDetails!=null?EmpExperienceDetails.Subspecialty: null)" />
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Type Of Contract")</label>
+                        <select id="TypeOfContract" name="TypeOfContract" class="form-control">
+                            <option></option>
+                            @foreach (var item in contractList)
+                            {
+                                <option value="@item.Code" @(EmpExperienceDetails != null && EmpExperienceDetails.TypeOfContract == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Academic Rank")</label>
+                        <select id="AcademicRank" name="AcademicRank" class="form-control">
+                            <option></option>
+                            @foreach (var item in academicrankList)
+                            {
+                                <option value="@item.Code" @(EmpExperienceDetails != null && EmpExperienceDetails.AcademicRank == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Functional Status")</label>
+                        <select id="FunctionalStatus" name="FunctionalStatus" class="form-control">
+                            <option></option>
+                            @foreach (var item in functionalstatusList)
+                            {
+                                <option value="@item.Code" @(EmpExperienceDetails != null && EmpExperienceDetails.FunctionalStatus == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Functional Type")</label>
+                        <select id="FunctionalType" name="FunctionalType" class="form-control">
+                            <option></option>
+                            @foreach (var item in functionaltypeList)
+                            {
+                                <option value="@item.Code" @(EmpExperienceDetails != null && EmpExperienceDetails.FunctionalType == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+@section scripts{
+    <script>
+
+        $(function () {
+
+        });
+        var applicationName = getApplicationName();
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: applicationName + "HumanResource/EmpExperience/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName +'HumanResource/EmpExperience';
+
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+       
+    </script>
+
+}

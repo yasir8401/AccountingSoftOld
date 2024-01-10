@@ -1,0 +1,115 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Layout = "_LayoutReport";
+    List<Customers> Customers = Model.CustomerIdList;
+    Company CompanyDetail = Model.CompanyDetail;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        CUSTOMERS
+                    </h2>
+                    <br>
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="50%"><i class="fa fa-filter"></i>Account </td>
+                                <td width="50%"><i class="fa fa-filter"></i>Status </td>
+                            </tr>
+
+                            <tr class="ItemColor text-center">
+
+                                <td width="50%" nowrap="">
+                                    @Model.AccountId
+                                </td>
+                                <td width="50%">
+                                    @if (Model.Status == "015001")
+                                    {
+                                <i> Active</i> 
+                                }
+                                 else if (Model.Status == "015002")
+                                  {
+                                <i> InActive</i>
+                                }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            @*<tr class="Grid_HeaderStyle Grid_HeaderStyle_Arabic">
+                    <th style="width:20px">الوصف</th>
+
+                    <th width="60px">مبلغ الفاتورة</th>
+                    <th width="40px">ضريبة</th>
+                    <th width="40px">قيمة الضريبة</th>
+                    <th width="40px">إجمالي</th>
+                    <th width="40px">إجمالي</th>
+                    <th width="40px">إجمالي</th>
+                </tr>*@
+                            <tr class="Grid_HeaderStyle">
+                                <th style="width:20px">Customer Id</th>
+
+                                <th>Name EN</th>
+                                <th>Name AR</th>
+                                <th>Account</th>
+                                <th>Mobile #</th>
+                                <th>Email</th>
+                                <th>Active Status</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Customers.Count() > 0)
+                            {
+                                foreach (var item in Customers)
+                                {
+                <tr class="ItemColor text-center">
+                    <td class="text-center">@item.CustomerId</td>
+                    <td class="text-center">@item.CustomerNameEn</td>
+                    <td class="text-center">@item.CustomerNameAr</td>
+
+                    <td class="text-center">@item.Account.AccountNameEn</td>
+                    <td class="text-center">@item.MobileNo</td>
+                    <td class="text-center">@item.Email</td>
+                    <td class="text-center">
+                        @if (item.ActiveStatus == "015001")
+                        {
+                <i>Active</i> }
+                                    else if (item.ActiveStatus == "015002")
+                                    {
+                <i>InActive</i>}
+                    </td>
+                </tr> }
+                            }
+                            else
+                            {
+                <tr class="ItemColor text-center">
+                    <td colspan="7" class="text-center">Sorry! No Data Found.</td>
+                </tr>}
+                        </tbody>
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

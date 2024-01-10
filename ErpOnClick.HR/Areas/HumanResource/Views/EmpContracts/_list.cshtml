@@ -1,0 +1,114 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<EmpContracts> EmpContractsList = Model.EmpContractList;
+    var empId = Model.empId;
+}
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Id")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Division")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Department")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Section")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("SubSection")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Team")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Joining Date")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Expiry Date")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Contract Months")</th>
+
+
+                <th width="30px"></th>
+                <th width="30px"></th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+
+                <th>Id</th>
+                <th>Divison</th>
+                <th>Department</th>
+                <th>Section</th>
+                <th>SubSection</th>
+                <th>Team</th>
+                <th>Joining Date</th>
+                <th>Expiry Date</th>
+                <th>Contract Months</th>
+
+
+                <th></th>
+                <th></th>
+
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in EmpContractsList)
+            {
+
+                <tr class="text-center">
+                    <td width="10px">@item.EmpContractId</td>
+                    <td>@(item.Division != null ? item.Division.DivisionNameEn:"")</td>
+                    <td>@(item.Department != null ? item.Department.DepartmentNameEn : "")</td>
+                    <td>@(item.Section != null ? item.Section.SectionNameEn : "")</td>
+                    <td>@(item.SubSection != null ? item.SubSection.SubSectionNameEn : "")</td>
+                    <td>@(item.Team != null ? item.Team.TeamEn : "")</td>
+
+                    <td>@(item.JoiningDate != null ? Convert.ToDateTime(item.JoiningDate).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@(item.ExpiryDate != null ? Convert.ToDateTime(item.ExpiryDate).ToString("dd-MMM-yyyy") : "")</td>
+                    <td>@item.ContractPeriodMonths</td>
+
+                    <td class="text-center padding-5">
+                        <a href="~/HumanResource/EmpContracts/edit/emp/@item.EmpId/@item.EmpContractId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td class="text-center padding-5">
+                        <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.EmpContractId')"><i class="fa fa-times text-danger"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    var applicationName = getApplicationName();
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: applicationName + "HumanResource/EmpContracts/delete",
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = applicationName + 'HumanResource/EmpContracts/emp/@empId';
+
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,119 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<Accounts> AccountIdList = Model.AccountIdList;
+
+}
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed ">
+        <thead class="text-sm ">
+            <tr class="col-lg-12">
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Code")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Name Arabic")</th>
+
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Type") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Group") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Is Transactionable") </th>
+
+
+                <th style="width:25px">@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+                <th style="width:25px">@SharedLocalizer.GetLocalizedHtmlString("Delete")</th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th>Code</th>
+
+                <th>Name EN</th>
+                <th>Name AR</th>
+                <th>Default Type </th>
+                <th>Group </th>
+                <th>Is Transactionable </th>
+
+
+                <td></td>
+                <td></td>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in AccountIdList)
+            {
+
+                <tr class="text-center">
+                    <td>@(item.AccountCode != null ? item.AccountCode : "-")</td>
+
+                    <td class="text-left">@(item.AccountNameEn != null ? item.AccountNameEn :  "-")</td>
+                    <td class="text-right">@(item.AccountNameAr != null ? item.AccountNameAr : "-")</td>
+                    @*<td>@(item.AccountType != null ?  item.AccountType.AccountTypeNameEn : "-")</td>*@
+                    <td>@(item.DefaultType != null ? item.DefaultType : "-")</td>
+                    <td>@(item.AccountGroup != null ?  item.AccountGroup.AccountGroupNameEn : "-")</td>
+                    <td>
+                        @{
+                            if (item.IsTransactionable == true)
+                            {
+                                <i class="fa fa-check text-success"></i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-times text-danger"></i>
+                            }
+                        }
+                    </td>
+                    <td class="text-center">
+                        <a href="@Url.Content("~/")Finance/Accounts/edit/@item.AccountId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td class="text-center">
+                        <a href="javascript:void(0)" class="btn btn-default btn-block btn-xs " onclick="deleteItem('@item.AccountId')"><i class="fa fa-times text-danger"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+        $('#Accli').addClass("menu-open");
+        $('#Reportsli').removeClass("menu-open");
+        $('#Statementsli').removeClass("menu-open");
+        $('#AccPli').removeClass("menu-open");
+        $('#AccRli').removeClass("menu-open");
+        $('#Setupli').removeClass("menu-open");
+
+        _initDatatable('#dtList');
+    });
+
+    function deleteItem(id) {
+        confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+            if (result.value == true) {
+
+                $.ajax({
+                    url: getApplicationName() + 'Finance/Accounts/delete',
+                    async: false,
+                    type: "POST",
+                    data: { id },
+                    success: function (data) {
+                        if (data.result.isError != true) {
+                            showMsg('Deleted !', 'Record has been deleted !', 'success');
+                            setTimeout(function () {
+                                window.location = getApplicationName() + 'Finance/Accounts';
+                            }, 500);
+                        }
+                        else if (data.result.msg != '') {
+                            showMsg('Delete Failed !', data.result.msg, 'error');
+                        }
+                        else {
+                            showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>

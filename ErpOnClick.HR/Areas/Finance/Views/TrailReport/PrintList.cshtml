@@ -1,0 +1,90 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models
+@{
+    Layout = "_LayoutReport";
+    List<TrailBalanceReportModel> listReportTrailBalance = Model.listReportTrailBalance;
+    Company CompanyDetail = Model.CompanyDetail;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        Trail Balance
+                    </h2>
+                    <br>
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            <tr class="Grid_HeaderStyle">
+                                <th> Code</th>
+                                <th> Account Title </th>
+                                <th> Type </th>
+                                <th> Head</th>
+                                <th class="border-right"> Sub Head</th>
+                                <th> Opening DR. </th>
+                                <th> Opening CR. </th>
+                                <th class="border-right">Balance</th>
+                                <th> Debit DR. </th>
+                                <th> Credit CR. </th>
+                                <th class="border-right">Balance</th>
+                                <th> Total Debit DR. </th>
+                                <th> Total Credit CR. </th>
+                                <th> Total</th>
+                            </tr>
+                        </thead>
+                        @{
+                                <tbody>
+                                    @foreach (var item in listReportTrailBalance)
+                                    {
+                                    <tr class="ItemColor text-center">
+                                        <td> @item.Code </td>
+                                        <td> @item.Account </td>
+                                        <td> @item.Type </td>
+                                        <td> @item.Head </td>
+                                        <td class="border-right"> @item.SubHead </td>
+                                        <td> @(item.ODebit!=null && item.ODebit!=0 ? String.Format("{0:.00}",item.ODebit) : "-") </td>
+                                        <td> @(item.OCredit != null && item.OCredit!=0 ? String.Format("{0:.00}",item.OCredit) : "-") </td>
+                                        <td class="border-right"> @(item.OTotal != null && item.OTotal!=0 ? String.Format("{0:.00}",item.OTotal) : "-") </td>
+                                        <td> @(item.ADebit != null && item.ADebit!=0 ? String.Format("{0:.00}",item.ADebit) : "-") </td>
+                                        <td> @(item.ACredit != null && item.ACredit!=0 ? String.Format("{0:.00}",item.ACredit) : "-") </td>
+                                        <td class="border-right"> @(item.ATotal != null && item.ATotal!=0 ? String.Format("{0:.00}",item.ATotal) : "-") </td>
+                                        <td> @(item.CDebit != null && item.CDebit!=0 ? String.Format("{0:.00}",item.CDebit) : "-") </td>
+                                        <td> @(item.CCredit != null && item.CCredit!=0 ? String.Format("{0:.00}",item.CCredit) : "-") </td>
+                                        <td> @(item.CTotal != null && item.CTotal!=0 ? String.Format("{0:.00}",item.CTotal) : "-") </td>
+                                    </tr>
+                                    }
+
+                                </tbody>
+                                <tfoot>
+                                    <tr class="Grid_HeaderStyle">
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="border-right">Total</td>
+                                        <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.ODebit)))</td>
+                                        <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.OCredit)))</td>
+                                        <td class="border-right">@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.OTotal)))</td>
+                                        <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.ADebit)))</td>
+                                        <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.ACredit)))</td>
+                                        <td class="border-right">@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.ATotal)))</td>
+                                        <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.CDebit)))</td>
+                                        <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.CCredit)))</td>
+                                        <td>@(String.Format("{0:.00}", listReportTrailBalance.Sum(x => x.CTotal)))</td>
+                                    </tr>
+                                </tfoot>
+                        }
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

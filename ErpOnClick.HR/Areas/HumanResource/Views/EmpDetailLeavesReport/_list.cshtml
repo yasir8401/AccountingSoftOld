@@ -1,0 +1,72 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.ViewModel
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    List<EmpLeavesReportModel> listReportEmpLeaves = Model.listReportEmpLeaves;
+
+}
+<link href="~/css/Report.css" rel="stylesheet" />
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed ">
+        <thead class="text-sm">
+            <tr class="col-lg-12">
+                <th align="left" width="20px"> @SharedLocalizer.GetLocalizedHtmlString("Id")</th>
+                <th align="left" width="320px"> @SharedLocalizer.GetLocalizedHtmlString("Employee")</th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Annual") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Sick") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Special") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Emergency") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Business") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Used") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Total") </th>
+                <th align="right"> @SharedLocalizer.GetLocalizedHtmlString("Balance")</th>
+                <th width="40px"> </th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr>
+                <th align="left" width="20px"> Id</th>
+                <th align="left" width="320px"> Employee</th>
+                <th align="right"> Annual </th>
+                <th align="right"> Sick </th>
+                <th align="right"> Special </th>
+                <th align="right"> Emergency </th>
+                <th align="right"> Business </th>
+                <th align="right"> Used </th>
+                <th align="right"> Total </th>
+                <th align="right"> Balance</th>
+                <th width="40px"> </th>
+            </tr>
+        </tfoot>
+        <tbody>
+
+            @foreach (var item in listReportEmpLeaves)
+            {
+                <tr class=" text-center">
+                    <td align="left" width="20px"> @item.EmployeeId </td>
+                    <td align="left" width="320px"> @item.Employee </td>
+                    <td align="right"> @item.Annual</td>
+                    <td align="right"> @item.Sick</td>
+                    <td align="right"> @item.Special</td>
+                    <td align="right"> @item.Emergency</td>
+                    <td align="right"> @item.Business</td>
+                    <td align="right"> @item.Used </td>
+                    <td align="right"> @item.Total</td>
+                    <td align="right"> @item.Balance</td>
+                    <td width="40px">
+                        <a href="~/HumanResource/EmpLeavesReport/Index?EmpId=@item.EmployeeId" class="btn btn-default btn-block  btn-xs "><i class="fa fa-search"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+        _initDatatable('#dtList');
+    });
+</script>

@@ -1,0 +1,95 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Layout = "_LayoutReport";
+    List<GeneralEntries> GeneralEntriesMDetails = Model.generalentryMList;
+    Company CompanyDetail = Model.CompanyDetail;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        GENERAL ENTRIES
+                    </h2>
+                    <br>
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="50%"><i class="fa fa-filter"></i>General Entry Date From </td>
+                                <td width="50%"><i class="fa fa-filter"></i>General Entry Date To </td>
+                            </tr>
+
+                            <tr class="ItemColor text-center">
+
+                                <td width="50%" nowrap="">
+                                    @Model.GeneralEntryDateFrom
+                                </td>
+                                <td width="50%" nowrap="">
+                                    @Model.GeneralEntryDateTo
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            @*<tr class="Grid_HeaderStyle Grid_HeaderStyle_Arabic">
+                    <th style="width:20px">الوصف</th>
+
+                    <th width="60px">مبلغ الفاتورة</th>
+                    <th width="40px">ضريبة</th>
+                    <th width="40px">قيمة الضريبة</th>
+                    <th width="40px">إجمالي</th>
+                </tr>*@
+                            <tr class="Grid_HeaderStyle">
+                                <th style="width:20px">Id</th>
+                                <th>Date</th>
+                                <th>Entry #</th>
+                                <th>Total Debit</th>
+                                <th>Total Credit</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (GeneralEntriesMDetails.Count() > 0)
+                            {
+                                @foreach (var item in GeneralEntriesMDetails)
+                                {
+                                    <tr class="ItemColor text-center">
+                                        <td class="text-center">@item.GeneralEntryId</td>
+                                        <td class="text-center">@Convert.ToDateTime(item.GeneralEntryDate).ToString("dd-MMM-yyyy")</td>
+                                        <td class="text-center">@item.GeneralEntryNo</td>
+                                        <td class="text-right">@item.TotalDebit</td>
+                                        <td class="text-right">@item.TotalCredit</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr class="ItemColor text-center">
+                                    <td colspan="5" class="text-center">Sorry! No Data Found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

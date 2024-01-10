@@ -1,0 +1,128 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    LookupTypes LookupTypeDetail = Model.LookupTypeDetail;
+    bool isEdit = (LookupTypeDetail != null);
+}
+
+
+
+    <form id="frmEdit" role="form">
+        <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+
+        <div class="card card-default card-outline">
+
+            <div class="card-header">
+                <h2 class="card-title">
+                    Lookup Types
+                </h2>
+                <!-- tools box -->
+                <div class="card-tools">
+                    <button type="submit" class="btn  btn-sm btn-primary">
+                        <i class="fas fa-save fa-fw"></i> Save
+                    </button>
+                    <a href="~/Security/LookupTypes" type="button" class="btn  btn-sm btn-default">
+                        <i class="fas fa-arrow-left fa-fw"></i> Return
+                    </a>
+                </div>
+                <!-- /. tools -->
+            </div>
+            <div class="card-body">
+
+                <div class="row">
+
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Code Type ID</label>
+                            <input type="text" id="LookupTypeId" name="LookupTypeId" class="form-control" value="@(LookupTypeDetail!=null?LookupTypeDetail.LookupTypeId: null)" @(isEdit?"readonly":"") required min="3" maxlength="3"  autofocus>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Code Type Name</label>
+                            <input type="text" id="LookupTypeNameEn" name="LookupTypeNameEn" class="form-control" value="@(LookupTypeDetail!=null?LookupTypeDetail.LookupTypeNameEn: null)" required>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Code Type Name in Arabic</label>
+                            <input type="text" id="LookupTypeNameAr" name="LookupTypeNameAr" class="form-control" dir="rtl" value="@(LookupTypeDetail!=null?LookupTypeDetail.LookupTypeNameAr: null)">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Active Status</label>
+                            <select id="ActiveStatus" name="ActiveStatus" class="form-control" required>
+                                @*<option></option>*@
+                                <option value="True" @(LookupTypeDetail != null && LookupTypeDetail.ActiveStatus == true ? "selected" : "")>Active</option>
+                                <option value="False" @(LookupTypeDetail != null && LookupTypeDetail.ActiveStatus == false ? "selected" : "")>Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Locked Status</label>
+                            <select id="Locked" name="Locked" class="form-control" required>
+                                @*<option></option>*@
+                                <option value="False" @(LookupTypeDetail != null && LookupTypeDetail.Locked == false ? "selected" : "")>No</option>
+                                <option value="True" @(LookupTypeDetail != null && LookupTypeDetail.Locked == true ? "selected" : "")>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        $(function () {
+            $('#LookupTypeId').mask('999');
+        });
+
+       
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() +"Security/LookupTypes/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() +'Security/LookupTypes';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

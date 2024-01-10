@@ -1,0 +1,415 @@
+﻿@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@using ErpOnClick.DAL.Models
+@{
+
+
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Divisions> divisionList = Model.divisionList;
+    IList<Departments> departmentList = Model.departmentList;
+    var divisionId = Model.divisionId;
+    Divisions divisionDetails = Model.divisionDetails;
+    IList<Sections> sectionsList = Model.sectionsList;
+    IList<SubSections> subSectionsList = Model.subSectionsList;
+    IList<Units> unitList = Model.unitList;
+    IList<Emp> EmpList = Model.EmpList;
+
+    Teams TeamsDetails = Model.TeamDetails;
+    bool isEdit = (TeamsDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="TeamId" name="TeamId" class="form-control" value="@(TeamsDetails != null ? TeamsDetails.TeamId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(TeamsDetails != null ? TeamsDetails.CompanyId : 0)" >
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(TeamsDetails != null ? TeamsDetails.BranchId : 0)" >
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="navigation('@divisionId')" href="javascript:void(0)">@SharedLocalizer.GetLocalizedHtmlString("General Info")</a>
+                </li>
+
+
+                @Html.Partial("/Areas/HumanResource/Views/divisions/_tabsPartial.cshtml", divisionDetails)
+
+
+            </ul>
+        </div>
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/HumanResource/Teams/divisions/@divisionId" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6" style="display:none">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option selected></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(TeamsDetails != null && TeamsDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6" style="display:none">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option selected></option>
+                            @foreach (var item in branchList)
+                            {
+                                <option value="@item.BranchId" @(TeamsDetails != null && TeamsDetails.BranchId == item.BranchId ? "selected" : "")>
+                                    @item.BranchNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Divisions")</label>
+                        <select id="DivisionId" name="DivisionId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in divisionList)
+                            {
+                                <option value="@item.DivisionId" @(TeamsDetails != null && TeamsDetails.DivisionId == item.DivisionId ? "selected" : "")>
+                                    @item.DivisionNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Departments")</label>
+                        <select id="DepartmentId" name="DepartmentId" class="form-control" required>
+                            <option selected></option>
+                            @foreach (var item in departmentList)
+                            {
+                                <option value="@item.DepartmentId" @(TeamsDetails != null && TeamsDetails.DepartmentId == item.DepartmentId ? "selected" : "")>
+                                    @item.DepartmentNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Section")</label>
+                        <select id="SectionId" name="SectionId" class="form-control" required>
+                            <option selected></option>
+                            @foreach (var item in sectionsList)
+                            {
+                                <option value="@item.SectionId" @(TeamsDetails != null && TeamsDetails.SectionId == item.SectionId ? "selected" : "")>
+                                    @item.SectionNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Sub Section")</label>
+                        <select id="SubSectionId" name="SubSectionId" class="form-control" required>
+                            <option selected></option>
+                            @foreach (var item in subSectionsList)
+                            {
+                                <option value="@item.SubSectionId" @(TeamsDetails != null && TeamsDetails.SubSectionId == item.SubSectionId ? "selected" : "")>
+                                    @item.SubSectionNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Unit")</label>
+                        <select id="UnitId" name="UnitId" class="form-control" required>
+                            <option selected></option>
+                            @foreach (var item in unitList)
+                            {
+                                <option value="@item.UnitId" @(TeamsDetails != null && TeamsDetails.UnitId == item.UnitId ? "selected" : "")>
+                                    @item.UnitNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Team Head")</label>
+                        <select id="TeamHeadUid" name="TeamHeadUid" class="form-control" required>
+                            <option selected></option>
+                            @foreach (var item in EmpList)
+                            {
+                                <option value="@item.EmpId" @(TeamsDetails != null && TeamsDetails.TeamHeadUid == item.EmpId ? "selected" : "")>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn + " " + item.GrandNameEn + " " + item.FamilyNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-12 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Reporting To")</label>
+                        <select id="ReportingToUid" name="ReportingToUid" class="form-control" required>
+                            <option selected></option>
+                            @foreach (var item in EmpList)
+                            {
+                                <option value="@item.EmpId" @(TeamsDetails != null && TeamsDetails.ReportingToUid == item.EmpId ? "selected" : "")>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn + " " + item.GrandNameEn + " " + item.FamilyNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("More Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Team En")</label>
+                        <input type="text" id="TeamEn" name="TeamEn" class="form-control" value="@(TeamsDetails!=null?TeamsDetails.TeamEn: null)" required autofocus>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Team Arabic")</label>
+                        <input type="text" id="TeamNaTeamArmeAr" name="TeamAr" class="form-control" value="@(TeamsDetails!=null?TeamsDetails.TeamAr: null)">
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Team Code")</label>
+                        <input type="text" id="TeamCode" name="TeamCode" class="form-control" value="@(TeamsDetails!=null?TeamsDetails.TeamCode: null)" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+
+            $("#tabTeams-tab").addClass("nav-link active");
+
+            $('#Detail').summernote(
+                {
+                    height: 200,
+                }
+            );
+        });
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName+"Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+        $('#DivisionId').change(function () {
+
+            var id = $('#DivisionId').val();
+
+            $.ajax({
+                url: applicationName+"Ajax/DepartmentCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option  value='" + product.departmentId + "'>" + product.departmentNameEn + "</option>";
+                    });
+                    item += "<option  ></option>";
+                    $("#DepartmentId").html(item);
+
+                }
+            });
+
+        });
+        $('#DepartmentId').change(function () {
+
+            var id = $('#DepartmentId').val();
+
+            $.ajax({
+                url: applicationName+ "Ajax/SectionCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.sectionId + "'>" + product.sectionNameEn + "</option>";
+                    });
+                    item += "<option  ></option>";
+                    $("#SectionId").html(item);
+
+                }
+            });
+
+        });
+        $('#SectionId').change(function () {
+
+            var id = $('#SectionId').val();
+
+            $.ajax({
+                url: applicationName+"Ajax/SubSectionCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.subSectionId + "'>" + product.subSectionNameEn + "</option>";
+                    });
+                    item += "<option  ></option>";
+                    $("#SubSectionId").html(item);
+
+                }
+            });
+
+        });
+        $('#SubSectionId').change(function () {
+
+            var id = $('#SubSectionId').val();
+
+            $.ajax({
+                url: applicationName+"Ajax/UnitsCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.unitId + "'>" + product.unitNameEn + "</option>";
+                    });
+                    item += "<option  ></option>";
+                    $("#UnitId").html(item);
+
+                }
+            });
+
+        });
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+
+                    debugger;
+                    $.ajax({
+                        url: applicationName+"HumanResource/Teams/" + actionType,
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName+'HumanResource/Teams/divisions/@divisionId';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+        function navigation() {
+            window.location = applicationName +'HumanResource/divisions/edit/@divisionId'
+        };
+
+    </script>
+
+}
+

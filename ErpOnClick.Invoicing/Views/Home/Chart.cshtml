@@ -1,0 +1,367 @@
+﻿@using ErpOnClick.Invoicing.Models
+@using ErpOnClick.Invoicing.Resources
+@inject LocService SharedLocalizer
+
+
+@{
+    DashboardViewModel viewModel = Model.dashboardViewModel;
+    Layout = null;
+}
+
+<div id="main" role="main">
+
+    <!-- #MAIN CONTENT -->
+    <div>
+        <div class="outer-block">
+
+            <div class="items colBG">
+                <h4>@SharedLocalizer.GetLocalizedHtmlString("Trail Balance")</h4>
+                <div class="clearfix margin-5"></div>
+                <div style="height:350px">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="chartTrailBalance" style="display: block; width: 399px; height: 350px;" width="399" height="350" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+
+            <div class="items colSM">
+                <a href="~/Admin/Customers"><h4>@SharedLocalizer.GetLocalizedHtmlString("Customers")</h4></a>
+                <div class="pull-left " style="width:50%">
+
+                    <div class="margin-top-25">&nbsp;</div>
+                    <h1 class="text-center " style="line-height:30px" title="Total Customers">
+                        @(viewModel.CustomerActive + viewModel.CustomerInActive)
+                        <small><br>@viewModel.CustomerActive @SharedLocalizer.GetLocalizedHtmlString("Active") | @viewModel.CustomerInActive @SharedLocalizer.GetLocalizedHtmlString("Non-Active")</small>
+                    </h1>
+                </div>
+                <div class="pull-right " style="width:50%">
+
+                    <div style="height:140px">
+                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <canvas id="chartCustomers" width="200" height="140" class="chartjs-render-monitor" style="display: block; width: 200px; height: 140px;"></canvas>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="items colBG">
+
+                <h4>@SharedLocalizer.GetLocalizedHtmlString("Items By Category")</h4>
+                <div class="clearfix margin-5"></div>
+                <div style="height:350px">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="chartItemByCategory" width="399" height="340" class="chartjs-render-monitor" style="display: block; width: 399px; height: 340px;"></canvas>
+                </div>
+            </div>
+            <div class="items colSM">
+                <h4>@SharedLocalizer.GetLocalizedHtmlString("Trail Balance")</h4>
+                <div class="clearfix margin-5"></div>
+                <div style="height:140px">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="chartTrailBalance" style="display: block; width: 399px; height: 350px;" width="399" height="350" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="items colBG">
+                <h4>@SharedLocalizer.GetLocalizedHtmlString("Accounts By Types")</h4>
+                <div class="clearfix margin-5"></div>
+                <div style="height:340px">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="chartAccounByType" width="399" height="340" class="chartjs-render-monitor" style="display: block; width: 399px; height: 340px;"></canvas>
+                </div>
+            </div>
+
+            <div class="items colSM">
+
+                <a href="~/Admin/Vendors"><h4>@SharedLocalizer.GetLocalizedHtmlString("Vendors")</h4></a>
+                <div class="pull-left " style="width:50%">
+
+                    <div class="margin-top-25">&nbsp;</div>
+                    <h1 class="text-center " style="line-height:30px" title="Total Vendors">
+                        @(viewModel.VendorActive + viewModel.VendorInActive)
+                        <small><br>@viewModel.VendorActive @SharedLocalizer.GetLocalizedHtmlString("Active") | @viewModel.VendorInActive @SharedLocalizer.GetLocalizedHtmlString("Non-Active")</small>
+                    </h1>
+                </div>
+                <div class="pull-right " style="width:50%">
+
+                    <div style="height:140px">
+                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <canvas id="chartVendors" width="200" height="140" class="chartjs-render-monitor" style="display: block; width: 200px; height: 140px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <style type="text/css">
+
+            /* Chart.js */
+            @@keyframes chartjs-render-animation {
+                from {
+                    opacity: .99
+                }
+
+                to {
+                    opacity: 1
+                }
+            }
+
+            .chartjs-render-monitor {
+                animation: chartjs-render-animation 1ms
+            }
+
+            .chartjs-size-monitor, .chartjs-size-monitor-expand, .chartjs-size-monitor-shrink {
+                position: absolute;
+                direction: ltr;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                overflow: hidden;
+                pointer-events: none;
+                visibility: hidden;
+                z-index: -1
+            }
+
+                .chartjs-size-monitor-expand > div {
+                    position: absolute;
+                    width: 1000000px;
+                    height: 1000000px;
+                    left: 0;
+                    top: 0
+                }
+
+                .chartjs-size-monitor-shrink > div {
+                    position: absolute;
+                    width: 200%;
+                    height: 200%;
+                    left: 0;
+                    top: 0
+                }
+        </style>
+
+        <style>
+
+            body {
+                background-color: #e5e5e5 !important;
+            }
+
+            .colSM {
+                height: 200px;
+            }
+
+            .colBG {
+                height: 415px;
+            }
+
+            @@media only screen and (min-device-width: 768px) {
+                .outer-block {
+                    -moz-column-count: 3;
+                    -webkit-column-count: 3;
+                    column-count: 3;
+                    -moz-column-gap: 1em;
+                    -webkit-column-gap: 1em;
+                    column-gap: 1em;
+                }
+            }
+
+            .items {
+                display: inline-block;
+                margin: 0 0 1em;
+                width: 100%;
+                background-color: #FFF;
+                padding: 10px 10px;
+            }
+
+                .items h4 {
+                    font-size: 1.3em;
+                    font-weight: 600;
+                    color: #ff7b00;
+                    border-bottom: 2px solid whitesmoke;
+                    padding-bottom: 10px;
+                }
+
+                .items h1 {
+                    font-size: 5em;
+                    font-weight: 500;
+                    color: #9a9a9a;
+                }
+
+                .items .align-text-bottom {
+                }
+
+            .pull-left {
+                float: left !important;
+            }
+
+            .pull-right {
+                float: right !important;
+            }
+
+            .margin-top-25 {
+                margin-top: 25px !important
+            }
+
+            h1 small {
+                font-size: 18px;
+                font-weight: 300;
+                letter-spacing: -1px;
+            }
+        </style>
+
+    </div>
+</div>
+
+
+<script>
+        $(document).ready(function () {
+            initChartTrailBalance();
+            initChartAccountByType();
+            initChartItemByCategory();
+            initChartVendors();
+            initChartCustomers();
+        })
+
+
+
+
+        function initChartTrailBalance() {
+            var ctx = document.getElementById('chartTrailBalance').getContext('2d');
+            var labels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.TrailBalnceByAccount.Select(x=>x.Account).ToList()));
+            var counts = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.TrailBalnceByAccount.Select(x=>x.Value).ToList()));
+
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Accounts',
+                        backgroundColor: '#eab164',
+                        borderColor: '#eaad5b',
+                        data: counts
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+        function initChartAccountByType() {
+
+            var ctx = document.getElementById('chartAccounByType').getContext('2d');
+            var labels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.AccountByTypes.Select(x=>x.AccountType).ToList()));
+            var counts = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.AccountByTypes.Select(x=>x.AccountCount).ToList()));
+
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'pie',
+
+                // The data for our dataset
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sales',
+                        backgroundColor: ['#eaa952', '#eab164', '#eab56d', '#eadbc8', '#eae3da', '#eadbc8'],
+                        //backgroundColor: ['#5D9CEC','#48CFAD','#A0D468','#FFCE54','#ffe500'],
+                        borderColor: 'white',
+                        data: counts
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+        function initChartItemByCategory() {
+
+            var ctx = document.getElementById('chartItemByCategory').getContext('2d');
+            var labels = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.ItemByCategory.Select(x=>x.Category).ToList()));
+            var counts = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(viewModel.ItemByCategory.Select(x=>x.Count).ToList()));
+
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'pie',
+
+                // The data for our dataset
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sales',
+                        backgroundColor: ['#eaa952', '#eadbc8', '#eab56d', '#eadbc8', '#eae3da' ],
+                        //backgroundColor: ['#5D9CEC','#48CFAD','#A0D468','#FFCE54','#ffe500'],
+                        borderColor: 'white',
+                        data: counts
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+        function initChartVendors() {
+            var ctx = document.getElementById('chartVendors').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: ['Active', 'Non-Active'],
+                    datasets: [{
+                        label: 'Status',
+                        backgroundColor: ['#ecb264', '#e1e8ef'],
+                        borderColor: 'white',
+                        data: [@viewModel.VendorActive, @viewModel.VendorInActive]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+        function initChartCustomers() {
+            var ctx = document.getElementById('chartCustomers').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'doughnut',
+
+                // The data for our dataset
+                data: {
+                    labels: ['Active', 'Non-Active'],
+                    datasets: [{
+                        label: 'Status',
+                        backgroundColor: ['#ecb264', '#e1e8ef'],
+                        borderColor: 'white',
+                        data: [@viewModel.CustomerActive, @viewModel.CustomerInActive]
+                    }]
+                },
+
+                // Configuration options go here
+                options: {
+                    maintainAspectRatio: false,
+                }
+            });
+
+        }
+
+</script>

@@ -1,0 +1,58 @@
+﻿#tblLines thead th, #tblLines tfoot th {
+    text-align: center !important;
+    font-size: 12px !important;
+    white-space: nowrap;
+    background-color: #fff6ea;
+    padding: 10px 0px;
+    vertical-align: middle;
+    text-transform: uppercase !important;
+    color: #686a6d;
+    letter-spacing: 1px;
+}
+
+#tblLines tbody td {
+    background-color: white;
+}
+
+#tblLines tbody td, #tblLines tfoot th {
+    padding: 0px;
+    vertical-align: middle;
+    text-transform: uppercase !important;
+    color: #686a6d;
+    letter-spacing: 1px;
+}
+
+    #tblLines tbody td input, #tblLines tfoot th input, #tblLines tbody td select, #tblLines tfoot th select {
+        padding: 1px;
+        border: 0px !important;
+        margin: 0px;
+        text-align: center;
+        background-color: transparent;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+
+    #tblLines tbody td input, #tblLines tbody td select {
+        font-size: 90%;
+        text-align: right;
+        width: 100%;
+    }
+
+#tblLines .trSum td input, #tblLines .trSum td select {
+    font-weight: bold;
+    background-color: #efefef;
+    border-radius: 0px !important;
+}
+
+.bg-danger {
+    background-color: white;
+}
+
+.bg-whitesmoke {
+    background-color: whitesmoke;
+}
+
+#tblLines tbody tr td:last-child {
+    background: initial !important;
+}

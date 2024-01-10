@@ -1,0 +1,337 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    IList<Company> companyList = Model.companyList;
+    IList<Branch> branchList = Model.branchList;
+
+    IList<Lookups> deptList = Model.deptList;
+    IList<Lookups> statusList = Model.statusList;
+    IList<Lookups> typeList = Model.typeList;
+    IList<Lookups> countryList = Model.countryList;
+    IList<Lookups> cityList = Model.cityList;
+
+    VacantJobs JobIdDetail = Model.JobIdDetail;
+    bool isEdit = (JobIdDetail != null);
+}
+
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="JobId" name="JobId" class="form-control" value="@(JobIdDetail != null ? JobIdDetail.JobId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                Details
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> Save
+                </button>
+                <a href="~/admin/vacantjobs" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> Return
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="JobTitle" name="JobTitle" class="form-control" value="@(JobIdDetail!=null?JobIdDetail.JobTitle: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label> Status</label>
+                        <select id="JobStatusId" name="JobStatusId" class="form-control" required>
+
+                            @foreach (var item in statusList)
+                            {
+                                <option value="@item.Code" @(JobIdDetail != null && JobIdDetail.JobStatusId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Start Date</label>
+
+                        <input type="text" id="JobStartDate" required name="JobStartDate" class="form-control DatePicker" value="@(JobIdDetail != null && JobIdDetail.JobStartDate !=null ? Convert.ToDateTime(JobIdDetail.JobStartDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="text" id="JobEndDate" required name="JobEndDate" class="form-control DatePicker" value="@(JobIdDetail != null && JobIdDetail.JobEndDate !=null ? Convert.ToDateTime(JobIdDetail.JobEndDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Salary Start</label>
+                        <input type="number" id="SalaryRangeStart" required name="SalaryRangeStart" class="form-control" value="@(JobIdDetail!=null?JobIdDetail.SalaryRangeStart: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Salary End</label>
+                        <input type="number" id="SalaryRangeEnd" required name="SalaryRangeEnd" class="form-control" value="@(JobIdDetail!=null?JobIdDetail.SalaryRangeEnd: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Company</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+
+                                <option value="@item.CompanyId" @(JobIdDetail != null && JobIdDetail.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Branch </label>
+                        <select id="BranchId" name="BranchId" class="form-control" required>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(JobIdDetail != null && JobIdDetail.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label> Department</label>
+                        <select id="JobDepartmentId" name="JobDepartmentId" class="form-control" required>
+
+                            @foreach (var item in deptList)
+                            {
+                                <option value="@item.Code" @(JobIdDetail != null && JobIdDetail.JobDepartmentId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="JobTypeId" name="JobTypeId" class="form-control" required>
+
+                            @foreach (var item in typeList)
+                            {
+                                <option value="@item.Code" @(JobIdDetail != null && JobIdDetail.JobTypeId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                More Details
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>Country</label>
+                        <select id="CountryId" name="CountryId" class="form-control" required>
+
+                            @foreach (var item in countryList)
+                            {
+                                <option value="@item.Code" @(JobIdDetail != null && JobIdDetail.CountryId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>City</label>
+                        <select id="CityId" name="CityId" class="form-control" required>
+
+                            @foreach (var item in cityList)
+                            {
+                                <option value="@item.Code" @(JobIdDetail != null && JobIdDetail.CityId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <div class="">
+                            <label class="col-md-12">Publish</label>
+                            <select id="Publish" name="Publish" class="form-control" required>
+
+                                <option value="True" @(JobIdDetail != null && JobIdDetail.Publish != null ? (Convert.ToBoolean(JobIdDetail.Publish) ? "selected" : "") : "")>Yes</option>
+                                <option value="False" @(JobIdDetail != null && JobIdDetail.Publish != null ? (Convert.ToBoolean(JobIdDetail.Publish) ? "" : "selected") : "")>No</option>
+                            </select>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>Email To</label>
+                        <input type="email" id="EmailTo" required name="EmailTo" class="form-control" value="@(JobIdDetail!=null?JobIdDetail.EmailTo: "")">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-outline card-outline col-lg-8">
+        <div class="card-header">
+            <h3 class="card-title">
+                Description
+            </h3>
+
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body pad">
+            <div class="mb-3">
+                <textarea id="JobDescription" name="JobDescription"
+                          style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(JobIdDetail != null? JobIdDetail.JobDescription : "")</textarea>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+
+            $('#JobDescription').summernote(
+                {
+                    height: 200,
+
+                });
+
+            $('#CompanyId').change(function () {
+              
+                var id = $('#CompanyId').val();
+
+                $.ajax({
+                    url: applicationName+ "Ajax/BranchCascading",
+                    async: false,
+                    type: "POST",
+                    data: { id: id },
+                    success: function (data) {
+                      
+                        var item = '';
+
+                        $.each(data.result, function (i, product) {
+                          
+                            item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                        });
+
+                        $("#BranchId").html(item);
+
+                    }
+                });
+
+            });
+
+
+
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: applicationName+"admin/vacantjobs/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName+'admin/vacantjobs';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        
+
+    </script>
+
+}

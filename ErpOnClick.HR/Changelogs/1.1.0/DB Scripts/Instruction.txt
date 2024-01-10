@@ -1,0 +1,6 @@
+
+
+************** Deployment Instructions ***************
+
+1) Take bakcup of exisitng database.
+2) Open each script file in SQL server management studio in order and execute it

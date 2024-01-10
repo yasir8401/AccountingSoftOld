@@ -1,0 +1,52 @@
+﻿@using ErpOnClick.DAL.Utilities
+
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment _HostEnvironment
+@{
+    var filePath = NativePaths.GetFilePath(_env);
+    var doc = "charts_of_accounts_xc.xlsx";
+    var wwwRootPath = _HostEnvironment.WebRootPath;
+
+}
+
+<div class="modal fade" id="importdataModal" tabindex="-1" role="dialog" aria-labelledby="importdataModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="max-width:500px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title pull-left" id="importdataModalLabel">Import Data</h5>
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="clearfix"></div>
+            </div>
+
+            <div class="modal-body" id="formimportdiv">
+                <form id="formimportN" role="form">
+                    <div class="col-md-12">
+                        <div class="modal-value">
+                        </div>
+                        <div class="row" id="hidefordetails">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label>Upload File to Import Data for Notes.</label>
+                                    <input style="border:1px solid double !important" type="file" id="NoteFile" name="File" class="form-control" required>
+                                    @*<a style="text-decoration:underline;font-size:12px;color: #84ceeb !important;" href="/Finance/ChartOfAccounts/DownloadExcelDocument" download="">Download Excel File for CHART OF ACCOUNTS. </a>*@
+                                    <a style="text-decoration:underline;font-size:12px;color: #84ceeb !important;" href="@filePath@doc" download="">Download Excel File for NOTES. </a>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button type="submit" id="formsubmit"  class="btn  btn-sm btn-primary">
+                                    <i class="fa fa-paperclip fa-fw"></i> Upload Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

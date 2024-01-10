@@ -1,0 +1,81 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Areas.ESS.Models; 
+@{
+    Layout = "_LayoutReport";
+    List<EmpAttendanceVM> EmpAttendance = Model.EmpAttendance;
+    Emp employee = Model.employee;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        Employee Attendance
+                    </h2>
+                    <br>
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td width="100%"><i class="fa fa-filter"></i>Employee Name: @(employee != null ? employee.FirstNameEn + " " + employee.FatherNameEn : "") </td>
+                            </tr>
+
+                            <tr class="ItemColor text-center">
+                                <td width="100%"><i class="fa fa-filter"></i>Attendance Month: @(EmpAttendance != null ? Convert.ToDateTime(EmpAttendance[0].AttendanceDate).ToString("MMM-yyyy")  : "") </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            <tr class="Grid_HeaderStyle">
+                                <th style="width:40px">Attendance Date</th>
+
+                                <th>Shift Time In</th>
+                                <th>Shift Time Out</th>
+                                <th>Actual Time In</th>
+                                <th>Actual Time Out</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (EmpAttendance.Count() > 0)
+                            {
+                                @foreach (var item in EmpAttendance.OrderBy(x => x.AttendanceDate))
+                                {
+                                    <tr class="ItemColor text-center">
+                                        <td class="text-center">@Convert.ToDateTime(item.AttendanceDate).ToString("dd-MMM-yyyy")</td>
+                                        <td class="text-center">@Convert.ToDateTime(item.PlannedTimeIn).ToString("HH:mm")</td>
+                                        <td class="text-center">@Convert.ToDateTime(item.PlannedTimeOut).ToString("HH:mm")</td>
+
+                                        <td class="text-center">@Convert.ToDateTime(item.ActualTimeIn).ToString("HH:mm")</td>
+                                        <td class="text-center">@Convert.ToDateTime(item.ActualTimeOut).ToString("HH:mm")</td>
+                                    </tr>
+                                } }
+                            else
+                            {
+                                <tr class="ItemColor text-center">
+                                    <td colspan="5" class="text-center">Sorry! No Data Found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

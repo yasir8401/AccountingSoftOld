@@ -1,0 +1,160 @@
+﻿@using ErpOnClick.ErpMain.ViewModel;
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.ErpMain.ViewModel.HumanResource;
+@inject LocService SharedLocalizer
+@{ 
+    DateTime date = Model.date;
+    List<EmpAttendanceReportViewModel> empAttendanceReportViewModel = Model.empAttendanceReportViewModel;
+}
+
+
+<div >
+    <table id="dtList"  class="table table-hover table-condensed">
+        <thead class="text-sm">
+            <tr>
+                <th>Sr.No</th>
+                <th>Emp Id</th>
+                <th>Name</th>
+                <th>CNIC</th>
+                <th>NTN</th>
+                <th>DOB</th>
+                <th>Joining Date</th>
+                <th>Leaving Date</th>
+                <th>Joiner/Leaver</th>
+                <th>office Location</th>
+                <th>Department</th>
+                <th>Shift</th>
+                <th>Designation</th>
+                <th>Emp Type</th>
+                <th>Wage Group</th>
+                <th>Benf Name</th>
+                <th>Customer Ref</th>
+                <th>Bank No</th>
+                <th>Bank Code</th>
+                <th>Bank Name</th>
+                <th>Bank Branch</th>
+                <th>Bank Currency</th>
+                @for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                {
+                    DateTime dt = new DateTime(date.Year, date.Month, i);
+                          <th>@dt.ToString("dd-MMM")</th>
+                }
+                <th>Tardies</th>
+                <th>Short Leaves</th>
+                <th>Absents</th>
+                <th>Paid Leave</th>
+                <th>Unpaid Leave</th>
+                <th>Presents</th>
+                <th>Total Days</th>
+                <th>Deducted Days</th>
+                <th>Salary Month</th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+
+                <th>Sr.No</th>
+                <th>Emp Id</th>
+                <th>Name</th>
+                <th>CNIC</th>
+                <th>NTN</th>
+                <th>DOB</th>
+                <th>Joining Date</th>
+                <th>Leaving Date</th>
+                <th>Joiner/Leaver</th>
+                <th>office Location</th>
+                <th>Department</th>
+                <th>Shift</th>
+                <th>Designation</th>
+                <th>Emp Type</th>
+                <th>Wage Group</th>
+                <th>Benf Name</th>
+                <th>Customer Ref</th>
+                <th>Bank No</th>
+                <th>Bank Code</th>
+                <th>Bank Name</th>
+                <th>Bank Branch</th>
+                <th>Bank Currency</th>
+                @for (int i = 1; i <= DateTime.DaysInMonth(date.Year, date.Month); i++)
+                {
+                    DateTime dt = new DateTime(date.Year, date.Month, i);
+                    <th>@dt.ToString("dd-MMM")</th>
+                }
+                <th>Tardies</th>
+                <th>Short Leaves</th>
+                <th>Absents</th>
+                <th>Paid Leave</th>
+                <th>Unpaid Leave</th>
+                <th>Presents</th>
+                <th>Total Days</th>
+                <th>Deducted Days</th>
+                <th>Salary Month</th>
+
+
+            </tr>
+        </tfoot>
+        <tbody>
+
+            @foreach (var item in empAttendanceReportViewModel)
+            {
+                <tr class="text-center">
+                    <td> @item.EmpId </td>
+                    <td> @item.EmpCode </td>
+                    <td> @item.EmpName </td>
+                    <td> @item.EmpCNIC </td>
+                    <td> @item.NTN </td>
+                    <td> @(item.DOB !=null ? item.DOB.Value.ToShortDateString():"" )</td>
+                    <td> @(item.JoiningDate.ToString("dd-MMM-yyyy"))</td>
+                    <td> @item.LeavingDate.ToString("dd-MMM-yyyy")</td>
+                    <td> @item.JoinerLeaver </td>
+                    <td> @item.OfficeLocation </td>
+                    <td> @item.Department </td>
+                    <td> @item.Shift</td>
+                    <td> @item.Designation </td>
+                    <td> @item.EmpType </td>
+                    <td> @item.WageGroup </td>
+                    <td> @item.BeneficiaryName </td>
+                    <td> @item.CustomerRef </td>
+                    <td> @item.BankAccountNo </td>
+                    <td> @item.BankCode </td>
+                    <td> @item.BankName </td>
+                    <td> @item.BankBranch </td>
+                    <td> @item.Currency </td>
+
+                    @foreach (var days in item.ListMonthAttendancePresentAbsent)
+                    {
+                        <td>@days</td>
+                    }
+                    <td>@item.Tardies</td>
+                    <td>@item.ShortLeaves </td>
+                    <td>@item.Absents </td>
+                    <td>@item.PaidLeaves</td>
+                    <td>@item.UnpaidLeaves </td>
+                    <td>@item.Presents </td>
+                    <td>@item.TotalDays</td>
+                    <td>@item.DeductedDays </td>
+                    <td>@item.SalaryMonth.ToString("MMM-yyyy") </td>
+                </tr>
+            }
+
+
+
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<script>
+    var applicationName = getApplicationName();
+
+    $(function () {
+
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+    
+</script>

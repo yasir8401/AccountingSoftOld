@@ -1,0 +1,129 @@
+﻿@using ErpOnClick.ErpMain.ViewModel
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.DAL.Utilities
+
+
+@inject LocService SharedLocalizer
+@inject Microsoft.AspNetCore.Hosting.IHostingEnvironment _env;
+@{
+    List<ProjectDetailListingViewModel> projectDetailListing = Model.projectDetailListing;
+    var filePath = NativePaths.GetFilePath(_env);
+}
+<style>
+    ul {
+        list-style-type: none;
+        padding: 0px
+    }
+</style>
+
+<div class="table-responsive pb-2 ">
+    <table id="dtList" class="table table-hover table-condensed " style="display:none">
+        <thead class="text-sm">
+            <tr>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Title") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Team Members")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Progress")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Status")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Plan Date")</th>
+            </tr>
+        </thead>
+        <tfoot style="display:table-row-group">
+            <tr class="text-center">
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Title") </th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Team Members")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Progress")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Status")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Plan Date")</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            @foreach (var item in projectDetailListing)
+            {
+
+                <tr class="text-center">
+
+                    <td width="200px" align="left">
+                        <ul style="list-style-type:none;">
+                            <li>@item.Project.ProjectTitle</li>
+                            <li style="color:black;font-size:10px">@item.ProjectType</li>
+                        </ul>
+                    </td>
+                    <td width="350px">
+                        <ul style="display:inline-flex; white-space:nowrap">
+                            <li>
+                                <img style="height: 48px;  width: 47px;" data-toggle="tooltip" title="@item.ProjectManager.FirstNameEn  @item.ProjectManager.FatherNameEn (He is Project Manager for this project)" class="img-circle elevation-2" src="@filePath@item.ProjectManager.ProfilePic">
+                            </li>
+                            @foreach (var member in item.TeamMembersList)
+                            {
+                                if (member.EmpId != item.ProjectManager.EmpId)
+                                {
+                                    <li>
+                                        <img style="height: 48px; width: 47px;" data-toggle="tooltip" title="@member.FirstNameEn  @member.FatherNameEn" class="img-circle elevation-2" src="@filePath@member.ProfilePic">
+                                    </li>
+                                }
+
+                            }
+                        </ul>
+                    </td>
+                    <td>
+                        <label>@item.Project.ProjectProgressPercent (%)</label>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-green" role="progressbar" aria-valuenow="@item.Project.ProjectProgressPercent" aria-valuemin="0" aria-valuemax="100" style="width: @item.Project.ProjectProgressPercent%">
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <ul>
+                            <li>
+                                @if (item.Status == "New")
+                                {
+                                    <label class="badge badge-danger">New</label>
+                                }
+                                else if (item.Status == "Pending")
+                                {
+                                    <label class="badge badge-warning">Pending</label>
+                                }
+                                else
+                                {
+                                    <label class="badge badge-success">Completed</label>
+                                }
+
+                            </li>
+                            @{
+                                var days = (item.DaysBehidSchedule != null ? Int32.Parse(item.DaysBehidSchedule.Split('.')[0]) : 0);
+                                if (days > 0)
+                                {
+                                    <li class="text-danger">@days Days - @item.DaysBehidSchedule.Split('.')[1].Split(':')[0] Months , Behind Schedule To Start</li>
+                                }
+                                else
+                                {
+                                    <li>@days Days - 0 Months  Behind Schedule To Start</li>
+                                }
+                            }
+
+                        </ul>
+                    </td>
+                    <td width="150px">
+                        <ul>
+                            <li>Start: @(item.Project.PlanDateFrom != null ? Convert.ToDateTime(item.Project.PlanDateFrom).ToString("dd-MMM-yyyy") : "") </li>
+                            <li>End: @(item.Project.PlanDateTo != null ? Convert.ToDateTime(item.Project.PlanDateTo).ToString("dd-MMM-yyyy") : "") </li>
+                        </ul>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+        _initDatatable('#dtList');
+        $('#dtList').show();
+    });
+
+
+
+</script>

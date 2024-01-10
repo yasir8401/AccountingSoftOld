@@ -1,0 +1,92 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.Invoicing.Resources
+@inject LocService SharedLocalizer
+
+@{ List<ItemCategories> ItemCategories = Model.ItemsIdList; }
+@section TabName{
+    Lookup Setup
+}
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Item Categories")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a id="printList" href="" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Print")</a>
+
+            <a href="~/admin/ItemCategories/edit" type="button" class="btn btn-sm btn-primary">
+                <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add New")
+            </a>
+        </div>
+        <!-- /. tools -->
+    </div>
+
+    <div class="card-footer pb-0 pt-2 text-sm">
+        <form id="frmSearch">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group ">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Parent Item Category")</label>
+                        <select name="ItemCategoryId" id="ItemCategoryId" class="form-control input-sm text-sm ">
+                            <option value="">All</option>
+                                @foreach (var item in ItemCategories)
+                                {
+                                    <option value="@item.ItemCategoryId"> @item.ItemCategoryNameEn</option>
+                                }
+                        </select>
+                    </div>
+                </div>
+                <div style="display:none">
+                    <button type="submit" class="btn btn-default btn-block">Refresh</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script>
+        $(function () {
+            $('#frmSearch button').click();
+        });
+
+        $('#frmSearch').find('input, select').change(() => {
+            $('#frmSearch button').click();
+        });
+
+        $('#frmSearch').submit(function (e) {
+            e.preventDefault();
+            BindGrid();
+
+        });
+
+
+        function BindGrid() {
+            
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() + 'admin/ItemCategories/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        }
+
+        $('#printList').click(function (e) {
+            var ItemCategoryId = $('#ItemCategoryId').val();
+            window.open(getApplicationName() + "admin/ItemCategories/PrintList?ItemCategoryId=" + ItemCategoryId, "_blank");
+        });
+    </script>
+}
+

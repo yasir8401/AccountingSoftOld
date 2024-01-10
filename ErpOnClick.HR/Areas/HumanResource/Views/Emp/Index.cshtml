@@ -1,0 +1,61 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Employees")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a id="printList" href="" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Print Salary")</a>
+            <a id="printListEmp" href="" target="_blank" class="btn btn-default btn-sm"><i class="fa fa-print fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Print Emp")</a>
+            <a href="~/HumanResource/emp/edit" type="button" class="btn  btn-sm btn-primary">
+                <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add New")
+            </a>
+        </div>
+        <!-- /. tools -->
+    </div>
+
+
+
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+            BindGrid();
+            $('#printList').click(function (e) {
+                window.open(applicationName + "HumanResource/Emp/PrintList?empSalaryCheck=" + true, "_blank");
+            });
+            $('#printListEmp').click(function (e) {
+                window.open(applicationName + "HumanResource/Emp/PrintList?empSalaryCheck=" + false, "_blank");
+            });
+        });
+
+
+        function BindGrid() {
+
+            var test = $('#frmSearch').serialize();
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'HumanResource/emp/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+    </script>
+}

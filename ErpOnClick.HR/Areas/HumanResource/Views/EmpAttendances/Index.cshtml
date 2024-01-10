@@ -1,0 +1,216 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+    DateTime? date = Model.attendanceDate;
+    List<EmpAttendance> employeecheck = Model.employeecheck;
+    var attendancechek = (employeecheck.Count != 0 ? employeecheck.FirstOrDefault().IsSaved : false);
+
+}
+
+@section TabName{
+    Vacant jobs Setup
+}
+<style>
+    
+
+    .text {
+        display: inline-block;
+        padding: 0.5em 1em;
+        min-width: 20em;
+        line-height: 1.2em;
+        background: #84ceeb;
+        position: relative;
+    }
+
+        
+
+</style>
+<input type="hidden" name="attendancechek" id="attendancechek" value="@attendancechek" />
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-3">
+                <h2 class="card-title">
+                    @SharedLocalizer.GetLocalizedHtmlString("Emp Attendances")
+                </h2>
+            </div>
+
+            <div class="col-md-3">
+                <input type="text" placeholder="Attendance Date" value="@(date!=null ?Convert.ToDateTime(date).ToString("dd-MMM-yyyy") : "")" name="AttendanceDate" id="AttendanceDate" class="form-control DatePicker" />
+            </div>
+            <div class="col-md-4">
+                <button class="btn  btn-sm btn-primary" onclick="searchByDate()">@SharedLocalizer.GetLocalizedHtmlString("Search")</button>
+                @*<button class="btn  btn-sm btn-primary" onclick="getEmployees()">@SharedLocalizer.GetLocalizedHtmlString("Get Employees")</button>*@
+            </div>
+
+
+            <!-- tools box -->
+            <div class="col-md-2 text-right">
+                <button onclick="saveAttendace()" @(employeecheck.Count==0 ? "disabled": "") style="margin-left: 94px;" type="button" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+            </div>
+
+        </div>
+
+        <!-- /. tools -->
+    </div>
+    <div id="AttendanceCheck" style="display:none;padding-top:10px;padding-bottom:0px;text-align:center;font-weight:600;letter-spacing:1px">
+        <p style="margin-bottom:-40px">
+            <span class="text" ><strong class="">You did not submit Attendance for this day</strong></span>
+        </p>
+    </div>
+
+
+    <div class="card-body">
+
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            BindGrid();
+            
+            var attendancechek = $('#attendancechek').val();
+
+            console.log(attendancechek);
+            if (attendancechek == false) {
+                $('#AttendanceCheck').show();
+
+            }
+        });
+        var applicationName = getApplicationName();
+
+        function getEmployees() {
+            var attendaceDate = $('#AttendanceDate').val();
+
+            $.ajax({
+                url: applicationName + "HumanResource/EmpAttendances/GetEmployees",
+                async: false,
+                type: "POST",
+                data: { date: attendaceDate },
+                success: function (data) {
+                    window.location = applicationName + 'HumanResource/EmpAttendances?attendanceDate=' + attendaceDate;
+                }
+            });
+        };
+        function searchByDate() {
+            //var date = $('#AttendanceDate').val();
+            var attendaceDate = $('#AttendanceDate').val();
+
+            //if (date == "") {
+            if (attendaceDate == "") {
+                showMsg('Enter !', '!Date First');
+            }
+            else {
+
+                $.ajax({
+                    url: applicationName + "HumanResource/EmpAttendances/GetEmployees",
+                    async: false,
+                    type: "POST",
+                    data: { date: attendaceDate },
+                    success: function (data) {
+                        window.location = applicationName + 'HumanResource/EmpAttendances?attendanceDate=' + attendaceDate;
+                    }
+                });
+
+                //    BindGrid(date);
+            }
+
+
+        }
+
+        function BindGrid(date) {
+            date = (date == null ? $('#AttendanceDate').val() : date);
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: applicationName + 'HumanResource/empattendances/_list',
+                data: { date: date },
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+
+        function saveAttendace() {
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+
+                    var empAttendancesList = new Array();
+
+                    $("#dtList tbody TR").each(function () {
+
+                        var row = $(this);
+                        var EmpAttendance = {};
+
+                        if (row.find("#AllowanceTypeId").val() != "") {
+
+                            var IsPresent = "IsPaidLeave-" + row.find('#EmpId').val();
+                            console.log(row.find("#IsPresent").is(':checked'));
+                            console.log(row.find("#IsPaidLeave").is(':checked'));
+                            console.log(row.find("#IsUnpaidLeave").is(':checked'));
+                            console.log(row.find("#IsShortLeave").is(':checked'));
+                            EmpAttendance.EmpAttendanceId = parseInt(row.find("#EmpAttendanceId").val());
+                            EmpAttendance.EmpId = parseInt(row.find('#EmpId').val());
+                            EmpAttendance.AttendanceDate = ($("#AttendanceDate").val() == "" ? null : $("#AttendanceDate").val());
+                            EmpAttendance.CreatedDate = ($("#CreatedDate").val() == "" ? null : $("#CreatedDate").val());
+                            EmpAttendance.TimeIn = (row.find("#TimeIn").val() == "" ? null : row.find("#TimeIn").val());
+                            EmpAttendance.Note = (row.find("#Note").val() == "" ? null : row.find("#Note").val());
+                            EmpAttendance.TimeOut = (row.find("#TimeOut").val());
+                            EmpAttendance.IsPresent = (row.find("#IsPresent").is(':checked') == true ? true : false);
+                            EmpAttendance.IsPaidLeave = (row.find("#IsPaidLeave").is(':checked') == true ? true : false);
+                            EmpAttendance.IsUnpaidLeave = (row.find("#IsUnpaidLeave").is(':checked') == true ? true : false);
+                            EmpAttendance.IsShortLeave = (row.find("#IsShortLeave").is(':checked') == true ? true : false);
+
+                            empAttendancesList.push(EmpAttendance);
+                        }
+
+
+                    });
+                    var attendaceDate = $('#AttendanceDate').val();
+                    $.ajax({
+                        url: applicationName + "HumanResource/EmpAttendances/save",
+                        data: { postedData: empAttendancesList },
+                        async: false,
+                        type: 'POST',
+
+                        success: function (data) {
+                            
+                            if (data.monthcheck == 1) {
+                                showMsg('Failed !', 'Kindly mark the current month attendance !', 'error');
+
+                            }
+                            else {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'HumanResource/EmpAttendances?attendanceDate=' + attendaceDate;
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
+    </script>
+}

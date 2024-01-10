@@ -1,0 +1,154 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+@{
+    IList<Lookups> CourseType = Model.CourseType;
+    IList<Users> User = Model.User;
+    Courseerp CourseDetails = Model.CourseDetails;
+    bool isEdit = (CourseDetails != null);
+}
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="CourseId" name="CourseId" class="form-control" value="@(CourseDetails != null ? CourseDetails.CourseId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-12">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/HumanResource/Course" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Course Name")</label>
+                        <input type="text" id="CourseName" name="CourseName" class="form-control" value="@(CourseDetails!=null?CourseDetails.CourseName: null)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Course Type")</label>
+                        <select id="CourseType" name="CourseType" class="form-control">
+                            <option></option>
+                            @foreach (var item in CourseType)
+                            {
+                                <option value="@item.Code" @(CourseDetails != null && CourseDetails.CourseType == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Course Issuer")</label>
+                        <select id="CourseIssuer" name="CourseIssuer" class="form-control">
+                            <option></option>
+                            @foreach (var item in User)
+                            {
+                                <option value="@item.UserId" @(CourseDetails != null && CourseDetails.CourseIssuer == item.UserId ? "selected" : "")>
+                                    @item.DisplayNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Course Date")</label>
+                        <input type="text" id="CourseDate" name="CourseDate" class="form-control DatePicker" value="@(CourseDetails != null && CourseDetails.CourseDate !=null ? Convert.ToDateTime(CourseDetails.CourseDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Course Duration")</label>
+                        <input type="text" id="CourseDuration" name="CourseDuration" class="form-control" value="@(CourseDetails!=null?CourseDetails.CourseDuration: null)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("City") </label>
+                        <input type="text" id="City" name="City" class="form-control" value="@(CourseDetails!=null?CourseDetails.City: null)" />
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Country")</label>
+                        <input type="text" id="Country" name="Country" class="form-control" value="@(CourseDetails!=null?CourseDetails.Country: null)" />
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</form>
+
+
+
+
+
+@section scripts{
+    <script>
+
+        $(function () {
+
+        });
+        var applicationName = getApplicationName();
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: applicationName + "HumanResource/Course/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'HumanResource/Course';
+
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

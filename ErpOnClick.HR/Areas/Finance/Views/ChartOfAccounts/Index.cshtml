@@ -1,0 +1,590 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@using ErpOnClick.ErpMain.ViewModel
+
+@inject LocService SharedLocalizer
+@{
+    List<Accounts> Accounts = Model.Accounts;
+    List<AccountTypes> AccountTypes = Model.AccountTypes;
+    List<importData> importedData = Model.importedData;
+    List<importData> importedDatalvl1 = importedData.Where(c => c.Level == "1").ToList();
+    List<importData> importedDatalvl2 = importedData.Where(c => c.Level == "2").ToList();
+    List<importData> importedDatalvl3 = importedData.Where(c => c.Level == "3").ToList();
+    List<importData> importedDatalvl4 = importedData.Where(c => c.Level == "4").ToList();
+    List<importData> importedDatalvl5 = importedData.Where(c => c.Level == "5").ToList();
+    var childnode = 0;
+    var node = 0;
+
+
+}
+<div class="loading col-md-12 " style="text-align:center;"><img style="width: 600px" src="~/adminlte/dist/img/loadingpleasewait.gif" /></div>
+
+<div class="card card-default card-outline" id="div" style="display:none;">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Diagram for Chart Of Accounts")
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a href="@Url.Content("~/")Finance/ChartOfAccounts/ExcelDocument" id="exportdata" type="button" class="btn btn-sm btn-primary">
+                <i class="fas fa-file-export"></i> @SharedLocalizer.GetLocalizedHtmlString("Export File")
+            </a>
+            <a href="javascript:void(0)" id="importdata" onclick="importData()" type="button" class="btn btn-sm btn-primary">
+                <i class="fas fa-file-import"></i> @SharedLocalizer.GetLocalizedHtmlString("Import File")
+            </a>
+            <a href="javascript:void(0)" id="importdata" onclick="showModal()" type="button" class="btn btn-sm btn-light">
+                <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add Account")
+            </a>
+        </div>
+        <!-- /. tools -->
+    </div>
+    <div class="card-footer pb-0 pt-2 text-sm">
+        <div id="jstree">
+            <ul>
+                @foreach (var head in Accounts.Where(c => c.ParentAccountId == null))
+                {
+                    <li>
+                        <span class="head">
+                            @head.AccountNameEn -@head.AccountCode
+                        </span>
+                        <ul>
+                            @foreach (var subhead in Accounts.Where(c => c.ParentAccountId == head.AccountId))
+                            {
+                                childnode = childnode + 1;
+                                <li id="child_node_@childnode">
+                                    @subhead.AccountNameEn -@subhead.AccountCode
+                                    <span class="text-right">
+                                        <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" onclick="edit('@subhead.AccountId')" class="btn btn-default btn-sm"><i class="fa fa-edit text-dark"></i></a>
+                                    </span>
+                                    <ul>
+                                        @foreach (var subsubhead in Accounts.Where(c => c.ParentAccountId == subhead.AccountId))
+                                        {
+                                            <li>
+                                                @subsubhead.AccountNameEn -@subsubhead.AccountCode
+                                                <span class="text-right">
+                                                    <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" onclick="edit('@subsubhead.AccountId')" class="btn btn-default btn-sm"><i class="fa fa-edit text-dark"></i></a>
+                                                </span>
+                                                <ul>
+                                                    @foreach (var account in Accounts.Where(c => c.ParentAccountId == subsubhead.AccountId))
+                                                    {
+                                                        <li>
+                                                            @account.AccountNameEn -@account.AccountCode
+                                                            <span class="text-right">
+                                                                <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" onclick="edit('@account.AccountId')" class="btn btn-default btn-sm"><i class="fa fa-edit text-dark"></i></a>
+                                                            </span>
+                                                            <ul>
+                                                                @foreach (var lower in Accounts.Where(c => c.ParentAccountId == account.AccountId))
+                                                                {
+                                                                    <li class="last" id="last_@lower.AccountId">
+                                                                        @lower.AccountNameEn -@lower.AccountCode
+                                                                        <span class="text-right">
+                                                                            <a href="javascript:void(0)" data-toggle="tooltip" title="Delete" onclick="deleteitem('@subhead.AccountId')" class="btn btn-default btn-sm"><i class="fa fa-trash text-danger"></i></a>
+                                                                            <a href="javascript:void(0)" data-toggle="tooltip" title="Edit" onclick="edit('@lower.AccountId')" class="btn btn-default btn-sm"><i class="fa fa-edit text-dark"></i></a>
+                                                                        </span>
+                                                                    </li>
+
+                                                                }
+                                                            </ul>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+@*<div class="card-footer pb-0 pt-2 text-sm" style="visibility:hidden">
+        <div class="table-responsive pb-2 ">
+            <form>
+                <table id="dtList" class="table table-hover table-condensed ">
+                    <thead class="text-sm ">
+                        <tr class="col-lg-12">
+                            <th style="width:20px">@SharedLocalizer.GetLocalizedHtmlString("Code")</th>
+                            <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+                            <th>@SharedLocalizer.GetLocalizedHtmlString("Level")</th>
+                            <th>@SharedLocalizer.GetLocalizedHtmlString("Nature")</th>
+                        </tr>
+                    </thead>
+                    <tfoot style="display:table-row-group">
+                        <tr class="text-center">
+                            <th style="width:20px">Code</th>
+                            <th>Name EN</th>
+                            <th>Level</th>
+                            <th>Nature</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var head in importedData)
+                        {
+                            <tr id="tr">
+                                <td align="center" id="Code"> @head.Code </td>
+                                <td id="Name"> @head.Name</td>
+                                <td id="Level" align="center"> @head.Level </td>
+                                <td id="Nature" align="center"> @head.Nature</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>*@
+
+
+<style>
+    .accent-orange .btn-link, .accent-orange a:not(.dropdown-item):not(.btn-app):not(.nav-link):not(.brand-link):not(.page-link):not(.btn) {
+        color: #6d8888 !important;
+    }
+
+    #jstree {
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+    }
+
+    .jstree-default .jstree-node {
+        min-height: 35px !important;
+        line-height: 35px;
+        margin-left: 24px;
+        min-width: 24px;
+    }
+
+    .head {
+        /*font-style: normal;
+        font-weight: bold;
+        letter-spacing: 1px;*/
+        font-size: 13px;
+    }
+
+    /* The customcheck */
+    .customcheck {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        /* Hide the browser's default checkbox */
+        .customcheck input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+    /* Create a custom checkbox */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 25px;
+        width: 25px;
+        background-color: #dbefef;
+        border-radius: 5px;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .customcheck:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the checkbox is checked, add a blue background */
+    .customcheck input:checked ~ .checkmark {
+        background-color: #84ceeb;
+        border-radius: 5px;
+    }
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .customcheck input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .customcheck .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    #jstree ul li .jstree-anchor {
+        width: 98%;
+    }
+
+        #jstree ul li .jstree-anchor .text-right {
+            float: right;
+        }
+
+    .jstree-default .jstree-wholerow {
+        height: 29px !important;
+    }
+
+    .jstree li.last > a > .jstree-icon {
+        background-image: none !important;
+    }
+
+        .jstree li.last > a > .jstree-icon::before {
+            font-family: "Font Awesome 5 Free" !important;
+            font-weight: 900 !important;
+            content: "\f1ea" !important;
+        }
+</style>
+
+@Html.Partial("/areas/Finance/Views/ChartOfAccounts/_generalModalPartial.cshtml")
+@Html.Partial("/areas/Finance/Views/ChartOfAccounts/_addAccountModalPartial.cshtml")
+@section scripts{
+
+    <script>
+        $(function () {
+            $(".loading").fadeOut(1500, function () {
+                $("#div").fadeIn(500);
+            });
+
+            $('#Accli').addClass("menu-open");
+            $('#Reportsli').removeClass("menu-open");
+            $('#Statementsli').removeClass("menu-open");
+            $('#AccPli').removeClass("menu-open");
+            $('#AccRli').removeClass("menu-open");
+            $('#Setupli').removeClass("menu-open");
+            
+            $('#jstree').jstree({
+                "plugins": ["wholerow"]
+            });
+        });
+
+
+        $('#jstree').on("changed.jstree", function (e, data) {
+            console.log(data.selected);
+        });
+        function importData() {
+            $('#importdataModal').modal('show');
+        }
+
+
+        $('#formimportCOA').submit(function (e) {
+
+            e.preventDefault();
+
+            var ext = $('#ChartOfAccountFile').val().split('.').pop().toLowerCase();
+            if (!(ext == "xlsx" || ext == "xls")) {
+                document.getElementById(this.id).value = "";
+                showMsg("Invalid File Type !", "You may only upload Excel files. Please ensure your file is in one of these formats.", "error");
+                isValidated = false;
+            }
+            else {
+                var file = $("#ChartOfAccountFile")[0].files[0];
+                var reader = new FileReader();
+                var excelData = [];
+                var ImportData = Array();
+                var _ImportData = {};
+                var count = 0;
+                var check = false;
+                reader.onload = function (event) {
+                    var data = event.target.result;
+                    var workbook = XLSX.read(data, {
+                        type: 'binary'
+                    });
+
+                    workbook.SheetNames.forEach(function (sheetName) {
+                        // Here is your object
+                        if (sheetName == "Chart of Account") {
+
+                            var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                            var row = "";
+                            var ImportData = new Array();
+                            $.each(XL_row_object, function (key, value) {
+
+                                var DataRows = {};
+                                DataRows.LineId = value.Code;
+                                DataRows.Name = value.Name;
+                                DataRows.Level = value.Level;
+                                DataRows.Nature = value.Nature;
+                                ImportData.push(DataRows);
+                                count = count + 1;
+                                if (count == XL_row_object.length) {
+                                    check = true;
+                                }
+                            });
+                            var Data = {
+
+                                IData: ImportData
+                            };
+
+                            if (check == true) {
+                                sendData();
+                            }
+
+                        }
+                        else {
+                            //showMsg('Import Failed !', 'Selected File/Sheet in Incorrect. Try again', 'error');
+                        }
+                    });
+                };
+
+                reader.onerror = function (ex) {
+                    console.log(ex);
+                };
+
+                reader.readAsBinaryString(file);
+            }
+
+        });
+
+        function sendData() {
+
+            $('#formimportCOA').find('#formsubmit').html('<i class="fa fa-spinner fa-spin fa-fw"></i> Please Wait, While Your Data is Importing...');
+            $('#formimportCOA').find('#formsubmit').prop("disabled", true);
+            var params = $('#formimportCOA').serialize();
+            var formEl = document.forms.formimportCOA;
+            var formData = new FormData(formEl);
+            $.ajax({
+                url: getApplicationName() + "Finance/ChartOfAccounts/ImportData",
+                type: 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                data: formData ? formData : params,
+                success: function (data) {
+
+                    if (data.result.isError == false) {
+                        setTimeout(function () {
+                            showMsg('Data Imported !', 'Data has been Imported !', 'success');
+                            window.location.href = getApplicationName() + 'Finance/ChartOfAccounts/Index?filename=' + data.result.msg;
+
+                        }, 1000);
+                        $('#formimportCOA').find('#formsubmit').html('<i class="fa fa-paperclip fa-fw"></i> Upload Now');
+                        $('#formimportCOA').find('#formsubmit').prop("disabled", false);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+
+        }
+
+        function showModal() {
+            getCOA();
+            gettypes();
+            $('#addAccountModal').modal("show");
+        }
+
+        function getCOA(id, isTransactionable) {
+
+            $.ajax({
+                url: getApplicationName() + "Finance/ChartOfAccounts/GetChartOfAccounts",
+                type: "POST",
+                success: function (data) {
+
+                    if (data.result.length > 0) {
+                        var maxhead = 0;
+                        var toprow = "<option value='' selected disabled></option>";
+                        var rows = toprow + "";
+                        $.each(data.result, function (key, value) {
+                            maxhead = (value.nature > maxhead ? value.nature : maxhead);
+                            for (var head = 1; head <= maxhead; head++) {
+                                if (value.code == head && value.nature == head) {
+                                    rows += "<option class='bg-gray' disabled value=" + value.accountId + " " + (id != 0 && id == value.accountId ? "Selected" : "") + ">" + value.name + " (Level: " + value.level + ")" + "</option>";
+                                    $.each(data.result, function (subkey, subvalue) {
+                                        if (subvalue.code.substring(0, 1) == head && subvalue.level == 2 && subvalue != value) {
+                                            rows += "<option class='bg-gray' disabled value=" + subvalue.accountId + " " + (id != 0 && id == subvalue.accountId ? "Selected" : "") + ">--" + subvalue.name + " (Level: " + subvalue.level + ")" + "</option>";
+                                            $.each(data.result, function (subsubkey, subsubvalue) {
+                                                if (subsubvalue.code.substring(0, 2) == subvalue.code && subsubvalue.level == 3 && subsubvalue != subvalue) {
+                                                    rows += "<option class='bg-gray' disabled value=" + subsubvalue.accountId + " " + (id != 0 && id == subsubvalue.accountId ? "Selected" : "") + ">----" + subsubvalue.name + " (Level: " + subsubvalue.level + ")" + "</option>";
+                                                    $.each(data.result, function (subsubsubkey, subsubsubvalue) {
+                                                        if (subsubsubvalue.code.substring(0, 4) == subsubvalue.code && subsubsubvalue.level == 4 && subsubsubvalue != subsubvalue) {
+                                                            rows += "<option value=" + subsubsubvalue.accountId + " " + (id != 0 && id == subsubsubvalue.accountId ? "Selected" : "") + ">------" + subsubsubvalue.name + " (Level: " + subsubsubvalue.level + ")" + "</option>";
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                        $('#Parent').html(rows);
+                    }
+                    ParentChange('#Parent', isTransactionable);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        function gettypes(id) {
+            $.ajax({
+                url: getApplicationName() + "Finance/ChartOfAccounts/GetAccountTypes",
+                type: "POST",
+                success: function (data) {
+
+                    if (data.result.length > 0) {
+                        var toprow = "<option value='' selected disabled></option>";
+                        var rows = toprow + "";
+                        $.each(data.result, function (key, value) {
+
+                            rows += "<option value=" + value.accountTypeId + " " + (id != 0 && id == value.accountTypeId ? "selected" : "") + ">" + value.accountTypeNameEn + "</option>";
+                        });
+                        $('#AccountType').html(rows);
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        $('#formAddChartOfAccount').submit(function (e) {
+            e.preventDefault();
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#formAddChartOfAccount').serialize();
+                    $.ajax({
+                        url: getApplicationName() + "Finance/ChartOfAccounts/AddChartOfAccount",
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+
+                            if (data.result.isError == false) {
+                                setTimeout(function () {
+                                    showMsg('Saved !', 'Record has been saved !', 'success');
+                                    $('#addAccountModal').modal("hide");
+                                    window.location.reload();
+
+                                }, 1000);
+                            }
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
+                }
+            });
+        });
+
+
+        function edit(id) {
+            var parentcoa = 0;
+            var type = 0;
+            var isTransactionable = null;
+            $.ajax({
+                url: getApplicationName() + "Finance/ChartOfAccounts/GetAccountDetails",
+                async: false,
+                type: "POST",
+                data: { id, id },
+                success: function (data) {
+
+                    if (data.result != null) {
+
+                        if (data.result.isTransactionable == true) {
+                            $('#IsTransactionable').prop("checked", true);
+                            isTransactionable = true;
+                        }
+                        else {
+                            $('#IsTransactionable').prop("checked", false);
+                            isTransactionable = false;
+                        }
+                        parentcoa = data.result.parentAccountId;
+                        type = data.result.accountTypeId;
+                        $('#Id').val(data.result.accountId);
+                        $('#Name').val(data.result.accountNameEn);
+                        $('#Code').val(data.result.accountCode);
+                        $('#OpeningBalance').val(data.result.openingBalance);
+                        $('#Balance').val(data.result.closingBalance);
+                        $("#DefaultType option").each(function (e) {
+                            if ($(this).val() == data.result.defaultType) {
+                                $(this).attr("selected", "selected");
+                            }
+                        });
+                        $("#Status option").each(function (e) {
+                            if ($(this).val() == "Active" && data.result.status == true) {
+                                $(this).attr("selected", "selected");
+                            }
+                            else if ($(this).val() == "Inactive" && data.result.status == false) {
+                                $(this).attr("selected", "selected");
+                            }
+                        });
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+            getCOA(parentcoa, isTransactionable);
+            gettypes(type);
+            $('#addAccountModal').modal("show");
+        }
+
+        function deleteitem(id) {
+            confirmAction('Confirm ?', 'Are you sure you want to delete ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+                    $.ajax({
+                        url: getApplicationName() + "Finance/ChartOfAccounts/Delete",
+                        async: false,
+                        type: "POST",
+                        data: { id },
+                        success: function (data) {
+                            if (data.result.isError == true) {
+                                showMsg('Deleted !', 'Record has been deleted !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'Finance/ChartOfAccounts';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Delete Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Delete Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function ParentChange(e, isTransactionable = true) {
+            
+            var isTransactionable = isTransactionable;
+            var dropdownid = $(e).attr("id");
+            var value = $("#" + dropdownid + " option:selected").text();
+            if (value.toLowerCase().indexOf("4") >= 0) {
+                $('#checkboxdiv').show();
+                $('#CheckboxdivParentALternate').hide();
+                $('#IsTransactionable').prop("checked", (isTransactionable != null ? isTransactionable : true));
+            }
+            else {
+                $('#CheckboxdivParentALternate').show();
+                $('#IsTransactionable').prop("checked", false);
+                $('#checkboxdiv').hide();
+            }
+        }
+    </script>
+}

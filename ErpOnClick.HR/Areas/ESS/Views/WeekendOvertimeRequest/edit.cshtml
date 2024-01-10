@@ -1,0 +1,307 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+
+@{
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Emp> employeesList = Model.employeesList;
+
+    List<Lookups> RequestStatus = Model.RequestStatus;
+    List<Lookups> RequestType = Model.RequestType;
+
+    List<Emp> employee = Model.employee;
+    //List<Emp> employeesList = Model.employeesList;
+
+    WeekendOvertime WeekendOvertimeDetail = Model.WeekendOvertimeDetail;
+    bool isEdit = (WeekendOvertimeDetail != null);
+}
+
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="RecId" name="RecId" class="form-control" value="@(WeekendOvertimeDetail != null ? WeekendOvertimeDetail.RecId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(WeekendOvertimeDetail != null ? WeekendOvertimeDetail.CompanyId : 0)">
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(WeekendOvertimeDetail != null ? WeekendOvertimeDetail.BranchId : 0)">
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Weekend Overtime Request Detail")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "hidden" : "")>
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save Weekend Overtime Request")
+                </button>
+                <a id="postBtn" @(!isEdit ? "hidden" : "" ) class="btn  btn-sm btn-success" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "hidden" : "")>
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Submit For Approval")
+                </a>
+                <a href="~/ESS/WeekendOvertimeRequest" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group" >
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Employee")</label>
+                        <select id="EmpId" name="EmpId" class="form-control" required @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "disabled" : "")>
+                            <option selected></option>
+                            @foreach (var item in employee)
+                            {
+                                <option value="@item.EmpId" selected>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "" : "hidden")>
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Request Status")</label>
+                        <select id="ApprovalStatus" name="ApprovalStatus" class="form-control" required disabled>
+                            <option selected></option>
+                            @foreach (var item in RequestStatus)
+                            {
+                                <option value="@item.Code" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus == item.Code ? "selected" : "")>
+                                    @(item.LookupNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Task Name")</label>
+                        <input type="text" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "disabled" : "") id="JobTitle" name="JobTitle" class="form-control" value="@(WeekendOvertimeDetail!=null?WeekendOvertimeDetail.JobTitle: "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Total Number of Days")</label>
+                        <input type="number" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "disabled" : "") min="0" id="TotalDays" name="TotalDays" class="form-control" value="@(WeekendOvertimeDetail!=null?WeekendOvertimeDetail.TotalDays: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Total Number of Hours")</label>
+                        <input type="number" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "disabled" : "") min="0" id="TotalHours" name="TotalHours" class="form-control" value="@(WeekendOvertimeDetail!=null?WeekendOvertimeDetail.TotalHours: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Date From") </label>
+                        <input type="text" id="DateFrom" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "disabled" : "") name="DateFrom" class="form-control DatePicker" value="@(WeekendOvertimeDetail != null && WeekendOvertimeDetail.DateFrom !=null ? Convert.ToDateTime(WeekendOvertimeDetail.DateFrom).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Date To") </label>
+                        <input type="text" id="DateTo" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "disabled" : "") name="DateTo" class="form-control DatePicker" value="@(WeekendOvertimeDetail != null && WeekendOvertimeDetail.DateTo !=null ? Convert.ToDateTime(WeekendOvertimeDetail.DateTo).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Assigned By")</label>
+                        <select id="AssignedBy" name="AssignedBy" class="form-control" required @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "disabled" : "")>
+                            <option selected></option>
+                            @foreach (var item in employeesList)
+                            {
+                                <option value="@item.EmpId" @((WeekendOvertimeDetail != null && WeekendOvertimeDetail.AssignedBy != null && WeekendOvertimeDetail.AssignedBy == item.EmpId) ? "selected": "")>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Assignment")
+            </h2>
+        </div>
+        <div class="card-body p-2">
+            <textarea rows="3" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.ApprovalStatus != null ? "disabled" : "") id="Assignment" name="Assignment" class="form-control " placeholder="Enter Assignment here...">@(WeekendOvertimeDetail != null ? WeekendOvertimeDetail.Assignment : "")</textarea>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8" style="display:none">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option></option>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(WeekendOvertimeDetail != null && WeekendOvertimeDetail.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+            $('#CompanyId').change(function () {
+
+                var id = $('#CompanyId').val();
+
+                $.ajax({
+                    url: applicationName + "Ajax/BranchCascading",
+                    async: false,
+                    type: "POST",
+                    data: { id: id },
+                    success: function (data) {
+
+                        var item = '';
+
+                        $.each(data.result, function (i, product) {
+
+                            item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                        });
+
+                        $("#BranchId").html(item);
+
+                    }
+                });
+
+            });
+
+
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+
+                    $.ajax({
+                        url: applicationName + "ESS/WeekendOvertimeRequest/" + actionType,
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'ESS/WeekendOvertimeRequest';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#postBtn').click(function () {
+
+
+            confirmAction('Confirm ?', 'Are you sure you want to Post  ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+                    var id = $('#RecId').val();
+
+                    $.ajax({
+                        url: applicationName + "ESS/WeekendOvertimeRequest/Post",
+                        async: false,
+                        type: "POST",
+                        data: { id: id },
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been Posted !', 'success');
+                                setTimeout(function () {
+                                    debugger;
+                                    var id = data.result.scalerVal;
+                                    window.location = applicationName + 'ESS/WeekendOvertimeRequest/Edit?id=' + id;
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

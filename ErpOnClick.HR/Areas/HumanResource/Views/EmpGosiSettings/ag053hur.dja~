@@ -1,0 +1,130 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+    var empId = Model.empId;
+    Emp empDetails = Model.empDetails;
+    EmpGosiSettings EmpGosiSettingsDetails = Model.EmpGosiSettingsDetails;
+    bool isEdit = (EmpGosiSettingsDetails != null);
+}
+
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="GosiSettingsId" name="GosiSettingsId" class="form-control" value="@(EmpGosiSettingsDetails != null ? EmpGosiSettingsDetails.GosiSettingsId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header p-0 border-bottom-0">
+            <div class="card" style="background-color: #496b6a">
+            </div>
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="navigation('@empId')" href="javascript:void(0)"><i class="fa fa-info"></i> @SharedLocalizer.GetLocalizedHtmlString("General Info")</a>
+                </li>
+
+                @Html.Partial("/Areas/HumanResource/Views/Emp/_tabsPartial.cshtml", empDetails)
+
+            </ul>
+        </div>
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Gosi Settings Detail")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Gosi Settings Name En")</label>
+                        <input type="text" id="GosiSettingNameEn" name="GosiSettingNameEn" class="form-control" value="@(EmpGosiSettingsDetails!=null?EmpGosiSettingsDetails.GosiSettingNameEn: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Gosi Settings Name Er")</label>
+                        <input type="text" id="GosiSettingNameAr" name="GosiSettingNameAr" class="form-control" value="@(EmpGosiSettingsDetails!=null?EmpGosiSettingsDetails.GosiSettingNameAr: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Joining Date")</label>
+                        <input type="text" id="JoiningDate" name="JoiningDate" class="form-control DatePicker" value="@(EmpGosiSettingsDetails != null && EmpGosiSettingsDetails.JoiningDate !=null ? Convert.ToDateTime(EmpGosiSettingsDetails.JoiningDate).ToString("dd-MMM-yyyy") : "")">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Gosi Code")</label>
+                        <input type="text" id="GosiSettingCode" name="GosiSettingCode" class="form-control" value="@(EmpGosiSettingsDetails!=null?EmpGosiSettingsDetails.GosiSettingCode: null)">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+@section scripts{
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+
+            $("#tabGosiSettings-tab").css("background-color", "#496b6a");
+            $("#tabGosiSettings-tab").css("color", "white");
+
+        });
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: applicationName + "HumanResource/EmpGosiSettings/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName +'HumanResource/EmpGosiSettings/emp/@empId';
+
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+        function navigation() {
+            window.location = applicationName +'HumanResource/emp/edit/@empId'
+        };
+    </script>
+
+}

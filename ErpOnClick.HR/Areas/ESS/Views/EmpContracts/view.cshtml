@@ -1,0 +1,868 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+
+@{
+    IList<Emp> EmpList = Model.EmpList;
+    IList<Divisions> divisionList = Model.divisionList;
+    IList<Departments> departmentList = Model.departmentList;
+    IList<Sections> sectionsList = Model.sectionsList;
+    IList<SubSections> subSectionsList = Model.subSectionsList;
+    IList<Units> unitList = Model.unitList;
+    IList<Teams> teamList = Model.teamList;
+    IList<Grades1> gradeList = Model.gradeList;
+    IList<GosiSettings> gosiList = Model.gosiList;
+    IList<AirTicketProfiles> ticketProfleList = Model.ticketProfleList;
+    IList<HousingAllowances> housingAllocanceList = Model.housingAllocanceList;
+    IList<PayGroups> payGroupList = Model.payGroupList;
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<AbsentProfiles> absentProfileList = Model.absentProfileList;
+    IList<EmpContractsPackage> EmpContractPackageDetailsList = Model.EmpContractPackageDetailsList;
+    IList<Lookups> AllowanceTypeList = Model.AllowanceTypeList;
+
+    IList<Lookups> ContractStatusList = Model.ContractStatusList;
+    var empId = Model.empId;
+    Emp empDetails = Model.empDetails;
+
+    EmpContracts EmpContractDetails = Model.EmpContractDetails;
+    bool isEdit = (EmpContractDetails != null);
+}
+<style>
+    #tblLines thead th {
+        text-align: center !important;
+        font-size: 12px !important;
+        vertical-align: bottom;
+        white-space: nowrap;
+        background-color: #efefef;
+        color: #45547d;
+        padding: 10px 0px;
+    }
+
+    #tblLines tbody td {
+        padding: 0px;
+    }
+
+        #tblLines tbody td .form-control {
+            padding: 1px;
+            border: 0px !important;
+            margin: 0px;
+            font-size: 13px;
+            text-align: center;
+            background-color: transparent;
+        }
+
+    #tblLines .trSum td .form-control {
+        font-weight: bold;
+        background-color: #efefef;
+        border-radius: 0px !important;
+    }
+
+    .bg-danger {
+        background-color: white;
+    }
+</style>
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="EmpContractId" name="EmpContractId" class="form-control" value="@(EmpContractDetails != null ? EmpContractDetails.EmpContractId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(EmpContractDetails != null ? EmpContractDetails.CompanyId : 0)" >
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(EmpContractDetails != null ? EmpContractDetails.BranchId : 0)" >
+
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header p-0 border-bottom-0">
+            <div class="card" style="background-color: #496b6a">
+            </div>
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="navigation('@empId')" href="javascript:void(0)"><i class="fa fa-info"></i> @SharedLocalizer.GetLocalizedHtmlString("General Info")</a>
+                </li>
+
+
+                @Html.Partial("/Areas/ESS/Views/Profile/_tabsPartial.cshtml", empDetails)
+
+
+            </ul>
+        </div>
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Details")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+               
+                <a href="~/ESS/EmpContracts/emp/@empId" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i>@SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Emp")</label>
+                        <select id="EmpId" name="EmpId" class="form-control" disabled>
+                            @foreach (var item in EmpList)
+                            {
+                                <option value="@item.EmpId" @(EmpContractDetails != null && EmpContractDetails.EmpId == item.EmpId ? "selected" : "")>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn + " " + item.GrandNameEn + " " + item.FamilyNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Contract Months")</label>
+                        <input disabled type="text" id="ContractPeriodMonths" name="ContractPeriodMonths" class="form-control" value="@(EmpContractDetails!=null?EmpContractDetails.ContractPeriodMonths: 0)">
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Joining Date")</label>
+                        <input disabled type="text" id="JoiningDate" name="JoiningDate" class="form-control DatePicker" value="@(EmpContractDetails != null && EmpContractDetails.JoiningDate !=null ? Convert.ToDateTime(EmpContractDetails.JoiningDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Joining Date Hijri")</label>
+                        <input disabled type="text" id="JoiningDateHijri" name="JoiningDateHijri" class="form-control DatePickerHijri" value="@(EmpContractDetails != null && EmpContractDetails.JoiningDateHijri !=null ? Convert.ToDateTime(EmpContractDetails.JoiningDateHijri).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Expiry Date")</label>
+                        <input disabled type="text" id="ExpiryDate" name="ExpiryDate" class="form-control DatePicker" value="@(EmpContractDetails != null && EmpContractDetails.ExpiryDate !=null ? Convert.ToDateTime(EmpContractDetails.ExpiryDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Expiry Date Hijri")</label>
+                        <input disabled type="text" id="ExpiryDateHijri" name="ExpiryDateHijri" class="form-control DatePickerHijri" value="@(EmpContractDetails != null && EmpContractDetails.ExpiryDateHijri !=null ? Convert.ToDateTime(EmpContractDetails.ExpiryDateHijri).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Contract Start Date")</label>
+                        <input disabled type="text" id="ContractStartDate" name="ContractStartDate" class="form-control DatePicker" value="@(EmpContractDetails != null && EmpContractDetails.ContractStartDate !=null ? Convert.ToDateTime(EmpContractDetails.ContractStartDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Contact Inactive-Date")</label>
+                        <input disabled type="text" id="ContactInactiveDate" name="ContactInactiveDate" class="form-control DatePicker" value="@(EmpContractDetails != null && EmpContractDetails.ContactInactiveDate !=null ? Convert.ToDateTime(EmpContractDetails.ContactInactiveDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+
+
+
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Contract Active Status")</label>
+                        <select id="ContractStatus" name="ContractStatus" class="form-control" required disabled>
+
+                            @foreach (var item in ContractStatusList)
+                            {
+                                <option value="@item.Code" @(EmpContractDetails != null && EmpContractDetails.ContractStatus == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3" style="display:none;">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("ThreshHold Salary")</label>
+                        <input disabled type="number" id="ThreshHoldSalary" placeholder="This is No, of salaries for secuirty" name="ThreshHoldSalary" class="form-control" value="@(EmpContractDetails!=null?EmpContractDetails.ThreshHoldSalary: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-3" style="display:none;">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Total Exampt Salary From Previous Employer")</label>
+                        <input disabled type="number" step="any" id="TotalExamptSalaryFromPreviousEmployer" name="TotalExamptSalaryFromPreviousEmployer" class="form-control" value="@(EmpContractDetails!=null?EmpContractDetails.TotalExamptSalaryFromPreviousEmployer: 0)">
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Annual Leaves Entitlement")</label>
+                        <input type="number" disabled step="any" id="TotalAnnualLeavesPerYear" name="TotalAnnualLeavesPerYear" class="form-control" value="@(EmpContractDetails!=null && EmpContractDetails.TotalAnnualLeavesPerYear != null ?EmpContractDetails.TotalAnnualLeavesPerYear: 30)">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-12">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("More Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+
+
+
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Division")</label>
+                        <select id="DivisionId" name="DivisionId" class="form-control" required disabled>
+                            <option selected></option>
+                            @foreach (var item in divisionList)
+                            {
+                                <option value="@item.DivisionId" @(EmpContractDetails != null && EmpContractDetails.DivisionId == item.DivisionId ? "selected" : "")>
+                                    @item.DivisionNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Department")</label>
+                        <select id="DepartmentId" name="DepartmentId" class="form-control" required disabled>
+                            <option selected></option>
+                            @foreach (var item in departmentList)
+                            {
+                                <option value="@item.DepartmentId" @(EmpContractDetails != null && EmpContractDetails.DepartmentId == item.DepartmentId ? "selected" : "")>
+                                    @item.DepartmentNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Section")</label>
+                        <select id="SectionId" name="SectionId" class="form-control" required disabled>
+                            <option selected></option>
+                            @foreach (var item in sectionsList)
+                            {
+                                <option value="@item.SectionId" @(EmpContractDetails != null && EmpContractDetails.SectionId == item.SectionId ? "selected" : "")>
+                                    @item.SectionNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Sub Section")</label>
+                        <select id="SubSectionId" name="SubSectionId" class="form-control" disabled>
+                            <option selected></option>
+                            @foreach (var item in subSectionsList)
+                            {
+                                <option value="@item.SubSectionId" @(EmpContractDetails != null && EmpContractDetails.SubSectionId == item.SubSectionId ? "selected" : "")>
+                                    @item.SubSectionNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Unit")</label>
+                        <select id="UnitId" name="UnitId" class="form-control" disabled>
+                            <option selected></option>
+                            @foreach (var item in unitList)
+                            {
+                                <option value="@item.UnitId" @(EmpContractDetails != null && EmpContractDetails.UnitId == item.UnitId ? "selected" : "")>
+                                    @item.UnitNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Team")</label>
+                        <select id="TeamId" name="TeamId" class="form-control" disabled>
+                            <option selected></option>
+                            @foreach (var item in teamList)
+                            {
+                                <option value="@item.TeamId" @(EmpContractDetails != null && EmpContractDetails.TeamId == item.TeamId ? "selected" : "")>
+                                    @item.TeamEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Grade") </label>
+                        <select id="GradeId" name="GradeId" class="form-control" disabled>
+                            <option selected></option>
+                            @foreach (var item in gradeList)
+                            {
+                                <option value="@item.GradeId" @(EmpContractDetails != null && EmpContractDetails.GradeId == item.GradeId ? "selected" : "")>
+                                    @item.GradeNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Gosi") </label>
+                        <select id="GosiId" name="GosiId" class="form-control" disabled>
+                            <option selected></option>
+                            @foreach (var item in gosiList)
+                            {
+                                <option value="@item.GosiSettingId" @(EmpContractDetails != null && EmpContractDetails.GosiId == item.GosiSettingId ? "selected" : "")>
+                                    @item.GosiSettingNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 " style="display:none;">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Absent Profile")</label>
+                        <select id="AbsentProfileId" name="AbsentProfileId" class="form-control" disabled>
+                            <option selected></option>
+                            @foreach (var item in absentProfileList)
+                            {
+                                <option value="@item.AbsentProfileId" @(EmpContractDetails != null && EmpContractDetails.AbsentProfileId == item.AbsentProfileId ? "selected" : "")>
+                                    @item.AbsentProfileNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 " style="display:none;">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Ticket Profile")</label>
+                        <select id="TicketProfileId" name="TicketProfileId" class="form-control" disabled>
+                            <option selected></option>
+                            @foreach (var item in ticketProfleList)
+                            {
+                                <option value="@item.AirTicketProfileId" @(EmpContractDetails != null && EmpContractDetails.TicketProfileId == item.AirTicketProfileId ? "selected" : "")>
+                                    @item.AirTicketProfileNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 " style="display:none;">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Housing Allowance")</label>
+                        <select id="HousingAllowanceId" name="HousingAllowanceId" class="form-control" disabled>
+                            <option selected></option>
+                            @foreach (var item in housingAllocanceList)
+                            {
+                                <option value="@item.HousingAllowanceId" @(EmpContractDetails != null && EmpContractDetails.HousingAllowanceId == item.HousingAllowanceId ? "selected" : "")>
+                                    @item.HousingAllowanceNameEn
+
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3 " style="display:none;">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Pay Group")</label>
+                        <select id="PayGroupId" name="PayGroupId" class="form-control" disabled>
+                            <option selected></option>
+                            @foreach (var item in payGroupList)
+                            {
+                                <option value="@item.PayGroupId" @(EmpContractDetails != null && EmpContractDetails.PayGroupId == item.PayGroupId ? "selected" : "")>
+                                    @item.PayGroupNameEn
+
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card card-outline card-outline col-lg-12">
+        <div class="card-header">
+            <h3 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Notes")
+            </h3>
+
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body pad">
+            <div class="mb-3">
+                <textarea required id="Notes" rows="8" name="Notes" disabled
+                          style="width: 100%; height: 200px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(EmpContractDetails != null? EmpContractDetails.Notes : "")</textarea>
+            </div>
+
+        </div>
+    </div>
+    <div class="card card-outline card-outline col-lg-12" style="display:none">
+        <div class="card-header">
+            <h3 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h3>
+
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body pad">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option selected></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(EmpContractDetails != null && EmpContractDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option selected></option>
+                            @foreach (var item in branchList)
+                            {
+                                <option value="@item.BranchId" @(EmpContractDetails != null && EmpContractDetails.BranchId == item.BranchId ? "selected" : "")>
+                                    @item.BranchNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="card card-outline card-outline col-lg-12">
+        <div class="card-header">
+            <h3 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Emp Contract Packages")
+            </h3>
+
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+
+            <div class="row">
+                <div class="table-responsive">
+                    <table id="tblLines" class="table table-bordered margin-0">
+                        <thead>
+                            <tr>
+                                <th width="30px" style="display:none"> @SharedLocalizer.GetLocalizedHtmlString("S.No") </th>
+                                <th> @SharedLocalizer.GetLocalizedHtmlString("AllowanceTypeId")</th>
+                                <th> @SharedLocalizer.GetLocalizedHtmlString("Amount")</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr id="trSample" style="display:none">
+                                <td style="display:none">
+                                    <input type="hidden" id="EmpContractsPackageId" name="EmpContractsPackageId" value="0">
+                                </td>
+                                <td>
+                                    <select class="form-group form-control" name="AllowanceTypeId" id="AllowanceTypeId" >
+                                        <option></option>
+                                        @foreach (var item in AllowanceTypeList)
+                                        {
+                                            <option value="@item.LookupId"> @item.LookupNameEn</option>
+                                        }
+                                    </select>
+
+                                </td>
+                                <td><input id="Amount" name="Amount" type="number" step="any" class="form-control input-sm text-right" min="0"></td>
+                                
+                            </tr>
+                            @if (EmpContractPackageDetailsList.Count() != 0)
+                            {
+
+                                @foreach (var item in EmpContractPackageDetailsList)
+                                {
+                                    <tr>
+                                        <td style="display:none">
+                                            <input type="hidden" id="EmpContractsPackageId" name="EmpContractsPackageId" value="@(item.EmpContractsPackageId != 0 ? item.EmpContractsPackageId : 0)">
+                                        </td>
+                                        <td>
+                                            <select class="form-group form-control" name="AllowanceTypeId" id="AllowanceTypeId" disabled>
+                                                <option></option>
+                                                @foreach (var itemTwo in AllowanceTypeList)
+                                                {
+                                                    if (itemTwo.LookupId == item.AllowanceTypeId)
+                                                    {
+                                                        <option value="@itemTwo.LookupId" selected> @itemTwo.LookupNameEn</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@itemTwo.LookupId"> @itemTwo.LookupNameEn</option>
+                                                    }
+
+                                                }
+                                            </select>
+
+                                        </td>
+                                        <td><input disabled id="Amount" name="Amount" type="number" value="@(item.Amount !=0 ? item.Amount : 0)" step="any" class="form-control input-sm text-right" min="0"></td>
+                                        
+                                    </tr>
+
+                                }
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+                @*<div class="margin-top-10 margin-bottom-10">
+                    <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="addRow(1);">@SharedLocalizer.GetLocalizedHtmlString("Add Row")</a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="addRow(3);">@SharedLocalizer.GetLocalizedHtmlString("Add 3 Rows")</a>
+                    <a href="javascript:void(0)" class="btn btn-sm btn-default" onclick="addRow(5);">@SharedLocalizer.GetLocalizedHtmlString("Add 5 Rows")</a>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+@section scripts{
+
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+            $("#tabEmpContract-tab").css("background-color", "#496b6a");
+            $("#tabEmpContract-tab").css("color", "white");
+
+            //$("#tabEmpContract-tab").addClass("nav-link active");
+            var actionType = $('#ACTION_TYPE').val();
+            if (actionType == "save") {
+                addRow(3);
+            }
+            setTriggers();
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var EmpContract = {
+                        EmpContractId: parseInt($('#EmpContractId').val()),
+                        EmpId: parseInt($('#EmpId').val()),
+                        ContractPeriodMonths: parseInt($('#ContractPeriodMonths').val()),
+                        JoiningDate: $('#JoiningDate').val(),
+                        JoiningDateHijri: $('#JoiningDateHijri').val(),
+                        ExpiryDate: $('#ExpiryDate').val(),
+                        ExpiryDateHijri: $('#ExpiryDateHijri').val(),
+                        ContractStartDate: $('#ContractStartDate').val(),
+                        ContractStatus: $('#ContractStatus').val(),
+                        ContactInactiveDate: $('#ContactInactiveDate').val(),
+                        DivisionId: parseInt($('#DivisionId').val()),
+                        DepartmentId: parseInt($('#DepartmentId').val()),
+                        SectionId: parseInt($('#SectionId').val()),
+                        SubSectionId: parseInt($('#SubSectionId').val()),
+                        UnitId: parseInt($('#UnitId').val()),
+                        TeamId: parseInt($('#TeamId').val()),
+                        GradeId: parseInt($('#GradeId').val()),
+                        GosiId: parseInt($('#GosiId').val()),
+                        VacationProfileId: 0,
+                        AbsentProfileId: parseInt($('#AbsentProfileId').val()),
+                        TicketProfileId: parseInt($('#TicketProfileId').val()),
+                        HousingAllowanceId: parseInt($('#HousingAllowanceId').val()),
+                        PayGroupId: parseInt($('#PayGroupId').val()),
+                        CompanyId: parseInt($('#CompanyId').val()),
+                        BranchId: parseInt($('#BranchId').val()),
+                        HousingAllowanceId: parseInt($('#HousingAllowanceId').val()),
+                        Notes: $('#Notes').val(),
+                        ThreshHoldSalary: parseFloat($('#ThreshHoldSalary').val()),
+                        TotalExamptSalaryFromPreviousEmployer: parseFloat($('#TotalExamptSalaryFromPreviousEmployer').val()),
+                    }
+                    var EmpContractPackagesList = new Array();
+
+                    $("#tblLines tbody TR").not("#trSample").each(function () {
+
+                        var row = $(this);
+                        var EmpContractPackage = {};
+
+                        if (row.find("#AllowanceTypeId").val() != "") {
+
+                            EmpContractPackage.EmpContractsPackageId = parseInt(row.find("#EmpContractsPackageId").val());
+                            EmpContractPackage.EmpContractId = parseInt($('#EmpContractId').val());
+                            EmpContractPackage.AllowanceTypeId = row.find("#AllowanceTypeId").val();
+                            EmpContractPackage.Amount = parseFloat(row.find("#Amount").val());
+                            EmpContractPackage.IsDeleted = row.find("#IsDeleted").val();
+                            var a = row.find("#IsDeleted").val();
+
+
+                            EmpContractPackagesList.push(EmpContractPackage);
+
+                        }
+
+
+                    });
+                    var EmpContractAndPackagesViewModel =
+                    {
+                        EmpContract: EmpContract,
+                        EmpContractPackagesList: EmpContractPackagesList
+                    }
+
+                    $.ajax({
+                        url: applicationName +"ESS/EmpContracts/" + actionType,
+                        data: EmpContractAndPackagesViewModel,
+                        async: false,
+                        type: 'POST',
+
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName +'ESS/EmpContracts/emp/@empId';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+        function addRow(n) {
+            var table = $('#tbLines');
+            var trSample = $('#trSample');
+
+
+            for (var i = 0; i < n; i++) {
+                var newRow = trSample.clone();
+                newRow.removeAttr('id');
+                $("#tblLines tbody").append(newRow);
+
+            }
+            $("#tblLines tbody tr").not('#trSample').show();
+            setTriggers();
+
+        }
+        function setTriggers() {
+
+            $("#tblLines tbody tr").each((i, item) => {
+                var tr = $(item);
+
+                tr.find("#AllowanceTypeId").change(() => {
+
+                    tr.find("#Amount").prop('required', true);
+                    tr.find("#Amount").val(1);
+
+                });
+            });
+
+        }
+        function deleteRow(tr) {
+
+            tr.find("td").eq(3).toggleClass("bg-danger");
+            tr.find("a #faDelete").toggle();
+            tr.find("a #faUndo").toggle();
+
+
+            var isDelete = tr.find("#IsDeleted").val();
+            if (isDelete == "false") {
+                tr.find("#IsDeleted").val("true");
+            }
+            if (isDelete == "true") {
+                tr.find("#IsDeleted").val("false");
+            }
+
+        }
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName +"Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+        $('#ActiveStatus').change(function () {
+
+            var id = $('#ActiveStatus').val();
+            var contractId = $('#EmpContractId').val();
+            $.ajax({
+                url: applicationName + "ESS/EmpContracts/ChangeActiveStatusOfContracts",
+                data: { activeStatus: id, contractId: contractId },
+                        async: false,
+                        type: 'POST',
+
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    @*window.location = '/ESS/EmpContracts/emp/@empId';*@
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+        });
+        $('#DivisionId').change(function () {
+
+            var id = $('#DivisionId').val();
+
+            $.ajax({
+                url: applicationName +"Ajax/DepartmentCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option  value='" + product.departmentId + "'>" + product.departmentNameEn + "</option>";
+                    });
+                    item += "<option  ></option>";
+                    $("#DepartmentId").html(item);
+
+                }
+            });
+
+        });
+        $('#DepartmentId').change(function () {
+
+            var id = $('#DepartmentId').val();
+
+            $.ajax({
+                url: applicationName + "Ajax/SectionCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.sectionId + "'>" + product.sectionNameEn + "</option>";
+                    });
+                    item += "<option  ></option>";
+                    $("#SectionId").html(item);
+
+                }
+            });
+
+        });
+        $('#SectionId').change(function () {
+
+            var id = $('#SectionId').val();
+
+            $.ajax({
+                url: applicationName +"Ajax/SubSectionCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.subSectionId + "'>" + product.subSectionNameEn + "</option>";
+                    });
+                    item += "<option  ></option>";
+                    $("#SubSectionId").html(item);
+
+                }
+            });
+
+        });
+        $('#SubSectionId').change(function () {
+
+            var id = $('#SubSectionId').val();
+
+            $.ajax({
+                url: applicationName + "Ajax/UnitsCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.unitId + "'>" + product.unitNameEn + "</option>";
+                    });
+                    item += "<option  ></option>";
+                    $("#UnitId").html(item);
+
+                }
+            });
+
+        });
+        $('#UnitId').change(function () {
+
+            var id = $('#UnitId').val();
+
+            $.ajax({
+                url: applicationName + "Ajax/TeamCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.teamId + "'>" + product.teamEn + "</option>";
+                    });
+                    item += "<option  ></option>";
+                    $("#TeamId").html(item);
+
+                }
+            });
+
+      });
+      function navigation() {
+            window.location = applicationName +'ESS/Profile/Index'
+        };
+    </script>
+
+}

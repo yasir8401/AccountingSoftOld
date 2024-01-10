@@ -1,0 +1,55 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+@{
+
+}
+
+
+
+
+<div class="card card-default card-outline">
+
+    <div class="card-header">
+        <h2 class="card-title">
+            @SharedLocalizer.GetLocalizedHtmlString("Tasks") 
+        </h2>
+        <!-- tools box -->
+        <div class="card-tools">
+            <a href="~/Projects/Tasks/edit" type="button" class="btn  btn-sm btn-primary">
+                <i class="fas fa-plus"></i>   @SharedLocalizer.GetLocalizedHtmlString("Add New")  
+            </a>
+        </div>
+        <!-- /. tools -->
+    </div>
+
+
+
+
+    <div class="card-body">
+        <div id="divList"></div>
+
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        $(function () {
+            BindGrid();
+        });
+
+        function BindGrid() {
+
+            $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+            $.ajax({
+                url: getApplicationName() + 'Projects/Tasks/_list',
+                data: $('#frmSearch').serialize(),
+                success: function (data) {
+                    $('#divList').html(data);
+                }
+            })
+        };
+
+    </script>
+}

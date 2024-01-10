@@ -1,0 +1,484 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+
+
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Navigations> navigationList = Model.navigationList;
+
+    OvertimeRequests OverTimeRequestDetails = Model.OverTimeRequestDetails;
+    IList<Emp> empList = Model.empList;
+    IList<Departments> deptList = Model.deptList;
+    IList<OvertimeRequestsLines> OverTimeRequestLinesList = Model.OverTimeRequestLinesList;
+    List<Lookups> RequestStatus = Model.RequestStatus;
+
+    bool isEdit = (OverTimeRequestDetails != null);
+}
+
+<link href="~/ESSlte/dist/css/EditAbleTableCss.css" rel="stylesheet" />
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="OvertimeRequestId" name="OvertimeRequestId" class="form-control" value="@(OverTimeRequestDetails != null ? OverTimeRequestDetails.OvertimeRequestId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(OverTimeRequestDetails != null ? OverTimeRequestDetails.CompanyId : 0)">
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(OverTimeRequestDetails != null ? OverTimeRequestDetails.BranchId : 0)">
+
+    <div class="card card-default card-outline col-lg-12">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("OverTime Request Detail")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary" @(OverTimeRequestDetails != null && OverTimeRequestDetails.RequestStatus != null ? "hidden" : "")>
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save Overtime Request")
+                </button>
+                <a id="postBtn" @(!isEdit ? "hidden" : "" ) class="btn  btn-sm btn-success" @(OverTimeRequestDetails != null && OverTimeRequestDetails.RequestStatus != null ? "hidden" : "")>
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Submit For Apporval")
+                </a>
+                <a href="~/ESS/OverTimeRequest" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("OverTime Date") </label>
+                        <input type="text" id="OvertimeDate" @(OverTimeRequestDetails != null && OverTimeRequestDetails.RequestStatus != null ? "disabled" : "") name="OvertimeDate" class="form-control DatePicker" value="@(OverTimeRequestDetails != null && OverTimeRequestDetails.OvertimeDate !=null ? Convert.ToDateTime(OverTimeRequestDetails.OvertimeDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("OverTime Request-No")</label>
+                        <input type="text" disabled placeholder="Auto Generated Field" id="OvertimeRequestNo" name="OvertimeRequestNo" class="form-control" value="@(OverTimeRequestDetails!=null?OverTimeRequestDetails.OvertimeRequestNo: null)">
+                    </div>
+                </div>
+
+                <div class="col-sm-3" hidden>
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Approval Date") </label>
+                        <input type="text" @(OverTimeRequestDetails != null && OverTimeRequestDetails.RequestStatus != null ? "disabled" : "") id="ApprovalDate" name="ApprovalDate" class="form-control DatePicker" value="@(OverTimeRequestDetails != null && OverTimeRequestDetails.ApprovalDate !=null ? Convert.ToDateTime(OverTimeRequestDetails.ApprovalDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+
+
+                <div class="col-sm-3" hidden>
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Approval Status")</label>
+                        <select id="RequestStatus" name="RequestStatus" class="form-control" required disabled>
+                            <option selected></option>
+                            @foreach (var item in RequestStatus)
+                            {
+                                <option value="@item.Code" @(OverTimeRequestDetails != null && OverTimeRequestDetails.RequestStatus == item.Code ? "selected" : "")>
+                                    @(item.LookupNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card card-default card-outline">
+        <div class="card-header">
+            <h2 class="card-title pt-1">
+                @SharedLocalizer.GetLocalizedHtmlString("OverTime Detail")
+            </h2>
+        </div>
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+                <table id="tblLines" class="table table-bordered m-0 table-condensed">
+                    <thead>
+                        <tr>
+                            <th> @SharedLocalizer.GetLocalizedHtmlString("Employee") </th>
+                            <th> @SharedLocalizer.GetLocalizedHtmlString("Time-From") </th>
+                            <th> @SharedLocalizer.GetLocalizedHtmlString("Time-To") </th>
+                            <th width="140px"> @SharedLocalizer.GetLocalizedHtmlString("OverTime-Hours") </th>
+                            <th> @SharedLocalizer.GetLocalizedHtmlString("Remarks") </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="trSample" style="display:none">
+                            <td style="display:none">
+                                <input type="hidden" id="LineId" name="LineId" value="0">
+                            </td>
+                            <td>
+
+                                <select id="EmpId" name="EmpId" class="form-control" disabled>
+                                    <option></option>
+                                    @foreach (var item in empList)
+                                    {
+                                        <option value="@item.EmpId" selected>
+                                            @(item.FirstNameEn + " " + item.FatherNameEn + " " + item.GrandNameEn + " " + item.FamilyNameEn)
+                                        </option>
+                                    }
+                                </select>
+                            </td>
+                            <td><input id="TimeFrom" name="TimeFrom" disabled type="time" step="any" class="form-control input-sm text-right" min="0"></td>
+                            <td><input id="TimeTo" name="TimeTo" disabled type="time" step="any" class="form-control input-sm text-right" min="0"></td>
+                            <td><input id="OtHours" name="OtHours" type="number" step="any" class="form-control input-sm text-right" min="0"></td>
+                            <td><input id="Remarks" name="Remarks" type="text" step="any" class="form-control input-sm text-right" min="0"></td>
+
+                        </tr>
+                        @if (OverTimeRequestLinesList.Count() != 0)
+                        {
+
+                            @foreach (var item in OverTimeRequestLinesList)
+                            {
+
+                                <tr>
+                                    <td style="display:none">
+                                        <input type="hidden" id="LineId" name="LineId" value="@(item.LineId !=0 ? item.LineId:0)">
+                                    </td>
+                                    <td>
+
+                                        <select id="EmpId" name="EmpId" class="form-control" disabled>
+                                            <option></option>
+                                            @foreach (var itemTwo in empList)
+                                            {
+                                                <option value="@itemTwo.EmpId" @(itemTwo != null && itemTwo.EmpId == item.EmpId ? "selected" : "")>
+                                                    @(itemTwo.FirstNameEn + " " + itemTwo.FatherNameEn + " " + itemTwo.GrandNameEn + " " + itemTwo.FamilyNameEn)
+                                                </option>
+                                            }
+                                        </select>
+                                    </td>
+                                    <td><input @(OverTimeRequestDetails != null && OverTimeRequestDetails.RequestStatus != null ? "disabled" : "") id="TimeFrom" value="@(item != null && item.TimeFrom !=null ?item.TimeFrom : TimeSpan.Zero)" name="TimeFrom" type="time" step="any" class="form-control input-sm text-right" min="0"></td>
+                                    <td><input @(OverTimeRequestDetails != null && OverTimeRequestDetails.RequestStatus != null ? "disabled" : "") id="TimeTo" value="@(item != null && item.TimeTo !=null ? item.TimeTo : TimeSpan.Zero)" name="TimeTo" type="time" step="any" class="form-control input-sm text-right" min="0"></td>
+                                    <td><input @(OverTimeRequestDetails != null && OverTimeRequestDetails.RequestStatus != null ? "disabled" : "") id="OtHours" value="@(item.OtHours !=0 ? item.OtHours:0)" name="OtHours" type="number" step="any" class="form-control input-sm text-right" min="0" max="10"></td>
+                                    <td><input @(OverTimeRequestDetails != null && OverTimeRequestDetails.RequestStatus != null ? "disabled" : "") id="Remarks" value="@(item.Remarks !=null ? item.Remarks:"")" name="Remarks" type="text" step="any" class="form-control input-sm text-right" min="0"></td>
+
+                                </tr>
+                            }
+                        }
+
+
+                    </tbody>
+
+
+
+                </table>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="card card-outline card-outline col-lg-12">
+        <div class="card-header">
+            <h3 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Note")
+            </h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body pad">
+            <div class="mb-3">
+                <textarea id="Note" rows="3" name="Note" @(OverTimeRequestDetails != null && OverTimeRequestDetails.RequestStatus != null ? "disabled" : "")
+                          style="width: 100%; height: 100px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(OverTimeRequestDetails != null? OverTimeRequestDetails.Note : "")</textarea>
+            </div>
+
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-12" style="display:none">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+
+
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(OverTimeRequestDetails != null && OverTimeRequestDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(OverTimeRequestDetails != null && OverTimeRequestDetails.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
+
+
+@section scripts{
+
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+            var actionType = $('#ACTION_TYPE').val();
+            if (actionType == "save") {
+                addRow(1);
+
+            }
+            setTriggers();
+        });
+
+
+        $("#OvertimeDate").change(function () {
+            var requestedDate = $('#OvertimeDate').val();
+            debugger;
+
+            $.ajax({
+                url: applicationName + "ESS/OverTimeRequest/GetCurrentAttendance",
+                async: false,
+                type: "POST",
+                data: { requestedDate },
+                success: function (data) {
+
+                    if (data != null && data.timeIn != "" && data.timeOut != "") {
+                        var table = $('#tblLines');
+                        table.find('tbody tr').each((i, item) => {
+                            var tr = $(item);
+
+                            tr.find('#TimeFrom').val(data.timeIn);
+                            tr.find('#TimeTo').val(data.timeOut);
+
+                        });
+                    }
+
+                }
+            });
+
+        });
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+
+            var overTimeRequestLineArray = new Array();
+            var overTimeRequestObject = {
+                OvertimeRequestId: parseInt($('#OvertimeRequestId').val()),
+                OvertimeRequestNo: $('#OvertimeRequestNo').val(),
+                OvertimeDate: $('#OvertimeDate').val(),
+                Note: $('#Note').val(),
+                ApprovalStatus: ($('#ApprovalStatus').val() == 'True' ? true : false),
+                ApprovalDate: $('#ApprovalDate').val(),
+                CompanyId: parseInt($('#CompanyId').val()),
+                BranchId: parseInt($('#BranchId').val())
+            }
+            $("#tblLines tbody TR").not("#trSample").each(function () {
+
+                var row = $(this);
+                var inputFields = row.find(":input");
+                var overTimeRequestLineObject = {};
+
+
+                if (row.find('#EmpId').val() != "") {
+
+                    overTimeRequestLineObject.LineId = parseInt(row.find('#LineId').val()),
+                        overTimeRequestLineObject.EmpId = parseInt(row.find('#EmpId').val()),
+                        overTimeRequestLineObject.TimeFrom = row.find('#TimeFrom').val(),
+                        overTimeRequestLineObject.TimeTo = row.find('#TimeTo').val(),
+                        overTimeRequestLineObject.OtHours = parseInt(row.find('#OtHours').val()),
+                        overTimeRequestLineObject.OtAmount = parseInt(row.find('#OtAmount').val()),
+                        overTimeRequestLineObject.Remarks = row.find('#Remarks').val()
+                    overTimeRequestLineObject.IsDeleted = row.find('#IsDeleted').val()
+
+                    overTimeRequestLineArray.push(overTimeRequestLineObject);
+                }
+            });
+
+            var overTimeRequestLineViewModel = {
+
+                OverTimeRequest: overTimeRequestObject,
+                OvertimeRequestsLines: overTimeRequestLineArray
+
+            }
+
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+
+                    $.ajax({
+                        url: applicationName + "ESS/OverTimeRequest/" + actionType,
+                        type: "POST",
+                        data: overTimeRequestLineViewModel,
+                        async: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'ESS/OverTimeRequest';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+
+
+                }
+            });
+        });
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: applicationName + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+                        debugger;
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+
+        function addRow(n) {
+            var table = $('#tblLines');
+            trSample = table.find('#trSample');
+            for (var i = 0; i < n; i++) {
+                var newRow = trSample.clone();
+                newRow.removeAttr('id');
+                table.find('tbody').append(newRow);
+            }
+            table.find('tbody tr').not('#trSample').show();
+            setTriggers();
+
+        }
+        function setTriggers() {
+            var table = $('#tblLines');
+            table.find('tbody tr').each((i, item) => {
+                var tr = $(item);
+
+                tr.find('#EmpId').change(function () {
+                    tr.find('#TimeFrom').prop('required', true);
+                    tr.find('#TimeTo').prop('required', true);
+                });
+                //tr.find('#TimeTo').change(function () {
+
+                //    var timeFrom = tr.find('#TimeFrom').val().split(':');
+                //    var timeTo = tr.find('#TimeTo').val().split(':');
+                //    if (timeTo[0] > timeFrom[0]) {
+                //        var hourTotal = timeTo[0] - timeFrom[0];
+                //        tr.find('#OtHours').val(hourTotal);
+                //    }
+                //    else {
+                //        showMsg('Failed !', 'From-Time Must Be less than To-Time. Try again', 'error');
+                //    }
+
+                //});
+
+            });
+        }
+        function deleteRow(tr) {
+
+            tr.toggleClass('bg-danger');
+            tr.find('a > #faDelete').toggle();
+            tr.find('a > #faUndo').toggle();
+            var inputFields = tr.find('#IsDeleted');
+
+            var isDelete = tr.find('#IsDeleted').val();
+            if (isDelete == "false") {
+                tr.find('#IsDeleted').val("true");
+            }
+            if (isDelete == "true") {
+                tr.find('#IsDeleted').val("false");
+            }
+
+        }
+
+        $('#postBtn').click(function () {
+
+
+            confirmAction('Confirm ?', 'Are you sure you want to Post  ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+                    var id = $('#OvertimeRequestId').val();
+
+                    $.ajax({
+                        url: applicationName + "ESS/OverTimeRequest/Post",
+                        async: false,
+                        type: "POST",
+                        data: { id: id },
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been Posted !', 'success');
+                                setTimeout(function () {
+                                    debugger;
+                                    var id = data.result.scalerVal;
+                                    window.location = applicationName + 'ESS/OverTimeRequest/Edit?id=' + id;
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+
+                }
+            });
+
+        });
+
+
+
+    </script>
+
+}

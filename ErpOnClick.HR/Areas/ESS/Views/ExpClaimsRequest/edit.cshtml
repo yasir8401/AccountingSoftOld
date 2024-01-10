@@ -1,0 +1,295 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+
+@{
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Emp> employeesList = Model.employeesList;
+
+    List<Lookups> RequestStatus = Model.RequestStatus;
+    List<Lookups> RequestType = Model.RequestType;
+
+
+    ExpClaims ExpClaim = Model.ExpClaimDetails;
+    bool isEdit = (ExpClaim != null);
+}
+
+
+
+<form id="frmEdit" role="form" enctype="multipart/form-data">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="RecId" name="RecId" class="form-control" value="@(ExpClaim != null ? ExpClaim.RecId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(ExpClaim != null ? ExpClaim.CompanyId : 0)">
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(ExpClaim != null ? ExpClaim.BranchId : 0)">
+
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Expense Claim Request Detail")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary" @(ExpClaim != null && ExpClaim.RequestStatus != null ? "hidden" : "")>
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Save Expense Claim Request")
+                </button>
+                <a id="postBtn" @(!isEdit ? "hidden" : "" ) class="btn  btn-sm btn-success" @(ExpClaim != null && ExpClaim.RequestStatus != null ? "hidden" : "")>
+                    <i class="fas fa-save fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Submit For Approval")
+                </a>
+                <a href="~/ESS/ExpClaimsRequest" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i> @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Employee")</label>
+                        <select id="EmpId" name="EmpId" class="form-control" required @(ExpClaim != null && ExpClaim.RequestStatus != null ? "disabled" : "")>
+                            <option selected></option>
+                            @foreach (var item in employeesList)
+                            {
+                                <option value="@item.EmpId" selected>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group" @(ExpClaim != null && ExpClaim.RequestStatus != null ? "" : "hidden")>
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Request Status")</label>
+                        <select id="RequestStatus" name="RequestStatus" class="form-control" required disabled>
+                            <option selected></option>
+                            @foreach (var item in RequestStatus)
+                            {
+                                <option value="@item.Code" @(ExpClaim != null && ExpClaim.RequestStatus == item.Code ? "selected" : "")>
+                                    @(item.LookupNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Title")</label>
+                        <input type="text" @(ExpClaim != null && ExpClaim.RequestStatus != null ? "disabled" : "") id="SpentAt" name="SpentAt" class="form-control" value="@(ExpClaim!=null?ExpClaim.SpentAt: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Spent Date")</label>
+                        <input type="text" @(ExpClaim != null && ExpClaim.RequestStatus != null ? "disabled" : "") id="SpentOn" name="SpentOn" class="form-control DatePicker" value="@(ExpClaim!=null?ExpClaim.SpentOn: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Amount")</label>
+                        <input type="number" @(ExpClaim != null && ExpClaim.RequestStatus != null ? "disabled" : "") min="0" id="Amount" name="Amount" class="form-control" value="@(ExpClaim!=null?ExpClaim.Amount: null)">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Attachment")</label>
+                        @if (ExpClaim != null && ExpClaim.Attachment != null)
+                        {
+                            <a href="~/Files/@ExpClaim.Attachment" download="">@SharedLocalizer.GetLocalizedHtmlString("DownloadPDF")</a>
+                            <input type="text" id="Attachment" name="Attachment" value="@ExpClaim.Attachment" class="form-control">
+                        }
+                        else
+                        {
+                            <input type="file" id="FileToUpload" name="FileToUpload" class="form-control">
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="card card-default card-outline col-lg-8">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Description")
+            </h2>
+        </div>
+        <div class="card-body p-2">
+            <textarea rows="3" @(ExpClaim != null && ExpClaim.RequestStatus != null ? "disabled" : "") id="Reason" name="Reason" class="form-control "  placeholder="Enter Reason here...">@(ExpClaim != null ? ExpClaim.Reason : "")</textarea>
+        </div>
+    </div>
+    <div class="card card-default card-outline col-lg-8" style="display:none">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organization Details")
+            </h2>
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(ExpClaim != null && ExpClaim.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option></option>
+                            @if (isEdit)
+                            {
+                                @foreach (var item in branchList)
+                                {
+                                    <option value="@item.BranchId" @(ExpClaim != null && ExpClaim.BranchId == item.BranchId ? "selected" : "")>
+                                        @item.BranchNameEn
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+        var applicationName = getApplicationName();
+
+        $(function () {
+            $('#CompanyId').change(function () {
+
+                var id = $('#CompanyId').val();
+
+                $.ajax({
+                    url: applicationName + "Ajax/BranchCascading",
+                    async: false,
+                    type: "POST",
+                    data: { id: id },
+                    success: function (data) {
+
+                        var item = '';
+
+                        $.each(data.result, function (i, product) {
+
+                            item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                        });
+
+                        $("#BranchId").html(item);
+
+                    }
+                });
+
+            });
+
+
+        });
+
+
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    var formEl = document.forms.frmEdit;
+                    var formData = new FormData(formEl);
+
+                    $.ajax({
+                        url: applicationName + "ESS/ExpClaimsRequest/" + actionType,
+                        type: "POST",
+                        data: formData ? formData : params,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = applicationName + 'ESS/ExpClaimsRequest';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+        $('#postBtn').click(function () {
+
+
+            confirmAction('Confirm ?', 'Are you sure you want to Post  ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+                    var id = $('#RecId').val();
+
+                    $.ajax({
+                        url: applicationName + "ESS/ExpClaimsRequest/Post",
+                        async: false,
+                        type: "POST",
+                        data: { id: id },
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been Posted !', 'success');
+                                setTimeout(function () {
+                                    debugger;
+                                    var id = data.result.scalerVal;
+                                    window.location = applicationName + 'ESS/ExpClaimsRequest/Edit?id=' + id;
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

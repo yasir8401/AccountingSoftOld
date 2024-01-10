@@ -1,0 +1,407 @@
+﻿
+body {
+    font-family: Arial;
+    -webkit-print-color-adjust: exact !important;
+}
+
+.GridHead {
+    font-weight: bold;
+    color: Yellow;
+    font-style: normal;
+    font-family: Arial;
+    background-color: Maroon;
+}
+
+
+.AlternateColor {
+    font-style: normal;
+    font-family: Arial;
+    background-color: PapayaWhip;
+    color: Black;
+}
+
+.ItemColor {
+    font-style: normal;
+    font-family: Arial;
+    color: Black;
+}
+
+.RepHLbl {
+    font-family: Arial;
+    font-weight: bold;
+    font-style: normal;
+    color: Navy;
+    background-color: White;
+}
+
+.RepLbl {
+    font-family: Arial;
+    font-style: normal;
+    color: Black;
+    background-color: White;
+}
+
+.RepHead {
+    font-family: ARIAL;
+    font-weight: BOLD;
+    font-size: 16pt;
+    font-style: normal;
+}
+
+.RepCourse {
+    font-family: Arial;
+    font-weight: bold;
+    font-style: normal;
+    color: #004000;
+    background-color: White;
+}
+
+
+
+/*--------------------------------------------------------------------*/
+#Outline {
+    height: 285mm;
+    width: 200mm;
+}
+
+#HTOutline {
+    width: 200mm;
+    height: 265mm;
+}
+
+#HallTicketOutline {
+    width: 240mm;
+    height: 140mm;
+}
+
+#Main {
+    height: 287mm;
+}
+
+/*
+.WarningDiv
+{
+	width: 209mm;
+	height: 297mm;
+}
+*/
+#ATable {
+    width: 180mm;
+}
+
+#Table2 {
+    width: 180mm;
+}
+
+#BTable {
+    width: 180mm;
+}
+
+#CTable {
+    width: 180mm;
+}
+
+#DTable {
+    width: 180mm;
+}
+
+#ETable {
+    width: 180mm;
+}
+
+#FTable {
+    width: 180mm;
+}
+
+#GTable {
+    width: 180mm;
+}
+
+#HTable {
+    width: 180mm;
+}
+
+#ITable {
+    width: 180mm;
+}
+
+#JTable {
+    width: 180mm;
+}
+
+#KTable {
+    width: 180mm;
+}
+
+#LTable {
+    width: 180mm;
+}
+
+#MTable {
+    width: 180mm;
+}
+
+#NTable {
+    width: 180mm;
+}
+
+#OTable {
+    width: 180mm;
+}
+
+/*--------------------------------------------------------------------*/
+
+.Report_Border {
+    border: 1px;
+    border-collapse: collapse;
+    border-color: Silver;
+}
+
+.GridStyle {
+    border: 0px;
+    border-collapse: collapse;
+    width: 100%;
+    border-color: Silver;
+    margin: 10px 5px 0px 5px;
+}
+
+.GridStyle {
+    border: 0px;
+    border-collapse: collapse;
+    width: 100%;
+    border-color: Silver;
+    margin: 10px 5px 0px 5px;
+}
+
+.Grid_HeaderStyle {
+    color: #0C0C0C;
+    background-color: #eaeaea;
+    font-weight: normal;
+    height: 30px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    BORDER-BOTTOM: 2px solid #cacaca;
+}
+
+.ItemColor {
+    font-family: Calibri, Tahoma, Verdana;
+    color: Black;
+    background-color: white;
+    height: 25px;
+    /**/
+    font-weight: normal;
+}
+
+.AlternateColor {
+    color: Black;
+    background-color: whitesmoke;
+    height: 25px;
+    /**/
+    font-weight: normal;
+}
+
+
+.tblDetail {
+    border-top: 1px solid silver;
+    border-bottom: 1px solid silver;
+}
+
+
+.btnPrint {
+    font-weight: bold;
+    font-size: 10pt;
+    z-index: 104;
+    right: 4px;
+    /* width: 301px; */
+    color: #4773a0;
+    font-family: Arial;
+    /* position: absolute; */
+    top: 5px;
+    background-color: #e2e2e2;
+    border: none;
+    padding: 7px 13px;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+
+.actionBar {
+    background-color: #4773a0;
+    padding: 5px;
+    margin: 6px -10px 0px -10px;
+}
+
+#Outline {
+    border: 1px solid silver;
+}
+
+
+
+.ItemColor {
+    font-family: Arial;
+    font-size: 11px;
+}
+
+.tblHeaders th {
+}
+
+.tblHeaders .ItemColor > td {
+    text-align: left;
+    padding-left: 10px;
+    font-size: 13px;
+    color: #183594;
+}
+
+.Grid_HeaderStyle > th, .ItemColor > td {
+    border: 1px solid silver;
+}
+
+
+
+
+
+.divHeader {
+    position: fixed;
+    top: 0;
+    background-color: white;
+}
+
+
+.divData {
+    margin-top: 125px;
+}
+
+.visible-pr {
+    display: none;
+}
+
+@media print {
+
+    .visible-pr {
+        display: block;
+    }
+
+    .actionBar {
+        display: none !important;
+    }
+
+    /*#Header, #Footer {
+        display: none !important;
+    }*/
+
+    #Outline {
+        border: 0px solid !important;
+    }
+
+
+    .divData {
+        margin-top: 92px;
+    }
+}
+
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.signatrure-table {
+    letter-spacing: 2px;
+    font-weight: 900;
+    width: 100%;
+}
+
+.signatrure-section {
+    text-align: center;
+    width: 50%;
+}
+
+    .signatrure-section span {
+        border-top: 3px solid black
+    }
+
+
+#pltable thead tr th {
+    font-weight: 900;
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+#pltable tbody tr {
+    height: 20px !important;
+    background-color: #ffffff !important;
+}
+
+    #pltable tbody tr td {
+        border: 0;
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: 2px;
+    }
+
+    #pltable tbody tr .b-t {
+        border-top: 1px solid black !important;
+    }
+
+    #pltable tbody tr .b-b {
+        border-bottom: 1px solid black !important;
+    }
+
+    #pltable tbody tr .b-lr, #pltable thead tr .b-lr {
+        border-left: 1px solid black !important;
+        border-right: 1px solid black !important;
+    }
+
+.text-center-vertical {
+    vertical-align: middle !important;
+}
+
+.b-l {
+    border-left: 1px solid black !important;
+}
+
+.b-r {
+    border-right: 1px solid black !important;
+}
+
+.medium-heading {
+    font-size: 16px !important;
+}
+
+.small-heading {
+    font-size: 14px !important;
+    letter-spacing: 1px !important;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+table thead tr th, table thead tr td {
+    font-size: 13px !important;
+    font-weight: 600;
+}
+
+table tbody tr td, table tbody tr th, table tfoot tr td {
+    font-size: 13px !important;
+}
+
+.font-weight-normal {
+    font-weight: 500 !important;
+}
+
+
+
+.text-color-green {
+    color: green;
+}
+.text-color-red {
+    color: red;
+}

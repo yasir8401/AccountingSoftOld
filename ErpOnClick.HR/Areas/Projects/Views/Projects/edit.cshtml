@@ -1,0 +1,287 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    IList<Branch> branchList = Model.branchList;
+    IList<Company> companyList = Model.companyList;
+    IList<Lookups> projectTypeList = Model.projectTypeList;
+    IList<Lookups> projectStatusList = Model.projectStatusList;
+    //IList<Lookups> HRtatusList = Model.HRtatusList;
+    IList<Emp> empList = Model.empList;
+    IList<Projects> parentProjectList = Model.parentProjectList;
+
+    Projects ProjectDetails = Model.ProjectDetails;
+    bool isEdit = (ProjectDetails != null);
+}
+
+
+<form id="frmEdit" role="form">
+    <input type="hidden" id="ACTION_TYPE" name="ACTION_TYPE" value="@(isEdit ? "update" : "save")" />
+    <input type="hidden" id="ProjectId" name="ProjectId" class="form-control" value="@(ProjectDetails != null ? ProjectDetails.ProjectId : 0)" @(isEdit ? "readonly" : "") min="3" maxlength="3">
+    <input type="hidden" id="CompanyId" name="CompanyId" class="form-control" value="@(ProjectDetails != null ? ProjectDetails.CompanyId : 0)" >
+    <input type="hidden" id="BranchId" name="BranchId" class="form-control" value="@(ProjectDetails != null ? ProjectDetails.BranchId : 0)" >
+
+    <div class="card card-default card-outline col-lg-8">
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Project Detail")
+            </h2>
+            <!-- tools box -->
+            <div class="card-tools">
+                <button type="submit" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-save fa-fw"></i>  @SharedLocalizer.GetLocalizedHtmlString("Save")
+                </button>
+                <a href="~/Projects/HR" type="button" class="btn  btn-sm btn-default">
+                    <i class="fas fa-arrow-left fa-fw"></i>     @SharedLocalizer.GetLocalizedHtmlString("Return")
+                </a>
+            </div>
+            <!-- /. tools -->
+        </div>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Title")</label>
+                        <input type="text" id="ProjectTitle" required name="ProjectTitle" class="form-control" value="@(ProjectDetails!=null?ProjectDetails.ProjectTitle: null)" required>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Project Manager") </label>
+                        <select id="ProjectManagerEmpId" name="ProjectManagerEmpId" class="form-control" required>
+                            <option></option>
+                            @foreach (var item in empList)
+                            {
+                                <option value="@item.EmpId" @(ProjectDetails != null && ProjectDetails.ProjectManagerEmpId == item.EmpId ? "selected" : "")>
+                                    @(item.FirstNameEn + " " + item.FatherNameEn + " " + item.GrandNameEn + " " + item.FamilyNameEn)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Project Type") </label>
+                        <select id="ProjectTypeId" name="ProjectTypeId" class="form-control">
+
+                            @foreach (var item in projectTypeList)
+                            {
+                                <option value="@item.Code" @(ProjectDetails != null && ProjectDetails.ProjectTypeId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Plan (Date From)")</label>
+                        <input type="text" id="PlanDateFrom" required name="PlanDateFrom" class="form-control DatePicker" value="@(ProjectDetails != null && ProjectDetails.PlanDateFrom !=null ? Convert.ToDateTime(ProjectDetails.PlanDateFrom).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Plan (Date To)")</label>
+                        <input type="text" id="PlanDateTo" required name="PlanDateTo" class="form-control DatePicker" value="@(ProjectDetails != null && ProjectDetails.PlanDateTo !=null ? Convert.ToDateTime(ProjectDetails.PlanDateTo).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Start Date")</label>
+                        <input type="text" id="HRtartDate" name="HRtartDate" class="form-control DatePicker" value="@(ProjectDetails != null && ProjectDetails.ProjectStartDate !=null ? Convert.ToDateTime(ProjectDetails.ProjectStartDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("End Date")</label>
+                        <input type="text" id="ProjectEndDate" name="ProjectEndDate" class="form-control DatePicker" value="@(ProjectDetails != null && ProjectDetails.ProjectEndDate !=null ? Convert.ToDateTime(ProjectDetails.ProjectEndDate).ToString("dd-MMM-yyyy") : "")">
+
+                    </div>
+                </div>
+                <div class="col-md-12"><hr /></div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Parent Project")</label>
+                        <select id="ParentProjectId" name="ParentProjectId" class="form-control">
+                            <option></option>
+                            @foreach (var item in parentProjectList)
+                            {
+                                <option value="@item.ProjectId" @(ProjectDetails != null && ProjectDetails.ParentProjectId == item.ProjectId ? "selected" : "")>
+                                    @item.ProjectTitle
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Related Project")</label>
+                        <select id="RelatedProjectId" name="RelatedProjectId" class="form-control">
+                            <option></option>
+                            @foreach (var item in parentProjectList)
+                            {
+                                <option value="@item.ProjectId" @(ProjectDetails != null && ProjectDetails.RelatedProjectId == item.ProjectId ? "selected" : "")>
+                                    @item.ProjectTitle
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Project Status")</label>
+                        <select id="HRtatusId" name="HRtatusId" class="form-control">
+
+                            @foreach (var item in projectStatusList)
+                            {
+                                <option value="@item.Code" @(ProjectDetails != null && ProjectDetails.ProjectStatusId == item.Code ? "selected" : "")>
+                                    @item.LookupNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label>@SharedLocalizer.GetLocalizedHtmlString("Progress Percent")</label>
+                        <input type="number" id="ProjectProgressPercent" name="ProjectProgressPercent" class="form-control" value="@(ProjectDetails!=null?ProjectDetails.ProjectProgressPercent: null)">
+                    </div>
+                </div>
+                <div class="col-md-12"><hr /></div>
+                <div class="col-md-12 card-header">
+                    <label>@SharedLocalizer.GetLocalizedHtmlString("Detail")</label>
+                    <textarea @(ProjectDetails != null && ProjectDetails.ProjectDetail != null ? "disabled" : "") required id="ProjectDetail" rows="4" name="ProjectDetail"
+                              style="width: 100%; height: 80px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;">@(ProjectDetails != null? ProjectDetails.ProjectDetail : "")</textarea>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card card-default card-outline col-lg-8" style="display:none">
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Organisation Details")  
+            </h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label>   @SharedLocalizer.GetLocalizedHtmlString("Company")</label>
+                        <select id="CompanyId" name="CompanyId" class="form-control">
+                            <option selected></option>
+                            @foreach (var item in companyList)
+                            {
+                                <option value="@item.CompanyId" @(ProjectDetails != null && ProjectDetails.CompanyId == item.CompanyId ? "selected" : "")>
+                                    @item.CoNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <div class="form-group">
+                        <label> @SharedLocalizer.GetLocalizedHtmlString("Branch")</label>
+                        <select id="BranchId" name="BranchId" class="form-control">
+                            <option selected></option>
+                            @foreach (var item in branchList)
+                            {
+                                <option value="@item.BranchId" @(ProjectDetails != null && ProjectDetails.BranchId == item.BranchId ? "selected" : "")>
+                                    @item.BranchNameEn
+                                </option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+@section scripts{
+
+    <script>
+
+        $(function () {
+
+
+        });
+
+        $('#CompanyId').change(function () {
+
+            var id = $('#CompanyId').val();
+
+            $.ajax({
+                url: getApplicationName() + "Ajax/BranchCascading",
+                async: false,
+                type: "POST",
+                data: { id: id },
+                success: function (data) {
+
+                    var item = '';
+
+                    $.each(data.result, function (i, product) {
+
+                        item += "<option value='" + product.branchId + "'>" + product.branchNameEn + "</option>";
+                    });
+
+                    $("#BranchId").html(item);
+
+                }
+            });
+
+        });
+        $('#frmEdit').on('submit', function (e) {
+            e.preventDefault();
+            var actionType = $('#ACTION_TYPE').val();
+
+            confirmAction('Confirm ?', 'Are you sure you want to save changes ?', 'info', 'Yes', 'No').then(function (result) {
+                if (result.value == true) {
+
+                    var params = $('#frmEdit').serialize();
+                    $.ajax({
+                        url: getApplicationName() + "Projects/Projects/" + actionType,
+                        async: false,
+                        type: "POST",
+                        data: params,
+                        success: function (data) {
+                            if (data.result.isError != true) {
+                                showMsg('Saved !', 'Record has been saved !', 'success');
+                                setTimeout(function () {
+                                    window.location = getApplicationName() + 'Projects/Projects';
+                                }, 500);
+                            }
+                            else if (data.result.msg != '') {
+                                showMsg('Save Failed !', data.result.msg, 'error');
+                            }
+                            else {
+                                showMsg('Save Failed !', 'Something went wrong. Try again', 'error');
+                            }
+                        }
+                    });
+                }
+            });
+
+
+
+
+        });
+
+    </script>
+
+}

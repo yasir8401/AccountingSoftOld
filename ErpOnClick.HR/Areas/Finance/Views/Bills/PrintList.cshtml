@@ -1,0 +1,109 @@
+﻿@using ErpOnClick.DAL.Models
+@{
+    Layout = "_LayoutReport";
+    List<Bills> BillsMDetails = Model.billMList;
+    Company CompanyDetail = Model.CompanyDetail;
+}
+
+<div>
+    <br />
+
+    <table id="Outline1" style="border-collapse: collapse" bordercolor="silver" cellspacing="0" cellpadding="3" width="100%" border="0">
+        <tbody>
+            <tr>
+                <td>
+                    <h2 class="ReportTitle text-center" style="font-size: 25px ; margin:0px;  ">
+                        BILLS
+                    </h2>
+                    <br>
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+
+
+                        </thead>
+                        <tbody>
+                            <tr class="Grid_HeaderStyle text-center">
+                                <td><i class="fa fa-filter"></i>Bill Date From </td>
+                                <td><i class="fa fa-filter"></i>Bill Note Date To </td>
+                                <td><i class="fa fa-filter"></i>Vendor </td>
+                                <td><i class="fa fa-filter"></i>Due Date From </td>
+                                <td><i class="fa fa-filter"></i>Due Date To </td>
+                            </tr>
+
+                            <tr class="ItemColor text-center">
+
+                                <td nowrap="">
+                                    @Model.BillDateFrom
+                                </td>
+                                <td>
+                                    @Model.BillDateTo
+
+                                </td>
+                                <td>
+                                    @Model.VendorId
+
+                                </td>
+                                <td>
+                                    @Model.DueDateFrom
+
+                                </td>
+                                <td>
+                                    @Model.DueDateTo
+
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <br />
+
+                    <table cellspacing="0" cellpadding="5" rules="all" border="0" id="DataGrid1" style="width: 100%;  " class="tblDetail">
+                        <thead>
+                            @*<tr class="Grid_HeaderStyle Grid_HeaderStyle_Arabic">
+                                    <th style="width:20px">الوصف</th>
+
+                                    <th width="60px">مبلغ الفاتورة</th>
+                                    <th width="40px">ضريبة</th>
+                                    <th width="40px">قيمة الضريبة</th>
+                                    <th width="40px">إجمالي</th>
+                                </tr>*@
+                            <tr class="Grid_HeaderStyle">
+                                <th style="width:20px">Id</th>
+                                <th>Date</th>
+                                <th>Vendor</th>
+                                <th>Amount</th>
+                                <th>DueDate</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (BillsMDetails.Count() > 0)
+                            {
+                                @foreach (var item in BillsMDetails)
+                                {
+                                    <tr class="ItemColor text-center">
+                                        <td class="text-center">@(item.BillId != 0 ? item.BillId : 0)</td>
+                                        <td class="text-center">@(item.BillDate != null ? Convert.ToDateTime(item.BillDate).ToString("dd-MMM-yyyy") : "-")</td>
+                                        <td class="text-center">@(item.Vendor != null && item.Vendor.VendorNameEn != null ? item.Vendor.VendorNameEn : "-")</td>
+                                        <td class="text-right">@(item.Total != 0 ? item.Total : 0)</td>
+                                        <td>@(item.DueDate != null ? Convert.ToDateTime(item.DueDate).ToString("dd-MMM-yyyy") : "-")</td>
+                                    </tr>
+                                } }
+                            else
+                            {
+                                <tr class="ItemColor text-center">
+                                    <td colspan="5" class="text-center">Sorry! No Data Found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <br>
+                    <br><br>
+                    <hr style="border: 1px solid whitesmoke; margin-bottom:5px;">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

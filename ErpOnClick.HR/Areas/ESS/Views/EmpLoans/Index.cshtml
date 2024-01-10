@@ -1,0 +1,80 @@
+﻿@using ErpOnClick.DAL.Models
+@using ErpOnClick.ErpMain.Resources
+@inject LocService SharedLocalizer
+
+@{
+    var empId = Model.empId;
+    Emp empDetails = Model.empDetails;
+}
+
+
+<form id="frmList">
+    <input type="hidden" id="EmpId" name="EmpId" class="form-control" value="@empId" />
+
+    <div class="card card-default card-outline">
+        <div class="card-header p-0 border-bottom-0">
+            <div class="card" style="background-color: #496b6a">
+            </div>
+            <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link" onclick="navigation('@empId')" href="javascript:void(0)"><i class="fa fa-info"></i> @SharedLocalizer.GetLocalizedHtmlString("General Info")</a>
+                </li>
+                @Html.Partial("/Areas/ESS/Views/Profile/_tabsPartial.cshtml", empDetails)
+            </ul>
+        </div>
+
+
+        <div class="card-header">
+            <h2 class="card-title">
+                @SharedLocalizer.GetLocalizedHtmlString("Employee Loan Requests")
+            </h2>
+            <!-- tools box -->
+            @*<div class="card-tools">
+                <a href="~/ESS/EmpLoans/edit/emp/@empId" type="button" class="btn  btn-sm btn-primary">
+                    <i class="fas fa-plus"></i> @SharedLocalizer.GetLocalizedHtmlString("Add New")
+                </a>
+            </div>*@
+            <!-- /. tools -->
+        </div>
+
+
+
+        <div class="card-body">
+            <div id="divList"></div>
+
+        </div>
+    </div>
+</form>
+
+@section scripts{
+    <script>
+                var applicationName = getApplicationName();
+
+                $(function () {
+                    //$("#tabEducation-tab").addClass("nav-link active");
+                    $("#tabEmpLoans-tab").css("background-color", "#496b6a");
+                    $("#tabEmpLoans-tab").css("color", "white");
+
+                    BindGrid();
+                });
+
+
+                function BindGrid() {
+
+                    var test = $('#frmSearch').serialize();
+
+                    $('#divList').html('<h5 class="margin-0"><p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait while data is loading...</p></h5>');
+                    $.ajax({
+                        url: applicationName +'ESS/EmpLoans/_list',
+                        data: $('#frmList').serialize(),
+                        success: function (data) {
+                            $('#divList').html(data);
+                        }
+                    })
+                };
+                function navigation() {
+                    window.location = applicationName +'ESS/EmpLoans/edit/@empId'
+                };
+
+    </script>
+}
